@@ -5,22 +5,35 @@ console.log('DEBUG: Loading environment variables...');
 console.log('DEBUG: NODE_ENV =', process.env.NODE_ENV);
 console.log('DEBUG: DATABASE_URL exists?', !!process.env.DATABASE_URL);
 console.log('DEBUG: DATABASE_URL length =', process.env.DATABASE_URL?.length || 0);
-console.log('DEBUG: DATABASE_URL (first 20 chars) =', process.env.DATABASE_URL?.substring(0, 20) || 'undefined');
+console.log('DEBUG: DATABASE_URL (first 50 chars) =', process.env.DATABASE_URL?.substring(0, 50) || 'undefined');
 
-dotenv.config();
+// Only load .env file in development - in production, use Railway environment variables directly
+// This ensures Railway's DATABASE_URL is never overridden by a local .env file
+if (process.env.NODE_ENV !== 'production') {
+  console.log('DEBUG: Development mode - loading .env file (will not override existing vars)');
+  dotenv.config({ override: false }); // Don't override existing environment variables
+} else {
+  console.log('DEBUG: Production mode - using Railway environment variables only (skipping .env file)');
+}
 
-// DEBUG: Log after dotenv.config()
-console.log('DEBUG: After dotenv.config()');
+// DEBUG: Log after potential dotenv.config()
+console.log('DEBUG: After environment loading');
 console.log('DEBUG: DATABASE_URL exists?', !!process.env.DATABASE_URL);
 console.log('DEBUG: DATABASE_URL length =', process.env.DATABASE_URL?.length || 0);
+console.log('DEBUG: DATABASE_URL (first 50 chars) =', process.env.DATABASE_URL?.substring(0, 50) || 'undefined');
 
+// Read environment variables directly from process.env - never use fallbacks or defaults
+// This ensures Railway's environment variables are used exactly as provided
 export const config = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: parseInt(process.env.PORT || '5000', 10),
+  // CRITICAL: Read DATABASE_URL directly from process.env - no fallback, no default
   DATABASE_URL: process.env.DATABASE_URL || '',
+  // CRITICAL: Read JWT secrets directly from process.env - no fallback, no default
   JWT_SECRET: process.env.JWT_SECRET || '',
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || '',
-  CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
+  // Use the correct Vercel frontend URL
+  CORS_ORIGIN: process.env.CORS_ORIGIN || 'https://cloud-luxury-beauty-frontend.vercel.app',
 };
 
 // DEBUG: Log config values (without secrets)

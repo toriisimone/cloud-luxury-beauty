@@ -3,8 +3,16 @@ import { logger } from './logger';
 
 console.log('DEBUG: Initializing PrismaClient...');
 console.log('DEBUG: DATABASE_URL from process.env length =', process.env.DATABASE_URL?.length || 0);
+console.log('DEBUG: DATABASE_URL (first 50 chars) =', process.env.DATABASE_URL?.substring(0, 50) || 'undefined');
 
+// PrismaClient automatically uses process.env.DATABASE_URL
+// Ensure we're using the correct Railway DATABASE_URL
 const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL, // Explicitly use process.env.DATABASE_URL
+    },
+  },
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 });
 

@@ -28,8 +28,10 @@ async function startServer() {
     console.log('DEBUG: About to start Express server on port', PORT);
     app.listen(PORT, () => {
       console.log('DEBUG: Express server started successfully');
+      console.log('Server running on port', PORT);
       logger.info(`Server running on port ${PORT}`);
       logger.info(`Environment: ${config.NODE_ENV}`);
+      logger.info(`CORS origin: ${config.CORS_ORIGIN}`);
     });
   } catch (error: any) {
     console.error('DEBUG: ERROR in startServer():');
