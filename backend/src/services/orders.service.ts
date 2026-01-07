@@ -1,5 +1,5 @@
 import prisma from '../config/database';
-import { Prisma } from '@prisma/client';
+import { Prisma, OrderStatus } from '@prisma/client';
 import { calculateCouponDiscount } from './coupons.service';
 
 export interface CreateOrderData {
@@ -174,7 +174,7 @@ export const createOrder = async (userId: string, data: CreateOrderData) => {
   });
 };
 
-export const updateOrderStatus = async (id: string, status: string) => {
+export const updateOrderStatus = async (id: string, status: OrderStatus) => {
   return prisma.order.update({
     where: { id },
     data: { status },

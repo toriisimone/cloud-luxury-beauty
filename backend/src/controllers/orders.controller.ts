@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
+import { OrderStatus } from '@prisma/client';
 import * as ordersService from '../services/orders.service';
 import { logger } from '../config/logger';
 
@@ -46,7 +47,7 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const order = await ordersService.updateOrderStatus(id, status);
+    const order = await ordersService.updateOrderStatus(id, status as OrderStatus);
     res.json(order);
   } catch (error: any) {
     logger.error('Update order status error:', error);
