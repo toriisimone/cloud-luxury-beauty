@@ -1,7 +1,17 @@
+// DEBUG: Log at the very start
+console.log('DEBUG: ========================================');
+console.log('DEBUG: Backend starting...');
+console.log('DEBUG: Node version:', process.version);
+console.log('DEBUG: Current working directory:', process.cwd());
+console.log('DEBUG: ========================================');
+
 import app from './app';
 import { config } from './config/env';
 import { logger } from './config/logger';
 import { connectDatabase } from './config/database';
+
+console.log('DEBUG: Imports completed, config loaded');
+console.log('DEBUG: DATABASE_URL from config length =', config.DATABASE_URL.length);
 
 const PORT = config.PORT || 5000;
 
