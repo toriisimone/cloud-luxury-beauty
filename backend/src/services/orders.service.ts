@@ -1,4 +1,5 @@
 import prisma from '../config/database';
+import { Prisma } from '@prisma/client';
 import { calculateCouponDiscount } from './coupons.service';
 
 export interface CreateOrderData {
@@ -52,7 +53,7 @@ export const getOrderById = async (id: string, userId: string) => {
 };
 
 export const createOrder = async (userId: string, data: CreateOrderData) => {
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     let subtotal = 0;
     const orderItems = [];
 
@@ -72,7 +73,7 @@ export const createOrder = async (userId: string, data: CreateOrderData) => {
       let variant = null;
 
       if (item.variantId) {
-        variant = product.variants.find((v) => v.id === item.variantId);
+        variant = product.variants.find((v: { id: string }) => v.id === item.variantId);
         if (!variant) {
           throw new Error(`Variant ${item.variantId} not found`);
         }
