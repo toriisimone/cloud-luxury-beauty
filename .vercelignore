@@ -1,0 +1,9 @@
+# Ignore backend completely during Vercel deployments
+backend/
+backend/**/*
+
+# Ignore root build scripts that might try to build backend
+package.json
+
+# Only deploy frontend
+!frontend/

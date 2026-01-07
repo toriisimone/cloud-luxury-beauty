@@ -1,0 +1,8 @@
+# Ignore backend completely
+../backend/
+backend/
+
+# Ignore root workspace configuration
+../package.json
+../railway.json
+../.github/

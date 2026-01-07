@@ -1,0 +1,7 @@
+# Ignore backend folder completely
+../backend/
+
+# Ignore root workspace files
+../package.json
+../package-lock.json
+../railway.json
