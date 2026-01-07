@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: cloud-luxury-backend
+    env: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cloud-luxury-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://cloud-luxury-frontend.onrender.com
+
+  - type: web
+    name: cloud-luxury-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://cloud-luxury-backend.onrender.com/api
+
+databases:
+  - name: cloud-luxury-db
+    databaseName: cloud_luxury
+    user: cloud_luxury_user

@@ -1,0 +1,50 @@
+:root {
+  --color-blush: #fdf2f4;
+  --color-blush-dark: #f8e1e7;
+  --color-lavender: #f3f0ff;
+  --color-rose-gold: #b76e79;
+  --color-gold: #d4af37;
+  --color-text: #2d2d2d;
+  --color-text-light: #666666;
+  --glass: rgba(255, 255, 255, 0.7);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--color-text);
+  background: linear-gradient(135deg, var(--color-blush) 0%, var(--color-lavender) 100%);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+input, textarea, select {
+  font-family: 'Inter', sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}

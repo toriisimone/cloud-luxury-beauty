@@ -1,0 +1,187 @@
+.checkout {
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--color-text);
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-light);
+  margin-bottom: 1rem;
+}
+
+.loginBtn,
+.shopBtn {
+  display: block;
+  margin: 1rem auto;
+  padding: 1rem 2rem;
+  background: var(--color-rose-gold);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.loginBtn:hover,
+.shopBtn:hover {
+  background: var(--color-gold);
+}
+
+.form {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.sections {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.formGroup input {
+  padding: 0.75rem;
+  border: 2px solid var(--color-blush-dark);
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--color-rose-gold);
+}
+
+.summary {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.summaryRowTotal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-blush-dark);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.couponSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.couponSection label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.couponInput {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.couponInput input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid var(--color-blush-dark);
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.applyBtn {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-rose-gold);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.applyBtn:hover {
+  background: var(--color-gold);
+}
+
+.couponApplied {
+  color: var(--color-rose-gold);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--color-rose-gold);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--color-gold);
+  transform: translateY(-2px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .sections {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
