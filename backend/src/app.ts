@@ -1,3 +1,5 @@
+console.log('DEBUG: Loading app.ts...');
+
 import express, { Express } from 'express';
 import cors from 'cors';
 import { config } from './config/env';
@@ -5,7 +7,10 @@ import { logger } from './config/logger';
 import { errorHandler } from './middleware/errorHandler';
 import routes from './routes';
 
+console.log('DEBUG: App imports completed');
+
 const app: Express = express();
+console.log('DEBUG: Express app created');
 
 // CORS configuration
 const corsOptions = {

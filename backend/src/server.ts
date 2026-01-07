@@ -17,17 +17,35 @@ const PORT = config.PORT || 5000;
 
 async function startServer() {
   try {
+    console.log('DEBUG: Starting server function...');
+    console.log('DEBUG: About to connect to database...');
+    console.log('DEBUG: DATABASE_URL (first 50 chars) =', config.DATABASE_URL.substring(0, 50));
+    
     await connectDatabase();
+    console.log('DEBUG: Database connected successfully');
     logger.info('Database connected successfully');
 
+    console.log('DEBUG: About to start Express server on port', PORT);
     app.listen(PORT, () => {
+      console.log('DEBUG: Express server started successfully');
       logger.info(`Server running on port ${PORT}`);
       logger.info(`Environment: ${config.NODE_ENV}`);
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('DEBUG: ERROR in startServer():');
+    console.error('DEBUG: Error type:', error?.constructor?.name);
+    console.error('DEBUG: Error message:', error?.message);
+    console.error('DEBUG: Error stack:', error?.stack);
     logger.error('Failed to start server:', error);
     process.exit(1);
   }
 }
 
-startServer();
+console.log('DEBUG: About to call startServer()...');
+startServer().catch((error: any) => {
+  console.error('DEBUG: Unhandled error in startServer():');
+  console.error('DEBUG: Error type:', error?.constructor?.name);
+  console.error('DEBUG: Error message:', error?.message);
+  console.error('DEBUG: Error stack:', error?.stack);
+  process.exit(1);
+});
