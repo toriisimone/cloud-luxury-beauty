@@ -12,9 +12,9 @@ console.log('DEBUG: App imports completed');
 const app: Express = express();
 console.log('DEBUG: Express app created');
 
-// CORS configuration - allow requests from Vercel frontend
+// CORS configuration - use explicit env value(s) only
 const corsOptions = {
-  origin: config.CORS_ORIGIN?.split(',') || ['https://cloud-luxury-beauty-frontend.vercel.app'],
+  origin: config.CORS_ORIGIN.split(','),
   credentials: true,
   optionsSuccessStatus: 200,
 };

@@ -32,8 +32,8 @@ export const config = {
   // CRITICAL: Read JWT secrets directly from process.env - no fallback, no default
   JWT_SECRET: process.env.JWT_SECRET || '',
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || '',
-  // Use the correct Vercel frontend URL
-  CORS_ORIGIN: process.env.CORS_ORIGIN || 'https://cloud-luxury-beauty-frontend.vercel.app',
+  // CORS origin must be provided via environment variable (no fallback)
+  CORS_ORIGIN: process.env.CORS_ORIGIN || '',
 };
 
 // DEBUG: Log config values (without secrets)
@@ -57,4 +57,8 @@ if (!config.JWT_SECRET) {
 
 if (!config.JWT_REFRESH_SECRET) {
   throw new Error('JWT_REFRESH_SECRET is required');
+}
+
+if (!config.CORS_ORIGIN) {
+  throw new Error('CORS_ORIGIN is required');
 }
