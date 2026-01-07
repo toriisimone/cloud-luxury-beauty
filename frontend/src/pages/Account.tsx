@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useSearchParams } from 'react-router-dom';
 import * as usersApi from '../api/usersApi';
 import * as ordersApi from '../api/ordersApi';
 import { Order } from '../types/global';
@@ -9,7 +8,6 @@ import styles from './Account.module.css';
 
 const Account = () => {
   const { user, login, register, isAuthenticated } = useAuth();
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
