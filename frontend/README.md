@@ -2,6 +2,8 @@
 
 React + TypeScript frontend for the Cloud Luxury Beauty e-commerce platform.
 
+Trigger rebuild
+
 ## Setup
 
 1. Install dependencies:
