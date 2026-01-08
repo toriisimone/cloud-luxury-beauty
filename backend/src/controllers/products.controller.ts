@@ -32,12 +32,25 @@ export const getProducts = async (req: Request, res: Response) => {
     if (category && !categoryId) {
       logger.info(`[PRODUCTS CONTROLLER] Category name provided: "${category}", looking up category ID...`);
       const { getCategoryByName } = await import('../services/categories.service');
-      const categoryObj = await getCategoryByName(category as string);
+      let categoryObj = await getCategoryByName(category as string);
+      
+      // If Skincare category doesn't exist, create it and seed products FIRST
+      if (!categoryObj && (category as string).toLowerCase() === 'skincare') {
+        logger.warn(`[PRODUCTS CONTROLLER] Skincare category not found! Creating it and seeding products...`);
+        const { autoSeedSkincareIfEmpty } = await import('../utils/autoSeedSkincare');
+        const seeded = await autoSeedSkincareIfEmpty();
+        if (seeded) {
+          logger.info('[PRODUCTS CONTROLLER] ✅ Skincare category created and products seeded');
+          // Look up the category again after creation
+          categoryObj = await getCategoryByName('Skincare');
+        }
+      }
+      
       if (categoryObj) {
         finalCategoryId = categoryObj.id;
         logger.info(`[PRODUCTS CONTROLLER] Found category ID: ${finalCategoryId} for category name: "${category}"`);
       } else {
-        logger.warn(`[PRODUCTS CONTROLLER] Category "${category}" not found in database`);
+        logger.warn(`[PRODUCTS CONTROLLER] Category "${category}" not found in database and could not be created`);
       }
     }
 
