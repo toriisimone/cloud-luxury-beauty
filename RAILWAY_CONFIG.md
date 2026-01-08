@@ -40,6 +40,34 @@ If Railway created a frontend service:
 1. Set its **Root Directory** to: `frontend`
 2. OR delete it and deploy frontend only on Vercel
 
+## Critical Monorepo Pitfall: “Wrong service is running backend”
+
+If you see logs like:
+- `DEBUG: Current working directory: /app/backend`
+- `DATABASE_URL exists? false`
+- `All env vars: []`
+
+…while you *believe* you’re looking at the backend service, it almost always means **you’re viewing logs for a different Railway service or a different Railway environment (Production vs Preview)**.
+
+### Fix (Railway UI)
+
+- **Backend service**
+  - **Root Directory**: `backend`
+  - **Build Command**: `npm install && npm run build`
+  - **Start Command**: `npm start`
+  - **Variables** (set on the backend service *and* on the correct Railway Environment):
+    - `DATABASE_URL`
+    - `JWT_SECRET`
+    - `JWT_REFRESH_SECRET`
+    - `CORS_ORIGIN`
+    - `NODE_ENV=production`
+    - `PORT=5000`
+
+- **Frontend service (recommended: delete it if using Vercel)**
+  - If you keep it, it must **NOT** run backend commands.
+  - **Root Directory**: `frontend`
+  - Or delete the frontend Railway service entirely and deploy frontend only on Vercel.
+
 ### Verify Configuration:
 
 After setting Root Directory to `backend`:
