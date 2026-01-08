@@ -91,11 +91,17 @@ const Home = () => {
       <section className={styles.section}>
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>Shop by Category</h2>
-          <div className={styles.categoriesGrid}>
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
-          </div>
+          {categories.length === 0 ? (
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>Categories loading...</p>
+            </div>
+          ) : (
+            <div className={styles.categoriesGrid}>
+              {categories.map((category) => (
+                <CategoryCard key={category.id} category={category} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
