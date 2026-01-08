@@ -49,31 +49,74 @@ const Products = () => {
         // If Skincare category, fetch from Amazon API
         if (categoryParam === 'Skincare') {
           try {
+            console.log('Fetching Amazon skincare products...');
             const amazonResponse = await amazonApi.getAmazonSkincareProducts();
-            let sortedProducts = [...amazonResponse.products];
+            console.log('Amazon API response:', amazonResponse);
             
-            // Sort Amazon products
+            if (amazonResponse.products && amazonResponse.products.length > 0) {
+              let sortedProducts = [...amazonResponse.products];
+              
+              // Sort Amazon products
+              const sort = searchParams.get('sort') || 'featured';
+              if (sort === 'price-low') {
+                sortedProducts.sort((a, b) => a.price - b.price);
+              } else if (sort === 'price-high') {
+                sortedProducts.sort((a, b) => b.price - a.price);
+              } else if (sort === 'name-asc') {
+                sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+              } else if (sort === 'name-desc') {
+                sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
+              }
+              
+              setAmazonProducts(sortedProducts);
+              setProducts([]);
+              setIsAmazonSource(true);
+              setTotal(sortedProducts.length);
+              setTotalPages(1);
+              setCurrentPage(1);
+              console.log('Amazon products set:', sortedProducts.length);
+            } else {
+              throw new Error('No Amazon products returned');
+            }
+          } catch (error) {
+            console.error('Failed to fetch Amazon products, falling back to regular products:', error);
+            // Fall back to regular products if Amazon API fails
+            setIsAmazonSource(false);
+            
+            // Fetch regular skincare products as fallback
+            const skincareCategory = categories.find(c => c.name === 'Skincare');
+            const search = searchParams.get('search');
+            const featured = searchParams.get('featured');
+            const page = parseInt(searchParams.get('page') || '1', 10);
             const sort = searchParams.get('sort') || 'featured';
+
+            const params: productsApi.GetProductsParams = {
+              categoryId: skincareCategory?.id || undefined,
+              search: search || undefined,
+              featured: featured === 'true' ? true : undefined,
+              page,
+              limit: 48,
+            };
+
+            const response = await productsApi.getProducts(params);
+            
+            // Sort products
+            let sortedProducts = [...response.products];
             if (sort === 'price-low') {
               sortedProducts.sort((a, b) => a.price - b.price);
             } else if (sort === 'price-high') {
               sortedProducts.sort((a, b) => b.price - a.price);
             } else if (sort === 'name-asc') {
-              sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+              sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
             } else if (sort === 'name-desc') {
-              sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
+              sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
             }
-            
-            setAmazonProducts(sortedProducts);
-            setProducts([]);
-            setIsAmazonSource(true);
-            setTotal(sortedProducts.length);
-            setTotalPages(1);
-            setCurrentPage(1);
-          } catch (error) {
-            console.error('Failed to fetch Amazon products, falling back to regular products:', error);
-            // Fall back to regular products if Amazon API fails
-            setIsAmazonSource(false);
+
+            setProducts(sortedProducts);
+            setAmazonProducts([]);
+            setTotalPages(response.totalPages);
+            setCurrentPage(response.page);
+            setTotal(response.total);
           }
         } else {
           // Regular product fetching for other categories

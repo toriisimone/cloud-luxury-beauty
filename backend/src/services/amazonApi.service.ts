@@ -263,12 +263,14 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
     logger.error('Error fetching Amazon products:', error);
     
     // Return cached products if available, even if expired
-    if (productCache) {
+    if (productCache && productCache.products.length > 0) {
       logger.warn('Returning expired cache due to API error');
       return productCache.products;
     }
     
-    throw error;
+    // If no cache and API fails, return empty array (frontend will fallback to regular products)
+    logger.warn('No cache available and API failed, returning empty array');
+    return [];
   }
 }
 
