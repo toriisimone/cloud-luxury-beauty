@@ -127,6 +127,10 @@ async function searchAmazonProducts(
       SearchIndex: 'Beauty',
       Resources: [
         'Images.Primary.Large',
+        'Images.Primary.Medium',
+        'Images.Primary.Small',
+        'Images.Variants.Large',
+        'Images.Variants.Medium',
         'ItemInfo.Title',
         'ItemInfo.ByLineInfo',
         'ItemInfo.Classifications',
@@ -264,7 +268,34 @@ async function searchAmazonProducts(
           }
           
           const title = item.ItemInfo?.Title?.DisplayValue || 'Unknown Product';
-          const imageUrl = item.Images?.Primary?.Large?.URL || item.Images?.Primary?.Medium?.URL || '';
+          
+          // Extract image URL with multiple fallbacks - try all possible image paths
+          let imageUrl = '';
+          if (item.Images?.Primary?.Large?.URL) {
+            imageUrl = item.Images.Primary.Large.URL;
+          } else if (item.Images?.Primary?.Medium?.URL) {
+            imageUrl = item.Images.Primary.Medium.URL;
+          } else if (item.Images?.Primary?.Small?.URL) {
+            imageUrl = item.Images.Primary.Small.URL;
+          } else if (item.Images?.Variants?.Large?.[0]?.URL) {
+            imageUrl = item.Images.Variants.Large[0].URL;
+          } else if (item.Images?.Variants?.Medium?.[0]?.URL) {
+            imageUrl = item.Images.Variants.Medium[0].URL;
+          }
+          
+          // Validate image URL - must be a valid HTTPS URL
+          if (!imageUrl || !imageUrl.startsWith('http')) {
+            logger.warn(`[AMAZON API] Product "${title}" (ASIN: ${asin}) has no valid image URL, skipping`);
+            logger.warn(`[AMAZON API] Image paths checked:`, {
+              primaryLarge: item.Images?.Primary?.Large?.URL || 'N/A',
+              primaryMedium: item.Images?.Primary?.Medium?.URL || 'N/A',
+              primarySmall: item.Images?.Primary?.Small?.URL || 'N/A',
+              variantsLarge: item.Images?.Variants?.Large?.[0]?.URL || 'N/A',
+              variantsMedium: item.Images?.Variants?.Medium?.[0]?.URL || 'N/A',
+            });
+            continue; // Skip products without valid images
+          }
+          
           const priceStr = item.Offers?.Listings?.[0]?.Price?.Amount || 
                           item.Offers?.Summaries?.[0]?.LowestPrice?.Amount || 
                           '0';
@@ -297,6 +328,19 @@ async function searchAmazonProducts(
             tags.push('New');
           }
 
+          // Log image URL for first 5 products
+          if (products.length < 5) {
+            logger.info(`[AMAZON API] ✅ Product ${products.length + 1} image URL: ${imageUrl}`);
+            logger.info(`[AMAZON API] Product ${products.length + 1} details:`, {
+              asin,
+              title: title.substring(0, 50),
+              price,
+              imageUrl,
+              rating,
+              reviewCount,
+            });
+          }
+          
           products.push({
             asin,
             title,
@@ -323,6 +367,18 @@ async function searchAmazonProducts(
     }
 
     logger.info(`[AMAZON API] Successfully parsed ${products.length} products from ${keywords} search`);
+    
+    // Log image statistics
+    const productsWithImages = products.filter(p => p.imageUrl && p.imageUrl.startsWith('http')).length;
+    const productsWithoutImages = products.length - productsWithImages;
+    logger.info(`[AMAZON API] Image statistics: ${productsWithImages} with images, ${productsWithoutImages} without (skipped)`);
+    
+    if (products.length > 0 && products.length <= 5) {
+      logger.info(`[AMAZON API] All product image URLs:`, products.map(p => ({
+        title: p.title.substring(0, 40),
+        imageUrl: p.imageUrl,
+      })));
+    }
 
     return {
       products,

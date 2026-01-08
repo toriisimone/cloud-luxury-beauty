@@ -19,15 +19,46 @@ const AmazonProductCard = ({ product }: AmazonProductCardProps) => {
   // Get size options if available
   const sizeOptions = product.size ? [product.size] : [];
 
+  // Log image URL and handle errors
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const img = e.currentTarget;
+    console.error('[AMAZON PRODUCT CARD] Image failed to load:', {
+      productTitle: product.title,
+      imageUrl: product.imageUrl,
+      attemptedSrc: img.src,
+    });
+    // Hide broken image - don't show placeholder
+    img.style.display = 'none';
+  };
+
+  const handleImageLoad = () => {
+    console.log('[AMAZON PRODUCT CARD] Image loaded successfully:', {
+      productTitle: product.title,
+      imageUrl: product.imageUrl,
+    });
+  };
+
+  // Only render if we have a valid image URL
+  if (!product.imageUrl || !product.imageUrl.startsWith('http')) {
+    console.warn('[AMAZON PRODUCT CARD] Product missing valid image URL, skipping render:', {
+      productTitle: product.title,
+      imageUrl: product.imageUrl,
+    });
+    return null; // Don't render products without images
+  }
+
   return (
     <div className={styles.card}>
       <div className={styles.link}>
         <div className={styles.imageContainer}>
-          {product.imageUrl ? (
-            <img src={product.imageUrl} alt={product.title} className={styles.image} />
-          ) : (
-            <div className={styles.placeholder}>No Image</div>
-          )}
+          <img 
+            src={product.imageUrl} 
+            alt={product.title} 
+            className={styles.image}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+            loading="lazy"
+          />
           {product.tags && product.tags.length > 0 && (
             <span className={styles.label}>{product.tags[0]}</span>
           )}

@@ -408,9 +408,21 @@ const Products = () => {
         {isAmazonSource && amazonProducts.length > 0 ? (
           <>
             <div className={styles.grid}>
-              {amazonProducts.map((product) => (
-                <AmazonProductCard key={product.asin} product={product} />
-              ))}
+              {amazonProducts
+                .filter((product) => {
+                  // Only render products with valid image URLs
+                  const hasValidImage = product.imageUrl && product.imageUrl.startsWith('http');
+                  if (!hasValidImage) {
+                    console.warn('[FRONTEND] Skipping product without valid image:', {
+                      title: product.title,
+                      imageUrl: product.imageUrl,
+                    });
+                  }
+                  return hasValidImage;
+                })
+                .map((product) => (
+                  <AmazonProductCard key={product.asin} product={product} />
+                ))}
             </div>
             <div className={styles.amazonNote}>
               <p>Products from Amazon • Affiliate links included</p>
