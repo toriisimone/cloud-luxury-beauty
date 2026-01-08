@@ -183,6 +183,16 @@
   margin: 0;
 }
 
+/* Amazon Note */
+.amazonNote {
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  color: var(--color-text-lighter);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
 /* Pagination */
 .pagination {
   display: flex;

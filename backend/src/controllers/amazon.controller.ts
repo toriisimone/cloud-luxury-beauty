@@ -36,16 +36,23 @@ export const getAmazonProducts = async (req: Request, res: Response) => {
 export const refreshAmazonProducts = async (req: Request, res: Response) => {
   try {
     logger.info('[AMAZON CONTROLLER] Manual refresh requested');
-    await amazonService.refreshProductCache();
-    const products = await amazonService.getSkincareProducts();
+    // Force immediate refresh
+    const products = await amazonService.forceRefreshSkincareProducts();
+    logger.info(`[AMAZON CONTROLLER] Refresh completed - ${products.length} products fetched`);
     res.json({
       message: 'Products refreshed successfully',
       products,
       count: products.length,
+      source: 'amazon',
     });
   } catch (error: any) {
     logger.error('[AMAZON CONTROLLER] Refresh Amazon products error:', error);
-    res.status(500).json({ error: error.message || 'Failed to refresh products' });
+    logger.error('[AMAZON CONTROLLER] Error stack:', error.stack);
+    res.status(500).json({ 
+      error: error.message || 'Failed to refresh products',
+      products: [],
+      count: 0,
+    });
   }
 };
 

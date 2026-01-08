@@ -79,9 +79,11 @@ const Products = () => {
             }
             console.log('[FRONTEND] ========== END AMAZON API RESPONSE ==========');
             
-            if (amazonResponse.products && amazonResponse.products.length > 0) {
+            // Check if we got products (even if count is 0, check the array)
+            const amazonProductsArray = amazonResponse.products || [];
+            if (amazonProductsArray.length > 0) {
               console.log('[FRONTEND] ✅ Amazon SKINCARE products found, displaying them');
-              let sortedProducts = [...amazonResponse.products];
+              let sortedProducts = [...amazonProductsArray];
               
               // Sort Amazon products
               const sort = searchParams.get('sort') || 'featured';
@@ -102,10 +104,13 @@ const Products = () => {
               setTotalPages(1);
               setCurrentPage(1);
               console.log('[FRONTEND] ✅ Amazon SKINCARE products set:', sortedProducts.length);
+              console.log('[FRONTEND] First 3 products:', sortedProducts.slice(0, 3).map(p => p.title));
               amazonSuccess = true;
             } else {
               console.warn('[FRONTEND] ⚠️ Amazon API returned empty products array for Skincare');
-              console.warn('[FRONTEND] Response was:', amazonResponse);
+              console.warn('[FRONTEND] Response was:', JSON.stringify(amazonResponse, null, 2));
+              console.warn('[FRONTEND] Products array length:', amazonProductsArray.length);
+              console.warn('[FRONTEND] Count:', amazonResponse.count);
             }
           } catch (error: any) {
             console.error('[FRONTEND] ❌ Failed to fetch Amazon SKINCARE products:', error);
@@ -382,11 +387,16 @@ const Products = () => {
 
         {/* Products Grid - Only render when we have products */}
         {isAmazonSource && amazonProducts.length > 0 ? (
-          <div className={styles.grid}>
-            {amazonProducts.map((product) => (
-              <AmazonProductCard key={product.asin} product={product} />
-            ))}
-          </div>
+          <>
+            <div className={styles.grid}>
+              {amazonProducts.map((product) => (
+                <AmazonProductCard key={product.asin} product={product} />
+              ))}
+            </div>
+            <div className={styles.amazonNote}>
+              <p>Products from Amazon • Affiliate links included</p>
+            </div>
+          </>
         ) : products.length > 0 ? (
           <>
             <div className={styles.grid}>

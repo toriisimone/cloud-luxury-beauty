@@ -450,8 +450,18 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
     
     // If no cache and API fails, return empty array (frontend will fallback to regular products)
     logger.warn('[AMAZON API] No cache available and API failed, returning empty array');
+    logger.warn('[AMAZON API] This will trigger frontend fallback to database products');
     return [];
   }
+}
+
+/**
+ * Force refresh and return products immediately (for manual refresh endpoint)
+ */
+export async function forceRefreshSkincareProducts(): Promise<AmazonProduct[]> {
+  logger.info('[AMAZON API] Force refresh requested - clearing cache and fetching fresh products');
+  productCache = null; // Clear cache
+  return await getSkincareProducts(); // Fetch fresh products
 }
 
 /**
