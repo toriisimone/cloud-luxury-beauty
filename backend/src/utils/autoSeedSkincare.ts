@@ -7,9 +7,12 @@ import { logger } from '../config/logger';
  */
 export async function autoSeedSkincareIfEmpty(): Promise<boolean> {
   try {
+    logger.info('[AUTO SEED SKINCARE] ========== AUTO SEED FUNCTION CALLED ==========');
+    logger.info('[AUTO SEED SKINCARE] Function called at:', new Date().toISOString());
     logger.info('[AUTO SEED SKINCARE] Checking if Skincare category needs products...');
 
     // Find Skincare category (case-insensitive)
+    logger.info('[AUTO SEED SKINCARE] Searching for Skincare category in database...');
     const skincareCategory = await prisma.category.findFirst({
       where: {
         name: {
@@ -20,7 +23,10 @@ export async function autoSeedSkincareIfEmpty(): Promise<boolean> {
     });
 
     if (!skincareCategory) {
-      logger.warn('[AUTO SEED SKINCARE] Skincare category not found, creating it...');
+      logger.warn('[AUTO SEED SKINCARE] ========== CATEGORY NOT FOUND ==========');
+      logger.warn('[AUTO SEED SKINCARE] Skincare category does not exist in database!');
+      logger.warn('[AUTO SEED SKINCARE] Creating Skincare category...');
+      
       // Create Skincare category if it doesn't exist
       const newCategory = await prisma.category.create({
         data: {
@@ -29,30 +35,54 @@ export async function autoSeedSkincareIfEmpty(): Promise<boolean> {
           description: 'Skincare products for healthy, glowing skin',
         },
       });
-      logger.info(`[AUTO SEED SKINCARE] Created Skincare category: ${newCategory.id}`);
+      logger.info(`[AUTO SEED SKINCARE] ✅✅✅ CATEGORY CREATED ✅✅✅`);
+      logger.info(`[AUTO SEED SKINCARE] Category ID: ${newCategory.id}`);
+      logger.info(`[AUTO SEED SKINCARE] Category name: ${newCategory.name}`);
+      logger.info(`[AUTO SEED SKINCARE] Category slug: ${newCategory.slug}`);
+      logger.info(`[AUTO SEED SKINCARE] ==========================================`);
       
       // Now seed products for this category
-      return await seedSkincareProducts(newCategory.id);
+      logger.info(`[AUTO SEED SKINCARE] Now seeding 20 products for this category...`);
+      const seeded = await seedSkincareProducts(newCategory.id);
+      logger.info(`[AUTO SEED SKINCARE] Seeding result: ${seeded ? 'SUCCESS' : 'FAILED'}`);
+      return seeded;
     }
 
+    logger.info(`[AUTO SEED SKINCARE] ✅ Skincare category found:`, {
+      id: skincareCategory.id,
+      name: skincareCategory.name,
+      slug: skincareCategory.slug,
+    });
+
     // Check if category has products
+    logger.info(`[AUTO SEED SKINCARE] Checking product count for Skincare category...`);
     const productCount = await prisma.product.count({
       where: {
         categoryId: skincareCategory.id,
       },
     });
 
-    logger.info(`[AUTO SEED SKINCARE] Skincare category has ${productCount} products`);
+    logger.info(`[AUTO SEED SKINCARE] Current product count: ${productCount}`);
 
     if (productCount === 0) {
-      logger.info('[AUTO SEED SKINCARE] No products found, seeding skincare products...');
-      return await seedSkincareProducts(skincareCategory.id);
+      logger.warn('[AUTO SEED SKINCARE] ========== NO PRODUCTS FOUND ==========');
+      logger.warn('[AUTO SEED SKINCARE] Skincare category exists but has 0 products!');
+      logger.warn('[AUTO SEED SKINCARE] Seeding 20 skincare products...');
+      const seeded = await seedSkincareProducts(skincareCategory.id);
+      logger.info(`[AUTO SEED SKINCARE] Seeding result: ${seeded ? 'SUCCESS' : 'FAILED'}`);
+      logger.info(`[AUTO SEED SKINCARE] ==========================================`);
+      return seeded;
     }
 
-    logger.info('[AUTO SEED SKINCARE] Skincare category already has products, skipping seed');
+    logger.info('[AUTO SEED SKINCARE] ✅ Skincare category already has products, skipping seed');
+    logger.info('[AUTO SEED SKINCARE] ==========================================');
     return false;
   } catch (error: any) {
+    logger.error('[AUTO SEED SKINCARE] ========== ERROR ==========');
     logger.error('[AUTO SEED SKINCARE] Error checking/seeding skincare products:', error);
+    logger.error('[AUTO SEED SKINCARE] Error message:', error.message);
+    logger.error('[AUTO SEED SKINCARE] Error stack:', error.stack);
+    logger.error('[AUTO SEED SKINCARE] ===========================');
     return false;
   }
 }
@@ -62,6 +92,10 @@ export async function autoSeedSkincareIfEmpty(): Promise<boolean> {
  */
 async function seedSkincareProducts(categoryId: string): Promise<boolean> {
   try {
+    logger.info('[SEED SKINCARE] ========== SEEDING PRODUCTS ==========');
+    logger.info(`[SEED SKINCARE] Category ID: ${categoryId}`);
+    logger.info(`[SEED SKINCARE] Starting to seed 20 skincare products...`);
+    
     const skincareProducts = [
       {
         name: 'Hydrating Face Serum',
@@ -245,20 +279,48 @@ async function seedSkincareProducts(categoryId: string): Promise<boolean> {
       },
     ];
 
-    logger.info(`[AUTO SEED SKINCARE] Seeding ${skincareProducts.length} skincare products...`);
+    logger.info(`[SEED SKINCARE] Total products to seed: ${skincareProducts.length}`);
+    logger.info(`[SEED SKINCARE] Starting database insertions...`);
 
-    for (const product of skincareProducts) {
-      const slug = product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-      await prisma.product.create({
-        data: {
-          ...product,
-          slug,
-        },
-      });
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < skincareProducts.length; i++) {
+      const product = skincareProducts[i];
+      try {
+        const slug = product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        const created = await prisma.product.create({
+          data: {
+            ...product,
+            slug,
+          },
+        });
+        successCount++;
+        if (i < 3 || i === skincareProducts.length - 1) {
+          logger.info(`[SEED SKINCARE] Product ${i + 1}/${skincareProducts.length} created:`, {
+            id: created.id,
+            name: created.name,
+            price: created.price,
+          });
+        }
+      } catch (error: any) {
+        failCount++;
+        logger.error(`[SEED SKINCARE] Failed to create product ${i + 1}: ${product.name}`, error.message);
+      }
     }
 
-    logger.info(`[AUTO SEED SKINCARE] ✅ Successfully seeded ${skincareProducts.length} skincare products`);
-    return true;
+    logger.info(`[SEED SKINCARE] ========== SEEDING COMPLETE ==========`);
+    logger.info(`[SEED SKINCARE] Successfully created: ${successCount} products`);
+    logger.info(`[SEED SKINCARE] Failed: ${failCount} products`);
+    
+    if (successCount > 0) {
+      logger.info(`[SEED SKINCARE] ✅✅✅ SUCCESS: ${successCount} skincare products seeded! ✅✅✅`);
+    } else {
+      logger.error(`[SEED SKINCARE] ❌❌❌ FAILED: No products were created! ❌❌❌`);
+    }
+    logger.info(`[SEED SKINCARE] =======================================`);
+    
+    return successCount > 0;
   } catch (error: any) {
     logger.error('[AUTO SEED SKINCARE] Error seeding skincare products:', error);
     return false;
