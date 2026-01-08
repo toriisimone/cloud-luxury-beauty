@@ -17,6 +17,11 @@ const axiosClient = axios.create({
   timeout: 15000, // 15 second timeout for all requests
 });
 
+// Verify baseURL is set correctly
+console.log('[API CONFIG] Axios client created with baseURL:', axiosClient.defaults.baseURL);
+console.log('[API CONFIG] Full products URL will be:', `${axiosClient.defaults.baseURL}/products`);
+console.log('[API CONFIG] Full Skincare URL will be:', `${axiosClient.defaults.baseURL}/products?category=Skincare`);
+
 // Request interceptor to add auth token and log requests
 axiosClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
