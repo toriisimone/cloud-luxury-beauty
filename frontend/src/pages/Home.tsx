@@ -21,48 +21,63 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching products and categories for homepage...');
+        console.log('[HOME] Fetching products and categories for homepage...');
+        setLoading(true);
         
+        // Fetch categories first
         const categoriesRes = await categoriesApi.getCategories();
         setCategories(categoriesRes);
+        console.log('[HOME] Categories fetched:', categoriesRes.length);
 
         // Try to fetch Amazon skincare products first
         try {
+          console.log('[HOME] Attempting to fetch Amazon skincare products...');
           const amazonResponse = await amazonApi.getAmazonSkincareProducts();
           if (amazonResponse.products && amazonResponse.products.length > 0) {
             setAmazonSkincareProducts(amazonResponse.products.slice(0, 12));
             setUseAmazonProducts(true);
-            console.log('Amazon skincare products fetched:', amazonResponse.products.length);
+            console.log('[HOME] ✅ Amazon skincare products fetched:', amazonResponse.products.length);
           } else {
             throw new Error('No Amazon products returned');
           }
-        } catch (amazonError) {
-          console.warn('Failed to fetch Amazon products, falling back to regular products:', amazonError);
+        } catch (amazonError: any) {
+          console.warn('[HOME] ⚠️ Failed to fetch Amazon products, falling back to regular products:', amazonError);
           // Fallback to regular products
-          const skincareCategory = categoriesRes.find(cat => cat.name === 'Skincare');
+          const skincareCategory = categoriesRes.find(cat => 
+            cat.name === 'Skincare' || 
+            cat.name === 'skincare' || 
+            cat.name.toLowerCase() === 'skincare'
+          );
           let skincareProductsRes: productsApi.ProductsResponse;
 
           if (skincareCategory) {
+            console.log('[HOME] Fetching regular skincare products from category:', skincareCategory.id);
             skincareProductsRes = await productsApi.getProducts({ categoryId: skincareCategory.id, limit: 12 });
             setSkincareProducts(skincareProductsRes.products);
           } else {
-            console.warn('Skincare category not found. Displaying all products instead.');
+            console.warn('[HOME] Skincare category not found. Displaying all products instead.');
             skincareProductsRes = await productsApi.getProducts({ limit: 12 });
             setSkincareProducts(skincareProductsRes.products);
           }
           setUseAmazonProducts(false);
-          console.log('Skincare products fetched:', skincareProductsRes.products.length);
+          console.log('[HOME] ✅ Regular skincare products fetched:', skincareProductsRes.products.length);
         }
         
-        console.log('Categories fetched:', categoriesRes.length);
-        
       } catch (error: any) {
-        console.error('Failed to fetch data:', error);
+        console.error('[HOME] ❌ Failed to fetch data:', error);
+        console.error('[HOME] Error details:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+        });
+        // Set empty arrays but don't block the page
         setSkincareProducts([]);
         setAmazonSkincareProducts([]);
         setCategories([]);
       } finally {
+        // ALWAYS set loading to false
         setLoading(false);
+        console.log('[HOME] ✅ Loading complete');
       }
     };
 

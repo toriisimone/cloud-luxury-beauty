@@ -122,17 +122,20 @@ const Products = () => {
             console.log('[FRONTEND] ⬇️ Falling back to regular SKINCARE products from database...');
             setIsAmazonSource(false);
             
-            // Wait for categories to load if not already loaded
-            let skincareCategory = categories.find(c => c.name === 'Skincare' || c.name === 'skincare');
+            // Fetch categories if not already loaded
+            let skincareCategory = categories.find(c => c.name === 'Skincare' || c.name === 'skincare' || c.name.toLowerCase() === 'skincare');
             
             // If categories not loaded yet, fetch them
-            if (!skincareCategory && categories.length === 0) {
+            if (!skincareCategory) {
               try {
+                console.log('[FRONTEND] Categories not loaded, fetching...');
                 const categoriesRes = await categoriesApi.getCategories();
                 setCategories(categoriesRes);
-                skincareCategory = categoriesRes.find(c => c.name === 'Skincare' || c.name === 'skincare');
-              } catch (error) {
-                console.error('Failed to fetch categories:', error);
+                skincareCategory = categoriesRes.find(c => c.name === 'Skincare' || c.name === 'skincare' || c.name.toLowerCase() === 'skincare');
+                console.log('[FRONTEND] Categories fetched:', categoriesRes.length);
+                console.log('[FRONTEND] Skincare category found:', !!skincareCategory);
+              } catch (error: any) {
+                console.error('[FRONTEND] Failed to fetch categories:', error);
               }
             }
             
@@ -149,6 +152,7 @@ const Products = () => {
               limit: 48,
             };
 
+            console.log('[FRONTEND] Fetching regular products with params:', params);
             const response = await productsApi.getProducts(params);
             console.log('[FRONTEND] ✅ Regular SKINCARE products fetched from database:', response.products.length);
             
@@ -216,17 +220,27 @@ const Products = () => {
           setCurrentPage(response.page);
           setTotal(response.total);
         }
-      } catch (error) {
-        console.error('Failed to fetch products:', error);
+      } catch (error: any) {
+        console.error('[FRONTEND] ❌ Failed to fetch products:', error);
+        console.error('[FRONTEND] Error details:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          stack: error.stack,
+        });
+        // Ensure we always set loading to false and show something
+        setProducts([]);
+        setAmazonProducts([]);
+        setTotal(0);
       } finally {
+        // ALWAYS set loading to false, even on error
         setLoading(false);
+        console.log('[FRONTEND] ✅ Loading complete');
       }
     };
 
-    // Only fetch products if categories are loaded (for Skincare fallback) or if not Skincare category
-    if (categories.length > 0 || !searchParams.get('category') || searchParams.get('category')?.toLowerCase() !== 'skincare') {
-      fetchProducts();
-    }
+    // Always fetch products - don't wait for categories (they'll be fetched if needed)
+    fetchProducts();
   }, [searchParams, categories]);
 
   const handleSortChange = (sortValue: string) => {
