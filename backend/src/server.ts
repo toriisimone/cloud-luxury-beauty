@@ -65,23 +65,9 @@ async function startServer() {
       logger.info(`Environment: ${config.NODE_ENV}`);
       logger.info(`CORS origin: ${config.CORS_ORIGIN}`);
 
-      // Initialize Amazon products cache on startup
-      if (config.AMAZON_ACCESS_KEY && config.AMAZON_SECRET_KEY && config.AMAZON_ASSOCIATE_TAG) {
-        logger.info('Initializing Amazon products cache...');
-        refreshProductCache().catch((error) => {
-          logger.error('Failed to initialize Amazon products cache:', error);
-        });
-
-        // Set up hourly refresh
-        setInterval(() => {
-          logger.info('Refreshing Amazon products cache (hourly)...');
-          refreshProductCache().catch((error) => {
-            logger.error('Failed to refresh Amazon products cache:', error);
-          });
-        }, 60 * 60 * 1000); // 1 hour
-      } else {
-        logger.warn('Amazon API credentials not configured. Amazon products will not be available.');
-      }
+      // AMAZON API DISABLED: No cache initialization or hourly refresh
+      // Amazon API calls are completely disabled - all products come from database
+      logger.info('Amazon API is disabled - using database products only');
     });
   } catch (error: any) {
     console.error('DEBUG: ERROR in startServer():');

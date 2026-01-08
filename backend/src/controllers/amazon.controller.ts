@@ -1,59 +1,38 @@
 import { Request, Response } from 'express';
-import * as amazonService from '../services/amazonApi.service';
+// AMAZON API DISABLED: All Amazon API calls are disabled
+// import * as amazonService from '../services/amazonApi.service';
 import { logger } from '../config/logger';
 
 /**
  * Get Amazon skincare products
- * Returns cached products (refreshed hourly)
+ * DISABLED: Amazon API is disabled - always returns empty array
+ * Use /api/products?category=Skincare to get database products instead
  */
 export const getAmazonProducts = async (req: Request, res: Response) => {
-  try {
-    logger.info('[AMAZON CONTROLLER] Request received for Amazon skincare products');
-    const products = await amazonService.getSkincareProducts();
-    logger.info(`[AMAZON CONTROLLER] Returning ${products.length} Amazon products`);
-    
-    res.json({
-      products,
-      count: products.length,
-      source: 'amazon',
-    });
-  } catch (error: any) {
-    logger.error('[AMAZON CONTROLLER] Get Amazon products error:', error);
-    logger.error('[AMAZON CONTROLLER] Error stack:', error.stack);
-    // Return empty array instead of error so frontend can fallback gracefully
-    res.json({ 
-      products: [],
-      count: 0,
-      source: 'amazon',
-      error: error.message || 'Failed to fetch Amazon products',
-    });
-  }
+  logger.info('[AMAZON CONTROLLER] ⚠️ Amazon API is DISABLED - returning empty array');
+  logger.info('[AMAZON CONTROLLER] Use /api/products?category=Skincare to get database products');
+  
+  res.json({
+    products: [],
+    count: 0,
+    source: 'amazon',
+    message: 'Amazon API is disabled. Use /api/products?category=Skincare to get database products.',
+  });
 };
 
 /**
  * Manually refresh Amazon products cache
+ * DISABLED: Amazon API is disabled
  */
 export const refreshAmazonProducts = async (req: Request, res: Response) => {
-  try {
-    logger.info('[AMAZON CONTROLLER] Manual refresh requested');
-    // Force immediate refresh
-    const products = await amazonService.forceRefreshSkincareProducts();
-    logger.info(`[AMAZON CONTROLLER] Refresh completed - ${products.length} products fetched`);
-    res.json({
-      message: 'Products refreshed successfully',
-      products,
-      count: products.length,
-      source: 'amazon',
-    });
-  } catch (error: any) {
-    logger.error('[AMAZON CONTROLLER] Refresh Amazon products error:', error);
-    logger.error('[AMAZON CONTROLLER] Error stack:', error.stack);
-    res.status(500).json({ 
-      error: error.message || 'Failed to refresh products',
-      products: [],
-      count: 0,
-    });
-  }
+  logger.info('[AMAZON CONTROLLER] ⚠️ Amazon API is DISABLED - refresh endpoint disabled');
+  
+  res.json({
+    message: 'Amazon API is disabled. Products are stored in the database.',
+    products: [],
+    count: 0,
+    source: 'amazon',
+  });
 };
 
 /**
