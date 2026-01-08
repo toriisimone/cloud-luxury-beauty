@@ -369,6 +369,9 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
   logger.info(`[AMAZON API] Using ${keywords.length} skincare-specific keywords`);
   logger.info(`[AMAZON API] Keywords: ${keywords.join(', ')}`);
   
+  // Initialize products array
+  const allProducts: AmazonProduct[] = [];
+  
   try {
     // Fetch products in batches - use all keywords to get 100+ products
     const totalBatches = Math.min(20, keywords.length * 2); // Up to 20 batches (200 potential products)
@@ -397,16 +400,16 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
     logger.info(`[AMAZON API] ========== FETCH SUMMARY ==========`);
     logger.info(`[AMAZON API] Total products fetched before deduplication: ${allProducts.length}`);
     logger.info(`[AMAZON API] Products by keyword:`, 
-      JSON.stringify(keywords.map(k => ({
+      JSON.stringify(keywords.map((k: string) => ({
         keyword: k,
-        count: allProducts.filter(p => p.title.toLowerCase().includes(k.toLowerCase())).length
+        count: allProducts.filter((p: AmazonProduct) => p.title.toLowerCase().includes(k.toLowerCase())).length
       })))
     );
 
     // Remove duplicates by ASIN
-    const uniqueProducts = Array.from(
-      new Map(allProducts.map(p => [p.asin, p])).values()
-    ).slice(0, 100); // Limit to 100 products
+    const uniqueProducts: AmazonProduct[] = Array.from(
+      new Map(allProducts.map((p: AmazonProduct) => [p.asin, p] as [string, AmazonProduct])).values()
+    ).slice(0, 100) as AmazonProduct[]; // Limit to 100 products
 
     logger.info(`[AMAZON API] Unique SKINCARE products after deduplication: ${uniqueProducts.length}`);
     logger.info(`[AMAZON API] ========== END FETCH SUMMARY ==========`);
