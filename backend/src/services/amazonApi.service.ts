@@ -137,12 +137,13 @@ async function searchAmazonProducts(
       throw new Error(`Amazon API error: ${response.status} ${errorText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as any;
 
     // Parse response
     const products: AmazonProduct[] = [];
-    if (data.SearchResult?.Items) {
-      for (const item of data.SearchResult.Items) {
+    if (data?.SearchResult?.Items) {
+      const items = data.SearchResult.Items as any[];
+      for (const item of items) {
         try {
           const asin = item.ASIN;
           const title = item.ItemInfo?.Title?.DisplayValue || 'Unknown Product';
@@ -200,7 +201,7 @@ async function searchAmazonProducts(
 
     return {
       products,
-      totalResults: data.SearchResult?.TotalResultCount || products.length,
+      totalResults: (data as any)?.SearchResult?.TotalResultCount || products.length,
     };
   } catch (error: any) {
     logger.error('Amazon API search error:', error);
