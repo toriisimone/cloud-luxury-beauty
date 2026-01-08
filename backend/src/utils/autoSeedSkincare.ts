@@ -1,7 +1,6 @@
 import prisma from '../config/database';
 import { logger } from '../config/logger';
 import { seedRealSkincareProducts } from './seedRealSkincareProducts';
-import { seedRealSkincareProducts } from './seedRealSkincareProducts';
 
 /**
  * Auto-seed skincare products if the Skincare category has no products

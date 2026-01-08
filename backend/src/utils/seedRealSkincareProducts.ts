@@ -180,13 +180,13 @@ export async function seedRealSkincareProducts(): Promise<boolean> {
           return null;
         }
 
-        const data = await response.json();
+        const data = await response.json() as any;
         
-        if (data.ItemsResult?.Items?.[0]) {
-          const item = data.ItemsResult.Items[0];
-          const imageUrl = item.Images?.Primary?.Large?.URL || 
-                          item.Images?.Primary?.Medium?.URL || 
-                          item.Images?.Primary?.Small?.URL;
+        if (data?.ItemsResult?.Items?.[0]) {
+          const item = data.ItemsResult.Items[0] as any;
+          const imageUrl = item?.Images?.Primary?.Large?.URL || 
+                          item?.Images?.Primary?.Medium?.URL || 
+                          item?.Images?.Primary?.Small?.URL;
           if (imageUrl) {
             return imageUrl;
           }
