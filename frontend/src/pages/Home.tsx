@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
 import Loader from '../components/Loader';
@@ -7,8 +8,39 @@ import * as productsApi from '../api/productsApi';
 import * as categoriesApi from '../api/categoriesApi';
 import styles from './Home.module.css';
 
-// Placeholder banner image - user will replace with their uploaded image
-const BANNER_IMAGE = 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1920&h=800&fit=crop';
+// Hero banner images - first is user's uploaded image, rest are placeholders
+// To use hero-banner.jpg: Place it in frontend/public/ and reference as '/hero-banner.jpg'
+// Or import it: import heroBanner from '../assets/hero-banner.jpg' and use heroBanner
+const HERO_SLIDES = [
+  {
+    image: '/hero-banner.jpg', // User's uploaded image - place in public/ folder
+    title: 'Cloud-lit beauty, weightless finish',
+    subtitle: 'Discover your radiance with our premium collection',
+    cta: 'Shop Now',
+    ctaLink: '/products',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1920&h=800&fit=crop',
+    title: 'Luxury skincare essentials',
+    subtitle: 'Nourish your skin with cloud-soft formulas',
+    cta: 'Explore Skin',
+    ctaLink: '/products?category=Skincare',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&h=800&fit=crop',
+    title: 'Fragrance collection',
+    subtitle: 'Captivating scents that linger like a dream',
+    cta: 'Shop Fragrance',
+    ctaLink: '/products?category=Fragrance',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1920&h=800&fit=crop',
+    title: 'Makeup essentials',
+    subtitle: 'Flawless coverage, weightless feel',
+    cta: 'Shop Cosmetics',
+    ctaLink: '/products?category=Face',
+  },
+];
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -16,6 +48,7 @@ const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [productsByCategory, setProductsByCategory] = useState<Record<string, Product[]>>({});
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,26 +97,88 @@ const Home = () => {
     fetchData();
   }, []);
 
+  // Auto-advance carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   if (loading) {
     return <Loader />;
   }
 
+  const currentSlideData = HERO_SLIDES[currentSlide];
+
   return (
     <div className={styles.home}>
-      {/* Full-Width Banner Image */}
-      <section className={styles.bannerSection}>
-        <div className={styles.bannerImage}>
-          <img 
-            src={BANNER_IMAGE} 
-            alt="Cloud Luxury Beauty - Four women on clouds" 
-            className={styles.bannerImg}
-          />
-          <div className={styles.bannerOverlay}>
-            <div className={styles.bannerContent}>
-              <h1 className={styles.bannerTitle}>Cloud Luxury</h1>
-              <p className={styles.bannerSubtitle}>Elevated beauty, floating in the clouds</p>
-            </div>
+      {/* Hero Carousel Section */}
+      <section className={styles.heroSection}>
+        <div className={styles.heroCarousel}>
+          {/* Brand Name - Centered near top */}
+          <div className={styles.brandName}>
+            <h1 className={styles.brandTitle}>AURAPOP</h1>
+            <p className={styles.brandSubline}>Tori Edition</p>
           </div>
+
+          {/* Carousel Slides */}
+          <div className={styles.slidesContainer}>
+            {HERO_SLIDES.map((slide, index) => (
+              <div
+                key={index}
+                className={`${styles.slide} ${index === currentSlide ? styles.active : ''}`}
+                style={{ backgroundImage: `url(${slide.image})` }}
+              >
+                {/* Cloud Overlay */}
+                <div className={styles.cloudOverlay}></div>
+                
+                {/* Content Overlay - Left Side */}
+                {index === currentSlide && (
+                  <div className={styles.slideContent}>
+                    <h2 className={styles.slideTitle}>{slide.title}</h2>
+                    <p className={styles.slideSubtitle}>{slide.subtitle}</p>
+                    <Link to={slide.ctaLink} className={styles.slideButton}>
+                      {slide.cta}
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Carousel Indicators */}
+          <div className={styles.carouselIndicators}>
+            {HERO_SLIDES.map((_, index) => (
+              <button
+                key={index}
+                className={`${styles.indicator} ${index === currentSlide ? styles.active : ''}`}
+                onClick={() => setCurrentSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Navigation Arrows */}
+          <button
+            className={styles.carouselArrow}
+            onClick={() => setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+            aria-label="Previous slide"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <button
+            className={`${styles.carouselArrow} ${styles.next}`}
+            onClick={() => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)}
+            aria-label="Next slide"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
       </section>
 
