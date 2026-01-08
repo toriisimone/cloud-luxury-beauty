@@ -484,6 +484,21 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
     ).slice(0, 100) as AmazonProduct[]; // Limit to 100 products
 
     logger.info(`[AMAZON API] Unique SKINCARE products after deduplication: ${uniqueProducts.length}`);
+    
+    // Log final image statistics
+    const finalWithImages = uniqueProducts.filter(p => p.imageUrl && p.imageUrl.startsWith('http')).length;
+    logger.info(`[AMAZON API] Final skincare products with valid images: ${finalWithImages} out of ${uniqueProducts.length}`);
+    
+    if (uniqueProducts.length > 0) {
+      const sampleSize = Math.min(5, uniqueProducts.length);
+      logger.info(`[AMAZON API] First ${sampleSize} skincare product image URLs:`, 
+        uniqueProducts.slice(0, sampleSize).map(p => ({
+          title: p.title.substring(0, 40),
+          imageUrl: p.imageUrl,
+        }))
+      );
+    }
+    
     logger.info(`[AMAZON API] ========== END FETCH SUMMARY ==========`);
 
     // Update cache
