@@ -17,7 +17,8 @@ import { logger } from './config/logger';
 import { connectDatabase } from './config/database';
 import { autoMigrate } from './utils/autoMigrate';
 import { autoSeedIfEmpty } from './utils/autoSeed';
-import { refreshProductCache } from './services/amazonApi.service';
+// AMAZON API DISABLED: No cache refresh
+// import { refreshProductCache } from './services/amazonApi.service';
 
 console.log('DEBUG: Imports completed, config loaded');
 console.log('DEBUG: DATABASE_URL from config length =', config.DATABASE_URL.length);
