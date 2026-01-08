@@ -3,6 +3,10 @@ import { createHash, createHmac } from 'crypto';
 import { config } from '../config/env';
 import { logger } from '../config/logger';
 
+// STARTUP LOG: Confirm service is loaded
+logger.info('[AMAZON API SERVICE] ✅ Amazon API service module loaded and ready');
+console.log('[AMAZON API SERVICE] ✅ Amazon API service module loaded and ready');
+
 interface AmazonProduct {
   asin: string;
   title: string;
@@ -395,11 +399,27 @@ async function searchAmazonProducts(
  * Uses caching to avoid hitting API rate limits
  */
 export async function getSkincareProducts(): Promise<AmazonProduct[]> {
+  // CRITICAL: Log immediately when function is called
+  logger.info('[AMAZON API SERVICE] ============================================');
+  logger.info('[AMAZON API SERVICE] ✅✅✅ getSkincareProducts() FUNCTION CALLED ✅✅✅');
+  logger.info('[AMAZON API SERVICE] This means the function is being executed!');
+  logger.info('[AMAZON API SERVICE] ============================================');
+  console.log('[AMAZON API SERVICE] ✅✅✅ getSkincareProducts() FUNCTION CALLED ✅✅✅');
+  console.log('[AMAZON API SERVICE] Timestamp:', new Date().toISOString());
+  
   // Check credentials first
+  logger.info('[AMAZON API SERVICE] Checking credentials...');
+  logger.info('[AMAZON API SERVICE] Has Access Key:', !!config.AMAZON_ACCESS_KEY);
+  logger.info('[AMAZON API SERVICE] Has Secret Key:', !!config.AMAZON_SECRET_KEY);
+  logger.info('[AMAZON API SERVICE] Has Associate Tag:', !!config.AMAZON_ASSOCIATE_TAG);
+  
   if (!config.AMAZON_ACCESS_KEY || !config.AMAZON_SECRET_KEY || !config.AMAZON_ASSOCIATE_TAG) {
-    logger.warn('[AMAZON API] Credentials not configured, returning empty array');
+    logger.warn('[AMAZON API SERVICE] ⚠️ Credentials not configured, returning empty array');
+    console.log('[AMAZON API SERVICE] ⚠️ Credentials not configured');
     return [];
   }
+  
+  logger.info('[AMAZON API SERVICE] ✅ All credentials present, proceeding with API call');
 
   // Check cache first
   if (productCache && Date.now() - productCache.timestamp < CACHE_DURATION) {
