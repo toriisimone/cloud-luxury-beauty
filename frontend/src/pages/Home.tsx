@@ -9,50 +9,37 @@ import * as categoriesApi from '../api/categoriesApi';
 import styles from './Home.module.css';
 
 const Home = () => {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [skincareProducts, setSkincareProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [productsByCategory, setProductsByCategory] = useState<Record<string, Product[]>>({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching products and categories...');
+        console.log('Fetching products and categories for homepage...');
         
-        // Fetch all products (up to 200) and categories
-        const [productsRes, categoriesRes, featuredRes] = await Promise.all([
-          productsApi.getProducts({ limit: 200 }),
-          categoriesApi.getCategories(),
-          productsApi.getProducts({ featured: true, limit: 20 }),
-        ]);
-        
-        console.log('Products fetched:', productsRes.products.length);
-        console.log('Categories fetched:', categoriesRes.length);
-        console.log('Featured products:', featuredRes.products.length);
-        
-        setAllProducts(productsRes.products);
-        setFeaturedProducts(featuredRes.products);
+        const categoriesRes = await categoriesApi.getCategories();
         setCategories(categoriesRes);
 
-        // Group products by category
-        const grouped: Record<string, Product[]> = {};
-        productsRes.products.forEach((product) => {
-          if (product.category) {
-            const catName = product.category.name;
-            if (!grouped[catName]) {
-              grouped[catName] = [];
-            }
-            if (grouped[catName].length < 20) {
-              grouped[catName].push(product);
-            }
-          }
-        });
-        setProductsByCategory(grouped);
+        // Find Skincare category ID
+        const skincareCategory = categoriesRes.find(cat => cat.name === 'Skincare');
+        let skincareProductsRes: productsApi.ProductsResponse;
+
+        if (skincareCategory) {
+          skincareProductsRes = await productsApi.getProducts({ categoryId: skincareCategory.id, limit: 12 });
+          setSkincareProducts(skincareProductsRes.products);
+        } else {
+          console.warn('Skincare category not found. Displaying all products instead.');
+          skincareProductsRes = await productsApi.getProducts({ limit: 12 });
+          setSkincareProducts(skincareProductsRes.products);
+        }
+        
+        console.log('Skincare products fetched:', skincareProductsRes.products.length);
+        console.log('Categories fetched:', categoriesRes.length);
+        
       } catch (error: any) {
         console.error('Failed to fetch data:', error);
-        setFeaturedProducts([]);
-        setAllProducts([]);
+        setSkincareProducts([]);
         setCategories([]);
       } finally {
         setLoading(false);
@@ -72,7 +59,7 @@ const Home = () => {
       <section className={styles.heroSection}>
         <div 
           className={styles.heroBanner}
-          style={{ backgroundImage: `url('/images/hero-banner.jpg')` }}
+          style={{ backgroundImage: `url(/images/hero-banner.jpg)` }}
         >
           {/* Cloud Overlay */}
           <div className={styles.cloudOverlay}></div>
@@ -84,6 +71,28 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Cloud Divider */}
+      <div className={styles.cloudDivider}></div>
+
+      {/* Shop Skincare Section */}
+      {skincareProducts.length > 0 && (
+        <section className={styles.skincareSection}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>Shop Skincare</h2>
+            <div className={styles.productsGrid}>
+              {skincareProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+            <div className={styles.viewMoreContainer}>
+              <Link to="/products?category=Skincare" className={styles.viewMoreButton}>
+                View All Skincare
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Cloud Divider */}
       <div className={styles.cloudDivider}></div>
@@ -104,73 +113,6 @@ const Home = () => {
 
       {/* Cloud Divider */}
       <div className={styles.cloudDivider}></div>
-
-      {/* Featured Products Section */}
-      {featuredProducts.length > 0 && (
-        <section className={styles.featuredSection}>
-          <div className={styles.container}>
-            <div className={styles.featuredHeader}>
-              <h2 className={styles.sectionTitle}>Featured Products</h2>
-              <p className={styles.featuredSubcopy}>
-                Your cloud-curated edit—soft glam, luminous skin, and elevated essentials.
-              </p>
-            </div>
-            <div className={styles.productsGrid}>
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Products by Category Sections */}
-      {Object.entries(productsByCategory).map(([categoryName, products]) => (
-        products.length > 0 && (
-          <section key={categoryName} className={styles.categoryProductsSection}>
-            <div className={styles.container}>
-              <div className={styles.categoryHeader}>
-                <h2 className={styles.categoryTitle}>{categoryName}</h2>
-                <Link to={`/products?category=${categoryName}`} className={styles.viewAllLink}>
-                  View All →
-                </Link>
-              </div>
-              <div className={styles.productsGrid}>
-                {products.slice(0, 12).map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            </div>
-            <div className={styles.cloudDivider}></div>
-          </section>
-        )
-      ))}
-
-      {/* All Products Section */}
-      {allProducts.length > 0 && (
-        <section className={styles.allProductsSection}>
-          <div className={styles.container}>
-            <div className={styles.featuredHeader}>
-              <h2 className={styles.sectionTitle}>Shop All Products</h2>
-              <p className={styles.featuredSubcopy}>
-                Discover our complete collection of cloud-luxury beauty essentials.
-              </p>
-            </div>
-            <div className={styles.productsGrid}>
-              {allProducts.slice(0, 24).map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-            {allProducts.length > 24 && (
-              <div className={styles.viewMoreContainer}>
-                <Link to="/products" className={styles.viewMoreButton}>
-                  View All {allProducts.length} Products
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
     </div>
   );
 };

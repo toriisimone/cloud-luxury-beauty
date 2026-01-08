@@ -12,7 +12,7 @@
   min-height: 600px;
   max-height: 900px;
   overflow: hidden;
-  margin-top: calc(36px + 80px); /* Top banner (36px) + Navbar height - no gap */
+  margin-top: calc(36px + 80px); /* Top banner (36px) + Navbar height - sits directly under menu */
 }
 
 .heroBanner {
@@ -184,12 +184,18 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Products Grid */
+/* Products Grid - Glossier style (3-4 columns desktop, 2 tablet, 1 mobile) */
 .productsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 3-4 columns desktop */
   gap: 2rem;
   margin-top: 2rem;
+}
+
+/* Skincare Section */
+.skincareSection {
+  padding: 4rem 0;
+  background: var(--color-white); /* White background for product sections */
 }
 
 /* Category Products Section */
@@ -253,6 +259,33 @@
   color: #000;
 }
 
+/* View More Button */
+.viewMoreContainer {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.viewMoreButton {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border: 1px solid #000;
+}
+
+.viewMoreButton:hover {
+  background: #fff;
+  color: #000;
+  border-color: #000;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .brandTitle {
@@ -266,7 +299,7 @@
   }
   
   .productsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* 2-3 columns tablet */
     gap: 1.5rem;
   }
 }
@@ -303,7 +336,7 @@
   }
 
   .productsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 2 columns mobile */
     gap: 1rem;
   }
 
@@ -344,7 +377,6 @@
 
 
   .productsGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    grid-template-columns: 1fr; /* 1 column on very small screens */
   }
 }
