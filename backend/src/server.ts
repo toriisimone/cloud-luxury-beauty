@@ -15,6 +15,7 @@ import app from './app';
 import { config } from './config/env';
 import { logger } from './config/logger';
 import { connectDatabase } from './config/database';
+import { autoMigrate } from './utils/autoMigrate';
 import { autoSeedIfEmpty } from './utils/autoSeed';
 
 console.log('DEBUG: Imports completed, config loaded');
@@ -32,10 +33,28 @@ async function startServer() {
     console.log('DEBUG: Database connected successfully');
     logger.info('Database connected successfully');
 
+    // Run automatic migrations to ensure database schema is up to date
+    logger.info('Running automatic migrations...');
+    try {
+      await autoMigrate();
+      logger.info('Automatic migrations completed');
+    } catch (error: any) {
+      // If migrations fail, log but continue - tables might already exist
+      logger.error('Migration failed, but continuing startup:', error);
+      console.error('DEBUG: Migration error (non-fatal):', error.message);
+    }
+
     // Auto-seed database if empty (runs automatically on startup)
+    // This runs AFTER migrations to ensure tables exist
     logger.info('Running auto-seed check...');
-    await autoSeedIfEmpty();
-    logger.info('Auto-seed check completed.');
+    try {
+      await autoSeedIfEmpty();
+      logger.info('Auto-seed check completed.');
+    } catch (error: any) {
+      // If seeding fails, log but continue - server can still run
+      logger.error('Auto-seed failed, but continuing startup:', error);
+      console.error('DEBUG: Auto-seed error (non-fatal):', error.message);
+    }
 
     console.log('DEBUG: About to start Express server on port', PORT);
     app.listen(PORT, () => {
