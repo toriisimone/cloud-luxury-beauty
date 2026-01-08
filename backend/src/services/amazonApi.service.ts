@@ -189,12 +189,14 @@ async function searchAmazonProducts(
     logger.info(`[AMAZON API] ========== RAW RESPONSE END ==========`);
 
     if (!response.ok) {
-      logger.error(`[AMAZON API] Error response: ${responseText}`);
+      logger.error(`[AMAZON API] ========== API ERROR RESPONSE ==========`);
+      logger.error(`[AMAZON API] Status: ${response.status} ${response.statusText}`);
+      logger.error(`[AMAZON API] Full error response: ${responseText}`);
       
       // Try to parse error response
       try {
         const errorData = JSON.parse(responseText);
-        logger.error(`[AMAZON API] Parsed error:`, JSON.stringify(errorData, null, 2));
+        logger.error(`[AMAZON API] Parsed error data:`, JSON.stringify(errorData, null, 2));
         
         if (errorData.__type) {
           logger.error(`[AMAZON API] Error type: ${errorData.__type}`);
@@ -202,14 +204,19 @@ async function searchAmazonProducts(
         if (errorData.message) {
           logger.error(`[AMAZON API] Error message: ${errorData.message}`);
         }
-        if (errorData.Errors) {
-          logger.error(`[AMAZON API] Errors array:`, JSON.stringify(errorData.Errors, null, 2));
+        if (errorData.Errors && Array.isArray(errorData.Errors)) {
+          logger.error(`[AMAZON API] Errors array (${errorData.Errors.length} errors):`, JSON.stringify(errorData.Errors, null, 2));
+          errorData.Errors.forEach((err: any, index: number) => {
+            logger.error(`[AMAZON API] Error ${index + 1}:`, JSON.stringify(err, null, 2));
+          });
         }
-      } catch (parseError) {
-        logger.error(`[AMAZON API] Could not parse error response as JSON`);
+      } catch (parseError: any) {
+        logger.error(`[AMAZON API] Could not parse error response as JSON:`, parseError.message);
+        logger.error(`[AMAZON API] Raw error text: ${responseText}`);
       }
       
-      throw new Error(`Amazon API error: ${response.status} ${response.statusText} - ${responseText.substring(0, 200)}`);
+      logger.error(`[AMAZON API] ========== END API ERROR RESPONSE ==========`);
+      throw new Error(`Amazon API error: ${response.status} ${response.statusText} - ${responseText.substring(0, 500)}`);
     }
 
     let data: any;
