@@ -95,9 +95,12 @@ async function searchAmazonProducts(
     const method = 'POST';
     const service = 'ProductAdvertisingAPI';
     const region = config.AMAZON_REGION;
+    
+    // Generate timestamp in correct format for AWS Signature V4
     const now = new Date();
-    const dateStamp = now.toISOString().substring(0, 10).replace(/-/g, '');
-    const timestamp = `${dateStamp}T${now.toISOString().substring(11, 19).replace(/:/g, '')}Z`;
+    const dateStamp = now.toISOString().substring(0, 10).replace(/-/g, ''); // YYYYMMDD
+    const timeStamp = now.toISOString().substring(11, 19).replace(/:/g, ''); // HHMMSS
+    const timestamp = `${dateStamp}T${timeStamp}Z`; // YYYYMMDDTHHMMSSZ
 
     logger.info(`[AMAZON API] Timestamp: ${timestamp}`);
 
@@ -143,13 +146,13 @@ async function searchAmazonProducts(
     logger.info(`[AMAZON API] Making request to: https://${endpoint}${uri}`);
 
     // Make API request
+    // Note: Do NOT include 'Host' header - it's automatically set by fetch
     const response = await fetch(`https://${endpoint}${uri}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'X-Amz-Date': timestamp,
         'Authorization': authorization,
-        'Host': endpoint,
       },
       body: payload,
     });
