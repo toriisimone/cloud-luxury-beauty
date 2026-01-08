@@ -56,12 +56,19 @@ function generateSignature(
   const canonicalRequestHash = createHash('sha256').update(canonicalRequest).digest('hex');
   const stringToSign = `${algorithm}\n${timestamp}\n${credentialScope}\n${canonicalRequestHash}`;
 
-  // Calculate signature
+  // Calculate signature using AWS Signature Version 4
+  // Step 1: kDate = HMAC_SHA256("AWS4" + SecretKey, DateStamp)
   const kDate = createHmac('sha256', `AWS4${config.AMAZON_SECRET_KEY}`).update(dateStamp).digest();
+  // Step 2: kRegion = HMAC_SHA256(kDate, Region)
   const kRegion = createHmac('sha256', kDate).update(region).digest();
+  // Step 3: kService = HMAC_SHA256(kRegion, Service)
   const kService = createHmac('sha256', kRegion).update(service).digest();
+  // Step 4: kSigning = HMAC_SHA256(kService, "aws4_request")
   const kSigning = createHmac('sha256', kService).update('aws4_request').digest();
+  // Step 5: signature = HMAC_SHA256(kSigning, StringToSign)
   const signature = createHmac('sha256', kSigning).update(stringToSign).digest('hex');
+  
+  logger.info(`[AMAZON API] Signature generated: ${signature.substring(0, 16)}...`);
 
   return signature;
 }
@@ -142,6 +149,7 @@ async function searchAmazonProducts(
     });
 
     logger.info(`[AMAZON API] Request payload: ${payload.substring(0, 200)}...`);
+    logger.info(`[AMAZON API] Full payload: ${payload}`);
 
     // Create authorization header
     const queryString = '';
@@ -150,6 +158,7 @@ async function searchAmazonProducts(
     const authorization = `AWS4-HMAC-SHA256 Credential=${config.AMAZON_ACCESS_KEY}/${credentialScope}, SignedHeaders=host;x-amz-date, Signature=${signature}`;
 
     logger.info(`[AMAZON API] Authorization header created (length: ${authorization.length})`);
+    logger.info(`[AMAZON API] Authorization (first 100 chars): ${authorization.substring(0, 100)}...`);
     logger.info(`[AMAZON API] Making request to: https://${endpoint}${uri}`);
     logger.info(`[AMAZON API] Request method: ${method}`);
     logger.info(`[AMAZON API] Request URI: ${uri}`);
