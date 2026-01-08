@@ -1,6 +1,5 @@
 import prisma from '../config/database';
 import { logger } from '../config/logger';
-import { seedRealSkincareProducts } from './seedRealSkincareProducts';
 
 /**
  * Auto-seed skincare products if the Skincare category has no products
@@ -71,11 +70,16 @@ export async function autoSeedSkincareIfEmpty(): Promise<boolean> {
       logger.warn('[AUTO SEED SKINCARE] Seeding 82 REAL Amazon skincare products...');
       
       // Try to seed real products first
-      const realProductsSeeded = await seedRealSkincareProducts();
-      if (realProductsSeeded) {
-        logger.info(`[AUTO SEED SKINCARE] ✅ Real products seeded successfully`);
-        logger.info(`[AUTO SEED SKINCARE] ==========================================`);
-        return true;
+      try {
+        const { seedRealSkincareProducts } = await import('./seedRealSkincareProducts');
+        const realProductsSeeded = await seedRealSkincareProducts();
+        if (realProductsSeeded) {
+          logger.info(`[AUTO SEED SKINCARE] ✅ Real products seeded successfully`);
+          logger.info(`[AUTO SEED SKINCARE] ==========================================`);
+          return true;
+        }
+      } catch (error: any) {
+        logger.warn(`[AUTO SEED SKINCARE] Real products seeding failed: ${error.message}`);
       }
       
       // Fallback to sample products if real products fail
