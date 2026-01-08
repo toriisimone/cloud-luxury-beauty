@@ -48,24 +48,39 @@ const Products = () => {
         console.log('Category param:', categoryParam);
         console.log('Categories loaded:', categories.length);
         
-        // If Skincare category, try Amazon API first, then fallback to regular products
+        // SKINCARE-ONLY: If Skincare category, try Amazon API first, then fallback to regular products
         if (categoryParam && categoryParam.toLowerCase() === 'skincare') {
+          console.log('[FRONTEND] ========== SKINCARE PAGE LOAD ==========');
+          console.log('[FRONTEND] Category detected: Skincare - attempting Amazon API first');
           let amazonSuccess = false;
           
-          // Try Amazon API first
+          // Try Amazon API first - SKINCARE PRODUCTS ONLY
           try {
-            console.log('[FRONTEND] Fetching Amazon skincare products...');
+            console.log('[FRONTEND] Fetching Amazon SKINCARE products...');
+            const startTime = Date.now();
             const amazonResponse = await amazonApi.getAmazonSkincareProducts();
-            console.log('[FRONTEND] Amazon API response received:', {
-              productCount: amazonResponse.products?.length || 0,
-              totalCount: amazonResponse.count || 0,
-              source: amazonResponse.source,
-              hasError: !!amazonResponse.error,
-              error: amazonResponse.error,
-            });
+            const fetchTime = Date.now() - startTime;
+            
+            console.log('[FRONTEND] ========== AMAZON API RESPONSE ==========');
+            console.log('[FRONTEND] Fetch time:', fetchTime + 'ms');
+            console.log('[FRONTEND] Product count:', amazonResponse.products?.length || 0);
+            console.log('[FRONTEND] Total count:', amazonResponse.count || 0);
+            console.log('[FRONTEND] Source:', amazonResponse.source);
+            console.log('[FRONTEND] Has error:', !!amazonResponse.error);
+            if (amazonResponse.error) {
+              console.error('[FRONTEND] Amazon API error:', amazonResponse.error);
+            }
+            if (amazonResponse.products && amazonResponse.products.length > 0) {
+              console.log('[FRONTEND] First product sample:', {
+                asin: amazonResponse.products[0].asin,
+                title: amazonResponse.products[0].title.substring(0, 50),
+                price: amazonResponse.products[0].price,
+              });
+            }
+            console.log('[FRONTEND] ========== END AMAZON API RESPONSE ==========');
             
             if (amazonResponse.products && amazonResponse.products.length > 0) {
-              console.log('[FRONTEND] Amazon products found, displaying them');
+              console.log('[FRONTEND] ✅ Amazon SKINCARE products found, displaying them');
               let sortedProducts = [...amazonResponse.products];
               
               // Sort Amazon products
@@ -86,23 +101,25 @@ const Products = () => {
               setTotal(sortedProducts.length);
               setTotalPages(1);
               setCurrentPage(1);
-              console.log('[FRONTEND] Amazon products set:', sortedProducts.length);
+              console.log('[FRONTEND] ✅ Amazon SKINCARE products set:', sortedProducts.length);
               amazonSuccess = true;
             } else {
-              console.warn('[FRONTEND] Amazon API returned empty products array');
+              console.warn('[FRONTEND] ⚠️ Amazon API returned empty products array for Skincare');
+              console.warn('[FRONTEND] Response was:', amazonResponse);
             }
           } catch (error: any) {
-            console.error('[FRONTEND] Failed to fetch Amazon products:', error);
+            console.error('[FRONTEND] ❌ Failed to fetch Amazon SKINCARE products:', error);
             console.error('[FRONTEND] Error details:', {
               message: error.message,
               response: error.response?.data,
               status: error.response?.status,
+              stack: error.stack,
             });
           }
           
-          // If Amazon failed or returned empty, fetch regular products
+          // If Amazon failed or returned empty, fetch regular SKINCARE products from database
           if (!amazonSuccess) {
-            console.log('Falling back to regular skincare products...');
+            console.log('[FRONTEND] ⬇️ Falling back to regular SKINCARE products from database...');
             setIsAmazonSource(false);
             
             // Wait for categories to load if not already loaded
@@ -133,7 +150,7 @@ const Products = () => {
             };
 
             const response = await productsApi.getProducts(params);
-            console.log('Regular products fetched:', response.products.length);
+            console.log('[FRONTEND] ✅ Regular SKINCARE products fetched from database:', response.products.length);
             
             // Sort products
             let sortedProducts = [...response.products];

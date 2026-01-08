@@ -210,9 +210,14 @@ async function searchAmazonProducts(
         logger.info(`[AMAZON API] SearchResult found`);
         logger.info(`[AMAZON API] TotalResultCount: ${data.SearchResult.TotalResultCount || 'N/A'}`);
         logger.info(`[AMAZON API] Items count: ${data.SearchResult.Items?.length || 0}`);
+        if (data.SearchResult.Items && data.SearchResult.Items.length > 0) {
+          logger.info(`[AMAZON API] First item ASIN: ${data.SearchResult.Items[0].ASIN}`);
+          logger.info(`[AMAZON API] First item title: ${data.SearchResult.Items[0].ItemInfo?.Title?.DisplayValue || 'N/A'}`);
+        }
       } else {
         logger.warn(`[AMAZON API] No SearchResult in response`);
-        logger.warn(`[AMAZON API] Full response structure:`, JSON.stringify(data, null, 2).substring(0, 1000));
+        logger.warn(`[AMAZON API] Response keys: ${Object.keys(data).join(', ')}`);
+        logger.warn(`[AMAZON API] Full response structure:`, JSON.stringify(data, null, 2));
       }
     } catch (parseError: any) {
       logger.error(`[AMAZON API] Failed to parse response as JSON:`, parseError.message);
@@ -329,24 +334,50 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
   logger.info(`[AMAZON API] Region: ${config.AMAZON_REGION}`);
 
   // Amazon API allows max 10 items per request, so we need multiple requests
-  const allProducts: AmazonProduct[] = [];
-  const keywords = ['skincare', 'face cream', 'serum', 'moisturizer', 'cleanser', 'toner', 'sunscreen', 'face mask', 'eye cream', 'anti-aging'];
+  // SKINCARE-ONLY keywords - comprehensive list for maximum product coverage
+  const keywords = [
+    'skincare',
+    'face cream',
+    'serum',
+    'moisturizer',
+    'cleanser',
+    'toner',
+    'sunscreen',
+    'face mask',
+    'eye cream',
+    'anti-aging',
+    'hydrating',
+    'brightening',
+    'acne treatment',
+    'retinol',
+    'hyaluronic acid',
+    'vitamin c serum',
+    'niacinamide',
+    'peptide serum',
+    'face wash',
+    'exfoliant'
+  ];
+  
+  logger.info(`[AMAZON API] Using ${keywords.length} skincare-specific keywords`);
+  logger.info(`[AMAZON API] Keywords: ${keywords.join(', ')}`);
   
   try {
-    // Fetch products in batches
-    for (let i = 0; i < 10 && allProducts.length < 100; i++) {
+    // Fetch products in batches - use all keywords to get 100+ products
+    const totalBatches = Math.min(20, keywords.length * 2); // Up to 20 batches (200 potential products)
+    for (let i = 0; i < totalBatches && allProducts.length < 100; i++) {
       const keyword = keywords[i % keywords.length];
       const itemPage = Math.floor(i / keywords.length) + 1;
       
       try {
-        logger.info(`[AMAZON API] Fetching batch ${i + 1}/10: keyword="${keyword}", page=${itemPage}`);
+        logger.info(`[AMAZON API] Fetching batch ${i + 1}/${totalBatches}: keyword="${keyword}", page=${itemPage}`);
         const result = await searchAmazonProducts(keyword, 10, itemPage);
-        logger.info(`[AMAZON API] Batch ${i + 1} returned ${result.products.length} products`);
+        logger.info(`[AMAZON API] Batch ${i + 1} returned ${result.products.length} products for keyword "${keyword}"`);
+        logger.info(`[AMAZON API] TotalResultCount from Amazon: ${result.totalResults}`);
         allProducts.push(...result.products);
         
-        // Avoid rate limiting
-        if (i < 9) {
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second between requests
+        // Avoid rate limiting - wait 1.5 seconds between requests
+        if (i < totalBatches - 1) {
+          await new Promise(resolve => setTimeout(resolve, 1500));
         }
       } catch (error: any) {
         logger.error(`[AMAZON API] Error fetching batch ${i + 1}:`, error.message);
