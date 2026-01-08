@@ -1,6 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Use production backend URL if VITE_API_URL is not set
+const API_URL = import.meta.env.VITE_API_URL || 'https://cloud-luxury-backend-production.up.railway.app/api';
 
 const axiosClient = axios.create({
   baseURL: API_URL,

@@ -105,9 +105,104 @@ async function main() {
   const toolsCategory = categories[4];
   const bundlesCategory = categories[5];
 
-  // Create products
+  // Create products - starting with the specific products requested
   const products = await Promise.all([
-    // Makeup products
+    // Cloud Matte Lipstick – Rose Dust ($24)
+    prisma.product.create({
+      data: {
+        name: 'Cloud Matte Lipstick – Rose Dust',
+        slug: 'cloud-matte-lipstick-rose-dust',
+        description: 'A velvety matte lipstick in the perfect rose dust shade. Long-wearing, weightless formula that glides on smoothly for a cloud-soft finish.',
+        price: 24.00,
+        stock: 200,
+        featured: true,
+        images: ['/products/lipstick-rose-dust.jpg'],
+        categoryId: makeupCategory.id,
+        variants: {
+          create: [
+            { name: 'Shade', value: 'Rose Dust', stock: 200, sku: 'CML-RD' },
+          ],
+        },
+      },
+    }),
+    // Lavender Mist Face Oil ($48)
+    prisma.product.create({
+      data: {
+        name: 'Lavender Mist Face Oil',
+        slug: 'lavender-mist-face-oil',
+        description: 'A luxurious face oil infused with lavender and cloud-soft botanicals. Nourishes and hydrates for a dewy, luminous complexion.',
+        price: 48.00,
+        stock: 150,
+        featured: true,
+        images: ['/products/lavender-face-oil.jpg'],
+        categoryId: skincareCategory.id,
+        variants: {
+          create: [
+            { name: 'Size', value: '30ml', price: 48.00, stock: 75, sku: 'LMFO-30' },
+            { name: 'Size', value: '50ml', price: 75.00, stock: 75, sku: 'LMFO-50' },
+          ],
+        },
+      },
+    }),
+    // Velvet Glow Blush ($28)
+    prisma.product.create({
+      data: {
+        name: 'Velvet Glow Blush',
+        slug: 'velvet-glow-blush',
+        description: 'Silky-soft powder blush that delivers a natural, flushed glow. Buildable color that blends seamlessly for a cloud-kissed complexion.',
+        price: 28.00,
+        stock: 180,
+        featured: true,
+        images: ['/products/velvet-blush.jpg'],
+        categoryId: makeupCategory.id,
+        variants: {
+          create: [
+            { name: 'Shade', value: 'Peach Cloud', stock: 45, sku: 'VGB-PC' },
+            { name: 'Shade', value: 'Rose Mist', stock: 45, sku: 'VGB-RM' },
+            { name: 'Shade', value: 'Lavender Dream', stock: 45, sku: 'VGB-LD' },
+            { name: 'Shade', value: 'Coral Sunset', stock: 45, sku: 'VGB-CS' },
+          ],
+        },
+      },
+    }),
+    // Cloud Dew Setting Spray ($32)
+    prisma.product.create({
+      data: {
+        name: 'Cloud Dew Setting Spray',
+        slug: 'cloud-dew-setting-spray',
+        description: 'A weightless setting spray that locks in your look with a dewy, cloud-soft finish. Keeps makeup fresh all day with hydrating mist.',
+        price: 32.00,
+        stock: 160,
+        featured: true,
+        images: ['/products/setting-spray.jpg'],
+        categoryId: makeupCategory.id,
+        variants: {
+          create: [
+            { name: 'Size', value: '100ml', price: 32.00, stock: 80, sku: 'CDSS-100' },
+            { name: 'Size', value: '200ml', price: 55.00, stock: 80, sku: 'CDSS-200' },
+          ],
+        },
+      },
+    }),
+    // Pink Sky Highlighter ($30)
+    prisma.product.create({
+      data: {
+        name: 'Pink Sky Highlighter',
+        slug: 'pink-sky-highlighter',
+        description: 'A luminous highlighter in a dreamy pink sky shade. Creates a soft, ethereal glow that catches the light like clouds at sunset.',
+        price: 30.00,
+        stock: 140,
+        featured: true,
+        images: ['/products/highlighter-pink.jpg'],
+        categoryId: makeupCategory.id,
+        variants: {
+          create: [
+            { name: 'Shade', value: 'Pink Sky', stock: 140, sku: 'PSH-PS' },
+          ],
+        },
+      },
+    }),
+    // Additional products for variety
     prisma.product.create({
       data: {
         name: 'Cloud Glow Liquid Foundation',

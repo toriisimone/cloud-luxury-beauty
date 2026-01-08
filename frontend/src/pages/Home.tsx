@@ -16,14 +16,26 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('Fetching products and categories...');
         const [productsRes, categoriesRes] = await Promise.all([
           productsApi.getProducts({ featured: true, limit: 8 }),
           categoriesApi.getCategories(),
         ]);
+        console.log('Products fetched:', productsRes.products.length);
+        console.log('Categories fetched:', categoriesRes.length);
         setFeaturedProducts(productsRes.products);
         setCategories(categoriesRes);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch data:', error);
+        console.error('Error details:', {
+          message: error?.message,
+          response: error?.response?.data,
+          status: error?.response?.status,
+          url: error?.config?.url,
+        });
+        // Set empty arrays on error so UI doesn't break
+        setFeaturedProducts([]);
+        setCategories([]);
       } finally {
         setLoading(false);
       }
