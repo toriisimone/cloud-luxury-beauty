@@ -46,9 +46,13 @@ const Products = () => {
         setLoading(true);
         const categoryParam = searchParams.get('category');
         console.log('Category param:', categoryParam);
+        console.log('Categories loaded:', categories.length);
         
-        // If Skincare category, fetch from Amazon API (case-insensitive check)
+        // If Skincare category, try Amazon API first, then fallback to regular products
         if (categoryParam && categoryParam.toLowerCase() === 'skincare') {
+          let amazonSuccess = false;
+          
+          // Try Amazon API first
           try {
             console.log('Fetching Amazon skincare products...');
             const amazonResponse = await amazonApi.getAmazonSkincareProducts();
@@ -76,16 +80,31 @@ const Products = () => {
               setTotalPages(1);
               setCurrentPage(1);
               console.log('Amazon products set:', sortedProducts.length);
-            } else {
-              throw new Error('No Amazon products returned');
+              amazonSuccess = true;
             }
           } catch (error) {
-            console.error('Failed to fetch Amazon products, falling back to regular products:', error);
-            // Fall back to regular products if Amazon API fails
+            console.error('Failed to fetch Amazon products:', error);
+          }
+          
+          // If Amazon failed or returned empty, fetch regular products
+          if (!amazonSuccess) {
+            console.log('Falling back to regular skincare products...');
             setIsAmazonSource(false);
             
-            // Fetch regular skincare products as fallback
-            const skincareCategory = categories.find(c => c.name === 'Skincare');
+            // Wait for categories to load if not already loaded
+            let skincareCategory = categories.find(c => c.name === 'Skincare' || c.name === 'skincare');
+            
+            // If categories not loaded yet, fetch them
+            if (!skincareCategory && categories.length === 0) {
+              try {
+                const categoriesRes = await categoriesApi.getCategories();
+                setCategories(categoriesRes);
+                skincareCategory = categoriesRes.find(c => c.name === 'Skincare' || c.name === 'skincare');
+              } catch (error) {
+                console.error('Failed to fetch categories:', error);
+              }
+            }
+            
             const search = searchParams.get('search');
             const featured = searchParams.get('featured');
             const page = parseInt(searchParams.get('page') || '1', 10);
@@ -100,6 +119,7 @@ const Products = () => {
             };
 
             const response = await productsApi.getProducts(params);
+            console.log('Regular products fetched:', response.products.length);
             
             // Sort products
             let sortedProducts = [...response.products];
@@ -172,7 +192,10 @@ const Products = () => {
       }
     };
 
-    fetchProducts();
+    // Only fetch products if categories are loaded (for Skincare fallback) or if not Skincare category
+    if (categories.length > 0 || !searchParams.get('category') || searchParams.get('category')?.toLowerCase() !== 'skincare') {
+      fetchProducts();
+    }
   }, [searchParams, categories]);
 
   const handleSortChange = (sortValue: string) => {
