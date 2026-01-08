@@ -12,7 +12,7 @@
   min-height: 600px;
   max-height: 900px;
   overflow: hidden;
-  margin-top: 116px; /* Account for top banner (36px) + navbar (80px) */
+  margin-top: 116px; /* Top banner (36px) + Navbar (80px) - sits right under navbar */
 }
 
 .heroBanner {
@@ -276,7 +276,7 @@
     height: 70vh;
     min-height: 500px;
     max-height: 600px;
-    margin-top: 116px;
+    margin-top: 0;
   }
 
   .brandTitle {
