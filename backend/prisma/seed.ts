@@ -6,6 +6,16 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
+  // Check if products already exist
+  const existingProducts = await prisma.product.count();
+  if (existingProducts > 0) {
+    console.log(`Database already has ${existingProducts} products. Skipping product seeding.`);
+    console.log('To re-seed, delete all products first.');
+    return;
+  }
+
+  console.log('Database is empty. Creating products...');
+
   // Create admin user
   const adminPassword = await bcrypt.hash('Admin123!', 10);
   const admin = await prisma.user.upsert({
@@ -429,6 +439,8 @@ async function main() {
   ]);
 
   console.log('Database seeded successfully!');
+  console.log(`Created ${products.length} products`);
+  console.log(`Created ${categories.length} categories`);
   console.log(`Admin user: admin@cloudluxury.com / Admin123!`);
   console.log(`Customer user: customer@example.com / Customer123!`);
 }
