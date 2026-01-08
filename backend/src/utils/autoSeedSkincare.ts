@@ -69,17 +69,28 @@ export async function autoSeedSkincareIfEmpty(): Promise<boolean> {
       logger.warn('[AUTO SEED SKINCARE] Skincare category exists but has 0 products!');
       logger.warn('[AUTO SEED SKINCARE] Seeding 82 REAL Amazon skincare products...');
       
-      // Try to seed real products first
+      // Try to seed all 82 real products first
       try {
-        const { seedRealSkincareProducts } = await import('./seedRealSkincareProducts');
-        const realProductsSeeded = await seedRealSkincareProducts();
+        const { seedAll82SkincareProducts } = await import('./seedSkincare82Products');
+        logger.info('[AUTO SEED SKINCARE] Calling seedAll82SkincareProducts()...');
+        const realProductsSeeded = await seedAll82SkincareProducts();
         if (realProductsSeeded) {
+          // Verify products were actually inserted
+          const verifyCount = await prisma.product.count({
+            where: {
+              categoryId: skincareCategory.id,
+            },
+          });
           logger.info(`[AUTO SEED SKINCARE] ✅ Real products seeded successfully`);
+          logger.info(`[AUTO SEED SKINCARE] ✅ Verified product count: ${verifyCount}`);
           logger.info(`[AUTO SEED SKINCARE] ==========================================`);
           return true;
+        } else {
+          logger.warn('[AUTO SEED SKINCARE] ⚠️ seedAll82SkincareProducts returned false');
         }
       } catch (error: any) {
-        logger.warn(`[AUTO SEED SKINCARE] Real products seeding failed: ${error.message}`);
+        logger.error(`[AUTO SEED SKINCARE] ❌ Real products seeding failed: ${error.message}`);
+        logger.error(`[AUTO SEED SKINCARE] Error stack:`, error.stack);
       }
       
       // Fallback to sample products if real products fail

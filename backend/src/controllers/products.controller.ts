@@ -125,11 +125,23 @@ export const getProducts = async (req: Request, res: Response) => {
     
     // If Skincare category and no products, check if we need to seed
     if (category && (category as string).toLowerCase() === 'skincare' && result.products.length === 0) {
-      logger.warn('[PRODUCTS CONTROLLER] ⚠️ No skincare products found! Attempting to seed...');
-      const { autoSeedSkincareIfEmpty } = await import('../utils/autoSeedSkincare');
-      const seeded = await autoSeedSkincareIfEmpty();
+      logger.warn('[PRODUCTS CONTROLLER] ⚠️ No skincare products found! Attempting to seed all 82 products...');
+      
+      // First check if category exists
+      if (!finalCategoryId) {
+        const { getCategoryByName } = await import('../services/categories.service');
+        const categoryObj = await getCategoryByName('Skincare');
+        if (categoryObj) {
+          finalCategoryId = categoryObj.id;
+        }
+      }
+      
+      // Seed all 82 products
+      const { seedAll82SkincareProducts } = await import('../utils/seedSkincare82Products');
+      const seeded = await seedAll82SkincareProducts();
+      
       if (seeded) {
-        logger.info('[PRODUCTS CONTROLLER] ✅ Skincare products seeded, fetching again...');
+        logger.info('[PRODUCTS CONTROLLER] ✅ All 82 skincare products seeded, fetching again...');
         // Fetch again after seeding
         const newResult = await productsService.getProducts({
           categoryId: finalCategoryId,
@@ -140,8 +152,11 @@ export const getProducts = async (req: Request, res: Response) => {
           page: parseInt(page as string, 10),
           limit: parseInt(limit as string, 10),
         });
-        logger.info(`[PRODUCTS CONTROLLER] After seeding: ${newResult.products.length} products`);
+        logger.info(`[PRODUCTS CONTROLLER] After seeding: ${newResult.products.length} products returned`);
+        logger.info(`[PRODUCTS CONTROLLER] Total: ${newResult.total} products in category`);
         return res.json(newResult);
+      } else {
+        logger.error('[PRODUCTS CONTROLLER] ❌ Failed to seed skincare products');
       }
     }
 
