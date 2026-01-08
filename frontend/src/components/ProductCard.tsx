@@ -16,6 +16,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
     addItem(product);
   };
 
+  // Generate random rating for demo (4.0 to 5.0)
+  const rating = (4.0 + Math.random() * 1.0).toFixed(1);
+  const reviewCount = Math.floor(Math.random() * 500) + 50;
+  
+  // Random labels for featured products
+  const labels = ['Best Seller', 'Award Winner', 'Kylie\'s Favorite', 'New'];
+  const randomLabel = product.featured ? labels[Math.floor(Math.random() * labels.length)] : null;
+
   return (
     <div className={styles.card}>
       <Link to={`/products/${product.id}`} className={styles.link}>
@@ -25,13 +33,27 @@ const ProductCard = ({ product }: ProductCardProps) => {
           ) : (
             <div className={styles.placeholder}>No Image</div>
           )}
-          {product.featured && <span className={styles.featured}>Featured</span>}
+          {randomLabel && (
+            <span className={styles.label}>{randomLabel}</span>
+          )}
+          {product.featured && !randomLabel && (
+            <span className={styles.featured}>Featured</span>
+          )}
         </div>
         <div className={styles.content}>
           <h3 className={styles.name}>{product.name}</h3>
           {product.category && (
             <p className={styles.category}>{product.category.name}</p>
           )}
+          <div className={styles.rating}>
+            <span className={styles.stars}>
+              {'★'.repeat(Math.floor(parseFloat(rating)))}
+              {parseFloat(rating) % 1 >= 0.5 && '☆'}
+            </span>
+            <span className={styles.ratingText}>
+              {rating} ({reviewCount})
+            </span>
+          </div>
           <p className={styles.price}>${product.price.toFixed(2)}</p>
         </div>
       </Link>
