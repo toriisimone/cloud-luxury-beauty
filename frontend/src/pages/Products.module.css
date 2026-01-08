@@ -1,7 +1,7 @@
 .products {
   min-height: 100vh;
   padding: 2rem 0 4rem;
-  background: var(--color-white);
+  background: #f5f5f5; /* Light gray background like Glossier */
 }
 
 .container {
@@ -31,14 +31,20 @@
   font-weight: 400;
 }
 
-/* Toolbar - Filter + Sort */
+/* Toolbar - Filter + Sort (Right Side - Glossier style) */
 .toolbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.toolbarRight {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
 }
 
 .filterButton,

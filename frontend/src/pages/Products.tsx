@@ -145,44 +145,46 @@ const Products = () => {
           )}
         </div>
 
-        {/* Filter + Sort Bar */}
+        {/* Filter + Sort Bar - Right Side (Glossier style) */}
         <div className={styles.toolbar}>
-          <button
-            className={styles.filterButton}
-            onClick={() => setFilterOpen(!filterOpen)}
-          >
-            Filter {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-          </button>
-          
-          <div className={styles.sortContainer}>
+          <div className={styles.toolbarRight}>
             <button
-              className={styles.sortButton}
-              onClick={() => setSortOpen(!sortOpen)}
+              className={styles.filterButton}
+              onClick={() => setFilterOpen(!filterOpen)}
             >
-              Sort ({getSortLabel()})
+              Filter {activeFiltersCount > 0 && `(${activeFiltersCount})`}
             </button>
-            {sortOpen && (
-              <div className={styles.sortDropdown}>
-                <button onClick={() => handleSortChange('featured')}>
-                  Featured
-                </button>
-                <button onClick={() => handleSortChange('newest')}>
-                  Newest
-                </button>
-                <button onClick={() => handleSortChange('price-low')}>
-                  Price: Low to High
-                </button>
-                <button onClick={() => handleSortChange('price-high')}>
-                  Price: High to Low
-                </button>
-                <button onClick={() => handleSortChange('name-asc')}>
-                  Name: A to Z
-                </button>
-                <button onClick={() => handleSortChange('name-desc')}>
-                  Name: Z to A
-                </button>
-              </div>
-            )}
+            
+            <div className={styles.sortContainer}>
+              <button
+                className={styles.sortButton}
+                onClick={() => setSortOpen(!sortOpen)}
+              >
+                Sort ({getSortLabel()})
+              </button>
+              {sortOpen && (
+                <div className={styles.sortDropdown}>
+                  <button onClick={() => handleSortChange('featured')}>
+                    Featured
+                  </button>
+                  <button onClick={() => handleSortChange('newest')}>
+                    Newest
+                  </button>
+                  <button onClick={() => handleSortChange('price-low')}>
+                    Price: Low to High
+                  </button>
+                  <button onClick={() => handleSortChange('price-high')}>
+                    Price: High to Low
+                  </button>
+                  <button onClick={() => handleSortChange('name-asc')}>
+                    Name: A to Z
+                  </button>
+                  <button onClick={() => handleSortChange('name-desc')}>
+                    Name: Z to A
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

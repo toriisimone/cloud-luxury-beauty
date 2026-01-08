@@ -1,25 +1,84 @@
-.navbar {
+/* Top Rotating Banner - Black */
+.topBanner {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
-  padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(253, 242, 244, 0.2);
+  background: #000;
+  color: #fff;
+  z-index: 1001;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.navbar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(800px 100px at 50% 0%, rgba(253, 242, 244, 0.3) 0%, rgba(253, 242, 244, 0) 70%),
-    radial-gradient(600px 80px at 20% 0%, rgba(243, 240, 255, 0.25) 0%, rgba(243, 240, 255, 0) 60%);
-  pointer-events: none;
-  z-index: -1;
+.bannerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1600px;
+  padding: 0 2rem;
+  position: relative;
+}
+
+.bannerText {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  animation: fadeInOut 4s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 20% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+  80%, 100% {
+    opacity: 1;
+  }
+}
+
+.bannerControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.bannerArrow,
+.bannerPause {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.bannerArrow:hover,
+.bannerPause:hover {
+  opacity: 0.7;
+}
+
+/* Main Navbar - White */
+.navbar {
+  position: fixed;
+  top: 36px; /* Below the top banner */
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 1rem 0;
 }
 
 .container {
@@ -30,148 +89,56 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-  z-index: 1;
 }
 
-/* Logo - Top Left */
+/* Logo - Left (Bold, Italicized, with period) */
 .logo {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-style: italic;
   color: #000;
-  letter-spacing: 1px;
   text-decoration: none;
-  transition: opacity 0.3s ease;
-  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+  letter-spacing: -0.02em;
 }
 
 .logo:hover {
   opacity: 0.7;
 }
 
-/* Center Navigation */
+/* Center Navigation - UPPERCASE */
 .centerNav {
   display: flex;
-  gap: 2.5rem;
+  gap: 2rem;
   align-items: center;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
-.menuItem {
-  position: relative;
-}
-
 .menuLink {
   color: #000;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.75rem;
   font-weight: 400;
   text-decoration: none;
-  text-transform: lowercase;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: opacity 0.3s ease;
-  padding: 0.5rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  letter-spacing: 0.3px;
+  transition: opacity 0.2s ease;
+  padding: 0.25rem 0;
 }
 
 .menuLink:hover {
   opacity: 0.6;
 }
 
-.hearts {
-  font-size: 0.7rem;
-  color: #A06674;
-  margin-left: 0.2rem;
-  opacity: 0.8;
-}
-
-/* Mega Menu */
-.megaMenu {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  max-width: 1200px;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 12px 12px;
-  padding: 2.5rem;
-  margin-top: 0.5rem;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  pointer-events: none;
-  border-top: 1px solid rgba(253, 242, 244, 0.3);
-}
-
-.megaMenu::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%,
-    rgba(253, 242, 244, 0.5) 20%,
-    rgba(243, 240, 255, 0.5) 80%,
-    transparent 100%
-  );
-}
-
-.menuItem:hover .megaMenu {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: all;
-}
-
-.megaMenuContent {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.2rem;
-}
-
-.subcategoryLink {
-  color: #000;
-  text-decoration: none;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  padding: 0.6rem 0;
-  transition: opacity 0.3s ease;
-  display: block;
-  text-transform: capitalize;
-}
-
-.subcategoryLink:hover {
-  opacity: 0.6;
-}
-
 /* Right Navigation */
 .rightNav {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.25rem;
   align-items: center;
-}
-
-.countrySelector {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #000;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.countrySelector:hover {
-  opacity: 0.6;
 }
 
 .iconButton {
@@ -183,20 +150,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 .iconButton:hover {
   opacity: 0.6;
 }
 
+.countrySelector {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #000;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.countrySelector:hover {
+  opacity: 0.6;
+}
+
 .navLink {
   color: #000;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.75rem;
   font-weight: 400;
   text-decoration: none;
-  transition: opacity 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s ease;
 }
 
 .navLink:hover {
@@ -204,34 +186,18 @@
 }
 
 .cartLink {
-  position: relative;
   color: #000;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s ease;
 }
 
 .cartLink:hover {
   opacity: 0.6;
-}
-
-.cartBadge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #A06674;
-  color: white;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.65rem;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
 }
 
 /* Mobile Menu Toggle */
@@ -271,16 +237,15 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
+  background: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 1.5rem 2rem;
-  border-top: 1px solid rgba(253, 242, 244, 0.3);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .mobileMenuItem {
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(253, 242, 244, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .mobileMenuItem:last-child {
@@ -289,11 +254,11 @@
 
 .mobileMenuLink {
   color: #000;
-  font-family: 'Inter', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   text-decoration: none;
-  text-transform: lowercase;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -302,13 +267,11 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .centerNav {
-    gap: 2rem;
+    gap: 1.5rem;
   }
   
-  .megaMenu {
-    width: calc(100vw - 4rem);
-    left: 2rem;
-    transform: none;
+  .menuLink {
+    font-size: 0.7rem;
   }
 }
 
@@ -325,10 +288,10 @@
     gap: 1rem;
   }
 
-  .countrySelector,
   .iconButton,
-  .navLink {
-    font-size: 0.8rem;
+  .navLink,
+  .cartLink {
+    font-size: 0.7rem;
   }
 
   .mobileMenuToggle {
@@ -340,7 +303,15 @@
   }
 
   .logo {
-    font-size: 1rem;
+    font-size: 1.25rem;
+  }
+
+  .bannerContent {
+    padding: 0 1rem;
+  }
+
+  .bannerText {
+    font-size: 0.7rem;
   }
 }
 
@@ -354,6 +325,10 @@
   }
 
   .countrySelector {
+    display: none;
+  }
+
+  .bannerControls {
     display: none;
   }
 }
