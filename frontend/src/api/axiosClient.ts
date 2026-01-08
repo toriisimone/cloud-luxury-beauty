@@ -3,10 +3,11 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 // Use production backend URL if VITE_API_URL is not set
 const API_URL = import.meta.env.VITE_API_URL || 'https://cloud-luxury-backend-production.up.railway.app/api';
 
-// Log API URL in development to help with debugging
-if (import.meta.env.DEV) {
-  console.log('[API] Using backend URL:', API_URL);
-}
+// ALWAYS log API URL to help with debugging (both dev and production)
+console.log('[API CONFIG] ========== API CONFIGURATION ==========');
+console.log('[API CONFIG] VITE_API_URL env var:', import.meta.env.VITE_API_URL || 'NOT SET');
+console.log('[API CONFIG] Using backend base URL:', API_URL);
+console.log('[API CONFIG] ========================================');
 
 const axiosClient = axios.create({
   baseURL: API_URL,
@@ -16,9 +17,18 @@ const axiosClient = axios.create({
   timeout: 15000, // 15 second timeout for all requests
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token and log requests
 axiosClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    const fullUrl = `${config.baseURL}${config.url}`;
+    console.log('[API REQUEST]', {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      baseURL: config.baseURL,
+      fullURL: fullUrl,
+      params: config.params,
+    });
+    
     const token = localStorage.getItem('accessToken');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -32,7 +42,16 @@ axiosClient.interceptors.request.use(
 
 // Response interceptor to handle token refresh and log errors
 axiosClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('[API RESPONSE]', {
+      url: response.config.url,
+      status: response.status,
+      statusText: response.statusText,
+      dataKeys: Object.keys(response.data || {}),
+      productCount: response.data?.products?.length || response.data?.count || 'N/A',
+    });
+    return response;
+  },
   async (error: AxiosError) => {
     // Log API errors for debugging
     if (error.response) {

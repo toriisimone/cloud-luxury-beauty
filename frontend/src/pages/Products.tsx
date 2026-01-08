@@ -163,9 +163,22 @@ const Products = () => {
               limit: 48,
             };
 
-            console.log('[FRONTEND] Fetching regular products with params:', params);
+            console.log('[FRONTEND] ========== FETCHING DATABASE PRODUCTS ==========');
+            console.log('[FRONTEND] Params:', JSON.stringify(params, null, 2));
+            console.log('[FRONTEND] Expected URL: https://cloud-luxury-backend-production.up.railway.app/api/products?category=Skincare');
+            
             const response = await productsApi.getProducts(params);
-            console.log('[FRONTEND] ✅ Regular SKINCARE products fetched from database:', response.products.length);
+            
+            console.log('[FRONTEND] ========== DATABASE PRODUCTS RESPONSE ==========');
+            console.log('[FRONTEND] Response status: OK');
+            console.log('[FRONTEND] Products returned:', response.products.length);
+            console.log('[FRONTEND] Total:', response.total);
+            console.log('[FRONTEND] First product:', response.products[0] ? {
+              id: response.products[0].id,
+              name: response.products[0].name,
+              categoryId: response.products[0].categoryId,
+            } : 'N/A');
+            console.log('[FRONTEND] ===============================================');
             
             // Sort products
             let sortedProducts = [...response.products];

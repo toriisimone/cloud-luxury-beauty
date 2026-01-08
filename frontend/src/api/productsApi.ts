@@ -26,7 +26,21 @@ export const getProducts = async (params?: GetProductsParams): Promise<ProductsR
   if (params?.category) {
     queryParams.category = params.category;
   }
+  
+  console.log('[PRODUCTS API] ========== GET PRODUCTS ==========');
+  console.log('[PRODUCTS API] Params:', queryParams);
+  console.log('[PRODUCTS API] Calling: /products with params:', queryParams);
+  
   const response = await axiosClient.get('/products', { params: queryParams });
+  
+  console.log('[PRODUCTS API] Response received:', {
+    productCount: response.data.products?.length || 0,
+    total: response.data.total || 0,
+    page: response.data.page || 0,
+    totalPages: response.data.totalPages || 0,
+  });
+  console.log('[PRODUCTS API] ===================================');
+  
   return response.data;
 };
 

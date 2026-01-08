@@ -6,12 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
-    },
+    // Proxy removed - using production backend URL directly via axiosClient baseURL
+    // This ensures all API calls go to: https://cloud-luxury-backend-production.up.railway.app/api
   },
   test: {
     globals: true,
