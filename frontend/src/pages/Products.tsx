@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import AmazonProductCard from '../components/AmazonProductCard';
 import Loader from '../components/Loader';
 import { Product } from '../types/global';
+import { AmazonProduct } from '../api/amazonApi';
 import * as productsApi from '../api/productsApi';
+import * as amazonApi from '../api/amazonApi';
 import * as categoriesApi from '../api/categoriesApi';
 import { Category } from '../types/global';
 import styles from './Products.module.css';
@@ -12,6 +15,7 @@ const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
+  const [amazonProducts, setAmazonProducts] = useState<AmazonProduct[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
@@ -19,6 +23,7 @@ const Products = () => {
   const [total, setTotal] = useState(0);
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
+  const [isAmazonSource, setIsAmazonSource] = useState(false);
 
   const categoryName = searchParams.get('category') || 'Shop All';
   const sortBy = searchParams.get('sort') || 'featured';
@@ -40,47 +45,82 @@ const Products = () => {
       try {
         setLoading(true);
         const categoryParam = searchParams.get('category');
-        const search = searchParams.get('search');
-        const featured = searchParams.get('featured');
-        const page = parseInt(searchParams.get('page') || '1', 10);
-        const sort = searchParams.get('sort') || 'featured';
-
-        // Find category by name if category param exists
-        let categoryId: string | undefined;
-        if (categoryParam) {
-          const category = categories.find(c => c.name === categoryParam);
-          if (category) {
-            categoryId = category.id;
-          }
-        }
-
-        const params: productsApi.GetProductsParams = {
-          categoryId: categoryId || undefined,
-          search: search || undefined,
-          featured: featured === 'true' ? true : undefined,
-          page,
-          limit: 48, // Glossier shows many products per page
-        };
-
-        const response = await productsApi.getProducts(params);
         
-        // Sort products based on sort parameter
-        let sortedProducts = [...response.products];
-        if (sort === 'price-low') {
-          sortedProducts.sort((a, b) => a.price - b.price);
-        } else if (sort === 'price-high') {
-          sortedProducts.sort((a, b) => b.price - a.price);
-        } else if (sort === 'name-asc') {
-          sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sort === 'name-desc') {
-          sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
-        }
-        // 'featured' and 'newest' use default order from API
+        // If Skincare category, fetch from Amazon API
+        if (categoryParam === 'Skincare') {
+          try {
+            const amazonResponse = await amazonApi.getAmazonSkincareProducts();
+            let sortedProducts = [...amazonResponse.products];
+            
+            // Sort Amazon products
+            const sort = searchParams.get('sort') || 'featured';
+            if (sort === 'price-low') {
+              sortedProducts.sort((a, b) => a.price - b.price);
+            } else if (sort === 'price-high') {
+              sortedProducts.sort((a, b) => b.price - a.price);
+            } else if (sort === 'name-asc') {
+              sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sort === 'name-desc') {
+              sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
+            }
+            
+            setAmazonProducts(sortedProducts);
+            setProducts([]);
+            setIsAmazonSource(true);
+            setTotal(sortedProducts.length);
+            setTotalPages(1);
+            setCurrentPage(1);
+          } catch (error) {
+            console.error('Failed to fetch Amazon products, falling back to regular products:', error);
+            // Fall back to regular products if Amazon API fails
+            setIsAmazonSource(false);
+          }
+        } else {
+          // Regular product fetching for other categories
+          setIsAmazonSource(false);
+          const search = searchParams.get('search');
+          const featured = searchParams.get('featured');
+          const page = parseInt(searchParams.get('page') || '1', 10);
+          const sort = searchParams.get('sort') || 'featured';
 
-        setProducts(sortedProducts);
-        setTotalPages(response.totalPages);
-        setCurrentPage(response.page);
-        setTotal(response.total);
+          // Find category by name if category param exists
+          let categoryId: string | undefined;
+          if (categoryParam) {
+            const category = categories.find(c => c.name === categoryParam);
+            if (category) {
+              categoryId = category.id;
+            }
+          }
+
+          const params: productsApi.GetProductsParams = {
+            categoryId: categoryId || undefined,
+            search: search || undefined,
+            featured: featured === 'true' ? true : undefined,
+            page,
+            limit: 48, // Glossier shows many products per page
+          };
+
+          const response = await productsApi.getProducts(params);
+          
+          // Sort products based on sort parameter
+          let sortedProducts = [...response.products];
+          if (sort === 'price-low') {
+            sortedProducts.sort((a, b) => a.price - b.price);
+          } else if (sort === 'price-high') {
+            sortedProducts.sort((a, b) => b.price - a.price);
+          } else if (sort === 'name-asc') {
+            sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+          } else if (sort === 'name-desc') {
+            sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+          }
+          // 'featured' and 'newest' use default order from API
+
+          setProducts(sortedProducts);
+          setAmazonProducts([]);
+          setTotalPages(response.totalPages);
+          setCurrentPage(response.page);
+          setTotal(response.total);
+        }
       } catch (error) {
         console.error('Failed to fetch products:', error);
       } finally {
@@ -215,7 +255,17 @@ const Products = () => {
         )}
 
         {/* Products Grid */}
-        {products.length === 0 ? (
+        {isAmazonSource ? (
+          amazonProducts.length === 0 ? (
+            <p className={styles.empty}>No products found.</p>
+          ) : (
+            <div className={styles.grid}>
+              {amazonProducts.map((product) => (
+                <AmazonProductCard key={product.asin} product={product} />
+              ))}
+            </div>
+          )
+        ) : products.length === 0 ? (
           <p className={styles.empty}>No products found.</p>
         ) : (
           <>

@@ -17,6 +17,7 @@ import { logger } from './config/logger';
 import { connectDatabase } from './config/database';
 import { autoMigrate } from './utils/autoMigrate';
 import { autoSeedIfEmpty } from './utils/autoSeed';
+import { refreshProductCache } from './services/amazonApi.service';
 
 console.log('DEBUG: Imports completed, config loaded');
 console.log('DEBUG: DATABASE_URL from config length =', config.DATABASE_URL.length);
@@ -63,6 +64,24 @@ async function startServer() {
       logger.info(`Server running on port ${PORT}`);
       logger.info(`Environment: ${config.NODE_ENV}`);
       logger.info(`CORS origin: ${config.CORS_ORIGIN}`);
+
+      // Initialize Amazon products cache on startup
+      if (config.AMAZON_ACCESS_KEY && config.AMAZON_SECRET_KEY && config.AMAZON_ASSOCIATE_TAG) {
+        logger.info('Initializing Amazon products cache...');
+        refreshProductCache().catch((error) => {
+          logger.error('Failed to initialize Amazon products cache:', error);
+        });
+
+        // Set up hourly refresh
+        setInterval(() => {
+          logger.info('Refreshing Amazon products cache (hourly)...');
+          refreshProductCache().catch((error) => {
+            logger.error('Failed to refresh Amazon products cache:', error);
+          });
+        }, 60 * 60 * 1000); // 1 hour
+      } else {
+        logger.warn('Amazon API credentials not configured. Amazon products will not be available.');
+      }
     });
   } catch (error: any) {
     console.error('DEBUG: ERROR in startServer():');

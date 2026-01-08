@@ -42,6 +42,11 @@ export const config = {
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || '',
   // CORS origin must be provided via environment variable (no fallback)
   CORS_ORIGIN: process.env.CORS_ORIGIN || '',
+  // Amazon Product Advertising API credentials
+  AMAZON_ACCESS_KEY: process.env.AMAZON_ACCESS_KEY || '',
+  AMAZON_SECRET_KEY: process.env.AMAZON_SECRET_KEY || '',
+  AMAZON_ASSOCIATE_TAG: process.env.AMAZON_ASSOCIATE_TAG || '',
+  AMAZON_REGION: process.env.AMAZON_REGION || 'us-east-1',
 };
 
 // DEBUG: Log config values (without secrets)

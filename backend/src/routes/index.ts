@@ -6,11 +6,13 @@ import couponsRoutes from './coupons.routes';
 import ordersRoutes from './orders.routes';
 import usersRoutes from './users.routes';
 import adminRoutes from './admin.routes';
+import amazonRoutes from './amazon.routes';
 
 const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/products', productsRoutes);
+router.use('/amazon', amazonRoutes);
 router.use('/categories', categoriesRoutes);
 router.use('/coupons', couponsRoutes);
 router.use('/orders', ordersRoutes);
