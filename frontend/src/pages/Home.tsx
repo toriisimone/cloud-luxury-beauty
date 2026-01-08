@@ -9,13 +9,12 @@ import * as categoriesApi from '../api/categoriesApi';
 import styles from './Home.module.css';
 
 // Hero banner images - first is user's uploaded image, rest are placeholders
-// To use hero-banner.jpg: Place it in frontend/public/ and reference as '/hero-banner.jpg'
-// Or import it: import heroBanner from '../assets/hero-banner.jpg' and use heroBanner
+// User should place hero-banner.jpg in frontend/public/images/
 const HERO_SLIDES = [
   {
-    image: '/hero-banner.jpg', // User's uploaded image - place in public/ folder
-    title: 'Cloud-lit beauty, weightless finish',
-    subtitle: 'Discover your radiance with our premium collection',
+    image: '/images/hero-banner.jpg', // User's uploaded image - place in public/images/ folder
+    title: 'AURAPOP — Tori Edition',
+    subtitle: 'Cloud-lit beauty, weightless finish',
     cta: 'Shop Now',
     ctaLink: '/products',
   },

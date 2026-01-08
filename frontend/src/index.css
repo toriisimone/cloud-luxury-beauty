@@ -1,12 +1,38 @@
 :root {
+  /* Glossier-inspired color palette with cloud theme */
   --color-blush: #fdf2f4;
   --color-blush-dark: #f8e1e7;
   --color-lavender: #f3f0ff;
   --color-rose-gold: #b76e79;
   --color-gold: #d4af37;
-  --color-text: #2d2d2d;
+  --color-text: #1a1a1a;
   --color-text-light: #666666;
+  --color-text-lighter: #999999;
+  --color-white: #ffffff;
+  --color-cloud: rgba(255, 255, 255, 0.9);
   --glass: rgba(255, 255, 255, 0.7);
+  
+  /* Spacing - Glossier style (airy, lots of white space) */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-xxl: 4rem;
+  
+  /* Typography - Small, clean, minimalist */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-xxl: 2rem;
+  
+  /* Cloud gradients */
+  --cloud-gradient: radial-gradient(circle 800px at 20% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 70%),
+                    radial-gradient(circle 600px at 80% 70%, rgba(253, 242, 244, 0.2) 0%, transparent 60%),
+                    linear-gradient(180deg, rgba(243, 240, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
 }
 
 * {
@@ -16,33 +42,65 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   color: var(--color-text);
-  background: linear-gradient(135deg, var(--color-blush) 0%, var(--color-lavender) 100%);
+  background: var(--color-white);
   min-height: 100vh;
-  line-height: 1.6;
+  line-height: 1.5;
+  font-size: var(--font-size-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
   color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: var(--font-size-xxl);
+  font-weight: 300;
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 400;
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 400;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.7;
 }
 
 button {
-  font-family: 'Inter', sans-serif;
+  font-family: inherit;
   cursor: pointer;
   border: none;
   outline: none;
+  background: none;
+  font-size: inherit;
+  transition: opacity 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.7;
 }
 
 input, textarea, select {
-  font-family: 'Inter', sans-serif;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 #root {

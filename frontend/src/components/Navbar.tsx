@@ -8,7 +8,6 @@ const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const { getItemCount } = useCart();
   const navigate = useNavigate();
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -18,44 +17,32 @@ const Navbar = () => {
 
   const menuItems = [
     {
-      name: 'cosmetics',
-      subcategories: [
-        { name: 'Lips', href: '/products?category=Lips' },
-        { name: 'Face', href: '/products?category=Face' },
-        { name: 'Eyes', href: '/products?category=Eyes' },
-        { name: 'Cheeks', href: '/products?category=Cheeks' },
-        { name: 'Brushes', href: '/products?category=Brushes' },
-      ],
+      name: 'Skincare',
+      href: '/products?category=Skincare',
     },
     {
-      name: 'fragrance',
-      subcategories: [
-        { name: 'Perfume', href: '/products?category=Fragrance' },
-        { name: 'Body Mist', href: '/products?category=Body Mist' },
-        { name: 'Candles', href: '/products?category=Candles' },
-      ],
-      hasHearts: true,
+      name: 'Makeup',
+      href: '/products?category=Makeup',
     },
     {
-      name: 'skin',
-      subcategories: [
-        { name: 'Skincare', href: '/products?category=Skincare' },
-        { name: 'Face Oils', href: '/products?category=Face Oils' },
-        { name: 'Serums', href: '/products?category=Serums' },
-        { name: 'Moisturizers', href: '/products?category=Moisturizers' },
-      ],
+      name: 'Body',
+      href: '/products?category=Body',
     },
     {
-      name: 'discover',
-      subcategories: [
-        { name: 'New Arrivals', href: '/products?featured=true' },
-        { name: 'Best Sellers', href: '/products?featured=true' },
-        { name: 'Limited Edition', href: '/products?category=Limited Edition' },
-      ],
+      name: 'Fragrance',
+      href: '/products?category=Fragrance',
     },
     {
-      name: 'rewards',
-      href: '/rewards',
+      name: 'Balms',
+      href: '/products?category=Balms',
+    },
+    {
+      name: 'Sets',
+      href: '/products?category=Sets',
+    },
+    {
+      name: 'Shop All',
+      href: '/products',
     },
   ];
 
@@ -70,41 +57,13 @@ const Navbar = () => {
         {/* Center Navigation */}
         <div className={styles.centerNav}>
           {menuItems.map((item) => (
-            <div
+            <Link
               key={item.name}
-              className={styles.menuItem}
-              onMouseEnter={() => setActiveMenu(item.name)}
-              onMouseLeave={() => setActiveMenu(null)}
+              to={item.href}
+              className={styles.menuLink}
             >
-              {item.href ? (
-                <Link to={item.href} className={styles.menuLink}>
-                  {item.name}
-                  {item.hasHearts && <span className={styles.hearts}>♥</span>}
-                </Link>
-              ) : (
-                <span className={styles.menuLink}>
-                  {item.name}
-                  {item.hasHearts && <span className={styles.hearts}>♥</span>}
-                </span>
-              )}
-              
-              {item.subcategories && activeMenu === item.name && (
-                <div className={styles.megaMenu}>
-                  <div className={styles.megaMenuContent}>
-                    {item.subcategories.map((sub) => (
-                      <Link
-                        key={sub.name}
-                        to={sub.href}
-                        className={styles.subcategoryLink}
-                        onClick={() => setActiveMenu(null)}
-                      >
-                        {sub.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+              {item.name}
+            </Link>
           ))}
         </div>
         
@@ -150,21 +109,13 @@ const Navbar = () => {
         <div className={styles.mobileMenu}>
           {menuItems.map((item) => (
             <div key={item.name} className={styles.mobileMenuItem}>
-              {item.href ? (
-                <Link 
-                  to={item.href} 
-                  className={styles.mobileMenuLink}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                  {item.hasHearts && <span className={styles.hearts}>♥</span>}
-                </Link>
-              ) : (
-                <span className={styles.mobileMenuLink}>
-                  {item.name}
-                  {item.hasHearts && <span className={styles.hearts}>♥</span>}
-                </span>
-              )}
+              <Link 
+                to={item.href} 
+                className={styles.mobileMenuLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
             </div>
           ))}
         </div>
