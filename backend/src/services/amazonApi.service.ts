@@ -131,6 +131,7 @@ async function searchAmazonProducts(
         'Images.Primary.Small',
         'Images.Variants.Large',
         'Images.Variants.Medium',
+        'Images.Variants.Small',
         'ItemInfo.Title',
         'ItemInfo.ByLineInfo',
         'ItemInfo.Classifications',
@@ -269,7 +270,8 @@ async function searchAmazonProducts(
           
           const title = item.ItemInfo?.Title?.DisplayValue || 'Unknown Product';
           
-          // Extract image URL with multiple fallbacks - try all possible image paths
+          // Extract image URL with multiple fallbacks - try ALL possible image paths
+          // Priority: Primary Large > Primary Medium > Primary Small > Variants Large > Variants Medium > Variants Small
           let imageUrl = '';
           if (item.Images?.Primary?.Large?.URL) {
             imageUrl = item.Images.Primary.Large.URL;
@@ -281,19 +283,31 @@ async function searchAmazonProducts(
             imageUrl = item.Images.Variants.Large[0].URL;
           } else if (item.Images?.Variants?.Medium?.[0]?.URL) {
             imageUrl = item.Images.Variants.Medium[0].URL;
+          } else if (item.Images?.Variants?.Small?.[0]?.URL) {
+            imageUrl = item.Images.Variants.Small[0].URL;
           }
           
-          // Validate image URL - must be a valid HTTPS URL
-          if (!imageUrl || !imageUrl.startsWith('http')) {
-            logger.warn(`[AMAZON API] Product "${title}" (ASIN: ${asin}) has no valid image URL, skipping`);
-            logger.warn(`[AMAZON API] Image paths checked:`, {
+          // Relaxed validation - accept any non-empty string that looks like a URL
+          // Amazon image URLs can be http:// or https://, and sometimes relative paths
+          const isValidImageUrl = imageUrl && (
+            imageUrl.startsWith('http://') || 
+            imageUrl.startsWith('https://') ||
+            imageUrl.startsWith('//') || // Protocol-relative URL
+            imageUrl.startsWith('/') // Relative path (less common but possible)
+          );
+          
+          if (!isValidImageUrl) {
+            logger.warn(`[AMAZON API] Product "${title}" (ASIN: ${asin}) has no valid image URL, will include anyway with empty image`);
+            logger.debug(`[AMAZON API] Image paths checked:`, {
               primaryLarge: item.Images?.Primary?.Large?.URL || 'N/A',
               primaryMedium: item.Images?.Primary?.Medium?.URL || 'N/A',
               primarySmall: item.Images?.Primary?.Small?.URL || 'N/A',
               variantsLarge: item.Images?.Variants?.Large?.[0]?.URL || 'N/A',
               variantsMedium: item.Images?.Variants?.Medium?.[0]?.URL || 'N/A',
+              variantsSmall: item.Images?.Variants?.Small?.[0]?.URL || 'N/A',
             });
-            continue; // Skip products without valid images
+            // Don't skip - use empty string and let frontend handle it
+            imageUrl = '';
           }
           
           const priceStr = item.Offers?.Listings?.[0]?.Price?.Amount || 
@@ -485,16 +499,30 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
 
     logger.info(`[AMAZON API] Unique SKINCARE products after deduplication: ${uniqueProducts.length}`);
     
-    // Log final image statistics
-    const finalWithImages = uniqueProducts.filter(p => p.imageUrl && p.imageUrl.startsWith('http')).length;
-    logger.info(`[AMAZON API] Final skincare products with valid images: ${finalWithImages} out of ${uniqueProducts.length}`);
+    // Log final image statistics - count products with valid image URLs
+    const finalWithImages = uniqueProducts.filter(p => {
+      const url = p.imageUrl || '';
+      return url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//'));
+    }).length;
+    const finalWithoutImages = uniqueProducts.length - finalWithImages;
+    logger.info(`[AMAZON API] Final skincare products: ${uniqueProducts.length} total, ${finalWithImages} with valid images, ${finalWithoutImages} without images`);
     
+    // Ensure we have at least 20 products - if not, log warning but still return what we have
+    if (uniqueProducts.length < 20) {
+      logger.warn(`[AMAZON API] ⚠️ Only ${uniqueProducts.length} products found, target is 20+`);
+    } else {
+      logger.info(`[AMAZON API] ✅ Successfully fetched ${uniqueProducts.length} products (target: 20+)`);
+    }
+    
+    // Log first 10 image URLs
     if (uniqueProducts.length > 0) {
-      const sampleSize = Math.min(5, uniqueProducts.length);
+      const sampleSize = Math.min(10, uniqueProducts.length);
       logger.info(`[AMAZON API] First ${sampleSize} skincare product image URLs:`, 
-        uniqueProducts.slice(0, sampleSize).map(p => ({
+        uniqueProducts.slice(0, sampleSize).map((p, idx) => ({
+          index: idx + 1,
           title: p.title.substring(0, 40),
-          imageUrl: p.imageUrl,
+          imageUrl: p.imageUrl || 'NO IMAGE',
+          hasImage: !!(p.imageUrl && (p.imageUrl.startsWith('http://') || p.imageUrl.startsWith('https://') || p.imageUrl.startsWith('//'))),
         }))
       );
     }

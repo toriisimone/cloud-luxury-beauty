@@ -22,12 +22,12 @@ const AmazonProductCard = ({ product }: AmazonProductCardProps) => {
   // Log image URL and handle errors
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const img = e.currentTarget;
-    console.error('[AMAZON PRODUCT CARD] Image failed to load:', {
+    console.warn('[AMAZON PRODUCT CARD] Image failed to load:', {
       productTitle: product.title,
       imageUrl: product.imageUrl,
       attemptedSrc: img.src,
     });
-    // Hide broken image - don't show placeholder
+    // Hide broken image but keep the card visible
     img.style.display = 'none';
   };
 
@@ -38,27 +38,28 @@ const AmazonProductCard = ({ product }: AmazonProductCardProps) => {
     });
   };
 
-  // Only render if we have a valid image URL
-  if (!product.imageUrl || !product.imageUrl.startsWith('http')) {
-    console.warn('[AMAZON PRODUCT CARD] Product missing valid image URL, skipping render:', {
-      productTitle: product.title,
-      imageUrl: product.imageUrl,
-    });
-    return null; // Don't render products without images
-  }
+  // Render product even if image is missing - show product info without image
+  // Only skip if imageUrl is explicitly null/undefined (not empty string)
+  const hasImageUrl = product.imageUrl !== null && product.imageUrl !== undefined;
 
   return (
     <div className={styles.card}>
       <div className={styles.link}>
         <div className={styles.imageContainer}>
-          <img 
-            src={product.imageUrl} 
-            alt={product.title} 
-            className={styles.image}
-            onError={handleImageError}
-            onLoad={handleImageLoad}
-            loading="lazy"
-          />
+          {hasImageUrl && product.imageUrl ? (
+            <img 
+              src={product.imageUrl} 
+              alt={product.title} 
+              className={styles.image}
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+              loading="lazy"
+            />
+          ) : (
+            <div className={styles.placeholder} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+              <span>Image Loading...</span>
+            </div>
+          )}
           {product.tags && product.tags.length > 0 && (
             <span className={styles.label}>{product.tags[0]}</span>
           )}
