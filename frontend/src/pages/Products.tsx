@@ -278,9 +278,23 @@ const Products = () => {
     ([key]) => key !== 'category' && key !== 'page' && key !== 'sort'
   ).length;
 
+  // Log rendering state for debugging
+  console.log('[FRONTEND RENDER] ========== RENDERING PRODUCTS PAGE ==========');
+  console.log('[FRONTEND RENDER] Loading:', loading);
+  console.log('[FRONTEND RENDER] Amazon products:', amazonProducts.length);
+  console.log('[FRONTEND RENDER] Regular products:', products.length);
+  console.log('[FRONTEND RENDER] Is Amazon source:', isAmazonSource);
+  console.log('[FRONTEND RENDER] Total:', total);
+
+  // Show loader ONLY when loading is true
   if (loading) {
+    console.log('[FRONTEND RENDER] Showing loader...');
     return <Loader />;
   }
+
+  // Determine if we have products to show
+  const hasProducts = (isAmazonSource && amazonProducts.length > 0) || (!isAmazonSource && products.length > 0);
+  console.log('[FRONTEND RENDER] Has products:', hasProducts);
 
   return (
     <div className={styles.products}>
@@ -366,7 +380,7 @@ const Products = () => {
           </div>
         )}
 
-        {/* Products Grid */}
+        {/* Products Grid - Only render when we have products */}
         {isAmazonSource && amazonProducts.length > 0 ? (
           <div className={styles.grid}>
             {amazonProducts.map((product) => (
@@ -401,12 +415,14 @@ const Products = () => {
             )}
           </>
         ) : (
-          <p className={styles.empty}>No products found.</p>
+          <div className={styles.emptyState}>
+            <p className={styles.empty}>No products found.</p>
+          </div>
         )}
       </div>
 
-      {/* Cloud Divider */}
-      <div className={styles.cloudDivider}></div>
+      {/* Cloud Divider - Only show when we have products */}
+      {hasProducts && <div className={styles.cloudDivider}></div>}
     </div>
   );
 };

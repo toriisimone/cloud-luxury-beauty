@@ -84,9 +84,25 @@ const Home = () => {
     fetchData();
   }, []);
 
+  // Log rendering state for debugging
+  console.log('[HOME RENDER] ========== RENDERING HOME PAGE ==========');
+  console.log('[HOME RENDER] Loading:', loading);
+  console.log('[HOME RENDER] Amazon products:', amazonSkincareProducts.length);
+  console.log('[HOME RENDER] Regular products:', skincareProducts.length);
+  console.log('[HOME RENDER] Use Amazon:', useAmazonProducts);
+  console.log('[HOME RENDER] Categories:', categories.length);
+
+  // Show loader ONLY when loading is true
   if (loading) {
+    console.log('[HOME RENDER] Showing loader...');
     return <Loader />;
   }
+
+  const hasSkincareProducts = useAmazonProducts 
+    ? amazonSkincareProducts.length > 0 
+    : skincareProducts.length > 0;
+
+  console.log('[HOME RENDER] Has skincare products:', hasSkincareProducts);
 
   return (
     <div className={styles.home}>
@@ -107,11 +123,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Cloud Divider */}
-      <div className={styles.cloudDivider}></div>
+      {/* Cloud Divider - Only show if we have skincare products */}
+      {hasSkincareProducts && <div className={styles.cloudDivider}></div>}
 
-      {/* Shop Skincare Section */}
-      {(useAmazonProducts ? amazonSkincareProducts.length > 0 : skincareProducts.length > 0) && (
+      {/* Shop Skincare Section - Only render if we have products */}
+      {hasSkincareProducts && (
         <section className={styles.skincareSection}>
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Shop Skincare</h2>
@@ -133,8 +149,8 @@ const Home = () => {
         </section>
       )}
 
-      {/* Cloud Divider */}
-      <div className={styles.cloudDivider}></div>
+      {/* Cloud Divider - Only show if we have categories */}
+      {categories.length > 0 && <div className={styles.cloudDivider}></div>}
 
       {/* Shop by Category Section */}
       {categories.length > 0 && (
@@ -150,8 +166,8 @@ const Home = () => {
         </section>
       )}
 
-      {/* Cloud Divider */}
-      <div className={styles.cloudDivider}></div>
+      {/* Cloud Divider - Only show at bottom if we have content */}
+      {(hasSkincareProducts || categories.length > 0) && <div className={styles.cloudDivider}></div>}
     </div>
   );
 };
