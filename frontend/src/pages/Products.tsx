@@ -138,7 +138,11 @@ const Products = () => {
                 setCategories(categoriesRes);
                 skincareCategory = categoriesRes.find(c => c.name === 'Skincare' || c.name === 'skincare' || c.name.toLowerCase() === 'skincare');
                 console.log('[FRONTEND] Categories fetched:', categoriesRes.length);
+                console.log('[FRONTEND] All category names:', categoriesRes.map(c => c.name));
                 console.log('[FRONTEND] Skincare category found:', !!skincareCategory);
+                if (skincareCategory) {
+                  console.log('[FRONTEND] Skincare category ID:', skincareCategory.id);
+                }
               } catch (error: any) {
                 console.error('[FRONTEND] Failed to fetch categories:', error);
               }
@@ -149,8 +153,10 @@ const Products = () => {
             const page = parseInt(searchParams.get('page') || '1', 10);
             const sort = searchParams.get('sort') || 'featured';
 
+            // Use category NAME parameter - backend will handle lookup and auto-seeding
+            console.log('[FRONTEND] Fetching products using category name: "Skincare"');
             const params: productsApi.GetProductsParams = {
-              categoryId: skincareCategory?.id || undefined,
+              category: 'Skincare', // Use category name - backend will lookup and auto-seed if needed
               search: search || undefined,
               featured: featured === 'true' ? true : undefined,
               page,

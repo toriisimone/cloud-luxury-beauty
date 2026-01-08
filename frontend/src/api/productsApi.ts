@@ -3,6 +3,7 @@ import { Product } from '../types/global';
 
 export interface GetProductsParams {
   categoryId?: string;
+  category?: string; // Support category name
   search?: string;
   minPrice?: number;
   maxPrice?: number;
@@ -20,7 +21,12 @@ export interface ProductsResponse {
 }
 
 export const getProducts = async (params?: GetProductsParams): Promise<ProductsResponse> => {
-  const response = await axiosClient.get('/products', { params });
+  // Build query params - include category name if provided
+  const queryParams: any = { ...params };
+  if (params?.category) {
+    queryParams.category = params.category;
+  }
+  const response = await axiosClient.get('/products', { params: queryParams });
   return response.data;
 };
 
