@@ -16,6 +16,7 @@ export interface AmazonProductsResponse {
   products: AmazonProduct[];
   count: number;
   source: string;
+  error?: string; // Optional error message if API call fails
 }
 
 /**
