@@ -1,0 +1,8 @@
+# Ignore frontend completely
+../frontend/
+frontend/
+
+# Ignore root workspace files
+../package.json
+../vercel.json
+../.github/
