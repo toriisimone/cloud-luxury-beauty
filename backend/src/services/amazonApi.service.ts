@@ -105,9 +105,16 @@ async function searchAmazonProducts(
     logger.info(`[AMAZON API] Timestamp: ${timestamp}`);
 
     // Request payload - EXACT format required by PA-API 5.0
+    // Verify Associate Tag is exactly as provided
+    const associateTag = config.AMAZON_ASSOCIATE_TAG.trim();
+    if (associateTag !== 'victoria0cdb-20') {
+      logger.warn(`[AMAZON API] Associate Tag mismatch! Expected: victoria0cdb-20, Got: "${associateTag}"`);
+    }
+    logger.info(`[AMAZON API] Using Associate Tag: "${associateTag}"`);
+    
     const payload = JSON.stringify({
       PartnerType: 'Associates',
-      PartnerTag: config.AMAZON_ASSOCIATE_TAG,
+      PartnerTag: associateTag, // Use trimmed value
       Marketplace: 'www.amazon.com',
       Keywords: keywords,
       SearchIndex: 'Beauty',
