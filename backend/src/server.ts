@@ -3,6 +3,12 @@ console.log('DEBUG: ========================================');
 console.log('DEBUG: Backend starting...');
 console.log('DEBUG: Node version:', process.version);
 console.log('DEBUG: Current working directory:', process.cwd());
+console.log('DEBUG: All process.env keys:', Object.keys(process.env).sort());
+console.log('DEBUG: Process.env count:', Object.keys(process.env).length);
+console.log('DEBUG: NODE_ENV from process.env:', process.env.NODE_ENV);
+console.log('DEBUG: RAILWAY_ENVIRONMENT:', process.env.RAILWAY_ENVIRONMENT);
+console.log('DEBUG: RAILWAY_SERVICE_NAME:', process.env.RAILWAY_SERVICE_NAME);
+console.log('DEBUG: RAILWAY_PROJECT_ID:', process.env.RAILWAY_PROJECT_ID);
 console.log('DEBUG: ========================================');
 
 import app from './app';

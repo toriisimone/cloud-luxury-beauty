@@ -1,11 +1,19 @@
 import dotenv from 'dotenv';
 
 // DEBUG: Log before loading env
+console.log('DEBUG: ========================================');
 console.log('DEBUG: Loading environment variables...');
+console.log('DEBUG: Total process.env keys:', Object.keys(process.env).length);
+console.log('DEBUG: All env keys:', Object.keys(process.env).sort().join(', '));
 console.log('DEBUG: NODE_ENV =', process.env.NODE_ENV);
 console.log('DEBUG: DATABASE_URL exists?', !!process.env.DATABASE_URL);
 console.log('DEBUG: DATABASE_URL length =', process.env.DATABASE_URL?.length || 0);
 console.log('DEBUG: DATABASE_URL (first 50 chars) =', process.env.DATABASE_URL?.substring(0, 50) || 'undefined');
+console.log('DEBUG: JWT_SECRET exists?', !!process.env.JWT_SECRET);
+console.log('DEBUG: JWT_REFRESH_SECRET exists?', !!process.env.JWT_REFRESH_SECRET);
+console.log('DEBUG: CORS_ORIGIN =', process.env.CORS_ORIGIN);
+console.log('DEBUG: PORT =', process.env.PORT);
+console.log('DEBUG: ========================================');
 
 // Only load .env file in development - in production, use Railway environment variables directly
 // This ensures Railway's DATABASE_URL is never overridden by a local .env file
