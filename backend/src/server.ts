@@ -15,6 +15,7 @@ import app from './app';
 import { config } from './config/env';
 import { logger } from './config/logger';
 import { connectDatabase } from './config/database';
+import { autoSeedIfEmpty } from './utils/autoSeed';
 
 console.log('DEBUG: Imports completed, config loaded');
 console.log('DEBUG: DATABASE_URL from config length =', config.DATABASE_URL.length);
@@ -30,6 +31,11 @@ async function startServer() {
     await connectDatabase();
     console.log('DEBUG: Database connected successfully');
     logger.info('Database connected successfully');
+
+    // Auto-seed database if empty (runs automatically on startup)
+    logger.info('Running auto-seed check...');
+    await autoSeedIfEmpty();
+    logger.info('Auto-seed check completed.');
 
     console.log('DEBUG: About to start Express server on port', PORT);
     app.listen(PORT, () => {
