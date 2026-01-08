@@ -1,12 +1,16 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-// Use production backend URL if VITE_API_URL is not set
-const API_URL = import.meta.env.VITE_API_URL || 'https://cloud-luxury-backend-production.up.railway.app/api';
+// CRITICAL: Always use this exact backend URL - no localhost, no old URLs, no environment variable overrides
+const API_URL = 'https://cloud-luxury-backend-production.up.railway.app/api';
 
 // ALWAYS log API URL to help with debugging (both dev and production)
 console.log('[API CONFIG] ========== API CONFIGURATION ==========');
-console.log('[API CONFIG] VITE_API_URL env var:', import.meta.env.VITE_API_URL || 'NOT SET');
+console.log('[API CONFIG] Backend base URL (HARDCODED):', API_URL);
+console.log('[API CONFIG] VITE_API_URL env var (IGNORED):', import.meta.env.VITE_API_URL || 'NOT SET');
 console.log('[API CONFIG] Using backend base URL:', API_URL);
+console.log('[API CONFIG] Full products URL:', `${API_URL}/products`);
+console.log('[API CONFIG] Full Skincare URL:', `${API_URL}/products?category=Skincare`);
+console.log('[API CONFIG] Full categories URL:', `${API_URL}/categories`);
 console.log('[API CONFIG] ========================================');
 
 const axiosClient = axios.create({
@@ -19,8 +23,7 @@ const axiosClient = axios.create({
 
 // Verify baseURL is set correctly
 console.log('[API CONFIG] Axios client created with baseURL:', axiosClient.defaults.baseURL);
-console.log('[API CONFIG] Full products URL will be:', `${axiosClient.defaults.baseURL}/products`);
-console.log('[API CONFIG] Full Skincare URL will be:', `${axiosClient.defaults.baseURL}/products?category=Skincare`);
+console.log('[API CONFIG] ✅ Verified: All API calls will use:', axiosClient.defaults.baseURL);
 
 // Request interceptor to add auth token and log requests
 axiosClient.interceptors.request.use(

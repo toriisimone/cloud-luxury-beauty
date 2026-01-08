@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import AmazonProductCard from '../components/AmazonProductCard';
 import CategoryCard from '../components/CategoryCard';
 import Loader from '../components/Loader';
 import { Product, Category } from '../types/global';
-import { AmazonProduct } from '../api/amazonApi';
 import * as productsApi from '../api/productsApi';
-import * as amazonApi from '../api/amazonApi';
 import * as categoriesApi from '../api/categoriesApi';
 import styles from './Home.module.css';
 
+// AMAZON API DISABLED: Always use database products
+// import AmazonProductCard from '../components/AmazonProductCard';
+// import { AmazonProduct } from '../api/amazonApi';
+// import * as amazonApi from '../api/amazonApi';
+
 const Home = () => {
   const [skincareProducts, setSkincareProducts] = useState<Product[]>([]);
-  const [amazonSkincareProducts, setAmazonSkincareProducts] = useState<AmazonProduct[]>([]);
+  // AMAZON API DISABLED: Always use database products
+  // const [amazonSkincareProducts, setAmazonSkincareProducts] = useState<AmazonProduct[]>([]);
+  // const [useAmazonProducts, setUseAmazonProducts] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [useAmazonProducts, setUseAmazonProducts] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,38 +32,26 @@ const Home = () => {
         setCategories(categoriesRes);
         console.log('[HOME] Categories fetched:', categoriesRes.length);
 
-        // Try to fetch Amazon skincare products first
-        try {
-          console.log('[HOME] Attempting to fetch Amazon skincare products...');
-          const amazonResponse = await amazonApi.getAmazonSkincareProducts();
-          if (amazonResponse.products && amazonResponse.products.length > 0) {
-            setAmazonSkincareProducts(amazonResponse.products.slice(0, 12));
-            setUseAmazonProducts(true);
-            console.log('[HOME] ✅ Amazon skincare products fetched:', amazonResponse.products.length);
-          } else {
-            throw new Error('No Amazon products returned');
-          }
-        } catch (amazonError: any) {
-          console.warn('[HOME] ⚠️ Failed to fetch Amazon products, falling back to regular products:', amazonError);
-          // Fallback to regular products
-          const skincareCategory = categoriesRes.find(cat => 
-            cat.name === 'Skincare' || 
-            cat.name === 'skincare' || 
-            cat.name.toLowerCase() === 'skincare'
-          );
-          let skincareProductsRes: productsApi.ProductsResponse;
+        // AMAZON API DISABLED: Always fetch from database for Skincare
+        const skincareCategory = categoriesRes.find(cat => 
+          cat.name === 'Skincare' || 
+          cat.name === 'skincare' || 
+          cat.name.toLowerCase() === 'skincare'
+        );
 
-          if (skincareCategory) {
-            console.log('[HOME] Fetching regular skincare products from category:', skincareCategory.id);
-            skincareProductsRes = await productsApi.getProducts({ categoryId: skincareCategory.id, limit: 12 });
-            setSkincareProducts(skincareProductsRes.products);
-          } else {
-            console.warn('[HOME] Skincare category not found. Displaying all products instead.');
-            skincareProductsRes = await productsApi.getProducts({ limit: 12 });
-            setSkincareProducts(skincareProductsRes.products);
-          }
-          setUseAmazonProducts(false);
-          console.log('[HOME] ✅ Regular skincare products fetched:', skincareProductsRes.products.length);
+        if (skincareCategory) {
+          console.log('[HOME] Fetching skincare products from database (category:', skincareCategory.id, ')');
+          const skincareProductsRes = await productsApi.getProducts({ 
+            category: 'Skincare', // Use category name
+            limit: 12 
+          });
+          setSkincareProducts(skincareProductsRes.products);
+          console.log('[HOME] ✅ Skincare products fetched:', skincareProductsRes.products.length);
+        } else {
+          console.warn('[HOME] Skincare category not found. Displaying all products instead.');
+          const allProductsRes = await productsApi.getProducts({ limit: 12 });
+          setSkincareProducts(allProductsRes.products);
+          console.log('[HOME] ✅ All products fetched:', allProductsRes.products.length);
         }
         
       } catch (error: any) {
@@ -69,10 +60,12 @@ const Home = () => {
           message: error.message,
           response: error.response?.data,
           status: error.response?.status,
+          url: error.config?.url,
+          baseURL: error.config?.baseURL,
+          fullURL: `${error.config?.baseURL}${error.config?.url}`,
         });
         // Set empty arrays but don't block the page
         setSkincareProducts([]);
-        setAmazonSkincareProducts([]);
         setCategories([]);
       } finally {
         // ALWAYS set loading to false
@@ -87,9 +80,7 @@ const Home = () => {
   // Log rendering state for debugging
   console.log('[HOME RENDER] ========== RENDERING HOME PAGE ==========');
   console.log('[HOME RENDER] Loading:', loading);
-  console.log('[HOME RENDER] Amazon products:', amazonSkincareProducts.length);
-  console.log('[HOME RENDER] Regular products:', skincareProducts.length);
-  console.log('[HOME RENDER] Use Amazon:', useAmazonProducts);
+  console.log('[HOME RENDER] Skincare products:', skincareProducts.length);
   console.log('[HOME RENDER] Categories:', categories.length);
 
   // Show loader ONLY when loading is true
@@ -98,9 +89,7 @@ const Home = () => {
     return <Loader />;
   }
 
-  const hasSkincareProducts = useAmazonProducts 
-    ? amazonSkincareProducts.length > 0 
-    : skincareProducts.length > 0;
+  const hasSkincareProducts = skincareProducts.length > 0;
 
   console.log('[HOME RENDER] Has skincare products:', hasSkincareProducts);
 
@@ -132,13 +121,9 @@ const Home = () => {
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Shop Skincare</h2>
             <div className={styles.productsGrid}>
-              {useAmazonProducts
-                ? amazonSkincareProducts.map((product) => (
-                    <AmazonProductCard key={product.asin} product={product} />
-                  ))
-                : skincareProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
+              {skincareProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
             </div>
             <div className={styles.viewMoreContainer}>
               <Link to="/products?category=Skincare" className={styles.viewMoreButton}>
