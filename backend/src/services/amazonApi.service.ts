@@ -85,6 +85,14 @@ async function searchAmazonProducts(
   itemCount: number = 10,
   itemPage: number = 1
 ): Promise<AmazonSearchResponse> {
+  // CRITICAL: Log immediately when function is called
+  logger.info('[AMAZON API SERVICE] ============================================');
+  logger.info('[AMAZON API SERVICE] ✅✅✅ searchAmazonProducts() FUNCTION CALLED ✅✅✅');
+  logger.info(`[AMAZON API SERVICE] Keywords: "${keywords}", ItemCount: ${itemCount}, ItemPage: ${itemPage}`);
+  logger.info('[AMAZON API SERVICE] ============================================');
+  console.log('[AMAZON API SERVICE] ✅✅✅ searchAmazonProducts() FUNCTION CALLED ✅✅✅');
+  console.log(`[AMAZON API SERVICE] Keywords: "${keywords}"`);
+  
   try {
     // Verify credentials are set
     if (!config.AMAZON_ACCESS_KEY || !config.AMAZON_SECRET_KEY || !config.AMAZON_ASSOCIATE_TAG) {
