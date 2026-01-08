@@ -151,6 +151,9 @@ async function searchAmazonProducts(
 
     logger.info(`[AMAZON API] Authorization header created (length: ${authorization.length})`);
     logger.info(`[AMAZON API] Making request to: https://${endpoint}${uri}`);
+    logger.info(`[AMAZON API] Request method: ${method}`);
+    logger.info(`[AMAZON API] Request URI: ${uri}`);
+    logger.info(`[AMAZON API] Request body length: ${payload.length} bytes`);
 
     // Make API request
     // Note: Do NOT include 'Host' header - it's automatically set by fetch
@@ -168,8 +171,13 @@ async function searchAmazonProducts(
     logger.info(`[AMAZON API] Response headers:`, JSON.stringify(Object.fromEntries(response.headers.entries())));
 
     const responseText = await response.text();
-    logger.info(`[AMAZON API] RAW RESPONSE (first 500 chars): ${responseText.substring(0, 500)}`);
+    logger.info(`[AMAZON API] ========== RAW RESPONSE START ==========`);
     logger.info(`[AMAZON API] RAW RESPONSE (full length): ${responseText.length} characters`);
+    logger.info(`[AMAZON API] RAW RESPONSE (first 1000 chars): ${responseText.substring(0, 1000)}`);
+    if (responseText.length > 1000) {
+      logger.info(`[AMAZON API] RAW RESPONSE (last 500 chars): ${responseText.substring(responseText.length - 500)}`);
+    }
+    logger.info(`[AMAZON API] ========== RAW RESPONSE END ==========`);
 
     if (!response.ok) {
       logger.error(`[AMAZON API] Error response: ${responseText}`);
@@ -386,14 +394,22 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
       }
     }
 
+    logger.info(`[AMAZON API] ========== FETCH SUMMARY ==========`);
     logger.info(`[AMAZON API] Total products fetched before deduplication: ${allProducts.length}`);
+    logger.info(`[AMAZON API] Products by keyword:`, 
+      JSON.stringify(keywords.map(k => ({
+        keyword: k,
+        count: allProducts.filter(p => p.title.toLowerCase().includes(k.toLowerCase())).length
+      })))
+    );
 
     // Remove duplicates by ASIN
     const uniqueProducts = Array.from(
       new Map(allProducts.map(p => [p.asin, p])).values()
     ).slice(0, 100); // Limit to 100 products
 
-    logger.info(`[AMAZON API] Unique products after deduplication: ${uniqueProducts.length}`);
+    logger.info(`[AMAZON API] Unique SKINCARE products after deduplication: ${uniqueProducts.length}`);
+    logger.info(`[AMAZON API] ========== END FETCH SUMMARY ==========`);
 
     // Update cache
     productCache = {
