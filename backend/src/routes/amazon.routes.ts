@@ -9,4 +9,7 @@ router.get('/skincare', amazonController.getAmazonProducts);
 // Manually refresh Amazon products cache
 router.post('/refresh', amazonController.refreshAmazonProducts);
 
+// Diagnostic endpoint to check configuration
+router.get('/config', amazonController.checkAmazonConfig);
+
 export default router;

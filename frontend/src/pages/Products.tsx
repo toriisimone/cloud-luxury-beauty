@@ -54,11 +54,18 @@ const Products = () => {
           
           // Try Amazon API first
           try {
-            console.log('Fetching Amazon skincare products...');
+            console.log('[FRONTEND] Fetching Amazon skincare products...');
             const amazonResponse = await amazonApi.getAmazonSkincareProducts();
-            console.log('Amazon API response:', amazonResponse);
+            console.log('[FRONTEND] Amazon API response received:', {
+              productCount: amazonResponse.products?.length || 0,
+              totalCount: amazonResponse.count || 0,
+              source: amazonResponse.source,
+              hasError: !!amazonResponse.error,
+              error: amazonResponse.error,
+            });
             
             if (amazonResponse.products && amazonResponse.products.length > 0) {
+              console.log('[FRONTEND] Amazon products found, displaying them');
               let sortedProducts = [...amazonResponse.products];
               
               // Sort Amazon products
@@ -79,11 +86,18 @@ const Products = () => {
               setTotal(sortedProducts.length);
               setTotalPages(1);
               setCurrentPage(1);
-              console.log('Amazon products set:', sortedProducts.length);
+              console.log('[FRONTEND] Amazon products set:', sortedProducts.length);
               amazonSuccess = true;
+            } else {
+              console.warn('[FRONTEND] Amazon API returned empty products array');
             }
-          } catch (error) {
-            console.error('Failed to fetch Amazon products:', error);
+          } catch (error: any) {
+            console.error('[FRONTEND] Failed to fetch Amazon products:', error);
+            console.error('[FRONTEND] Error details:', {
+              message: error.message,
+              response: error.response?.data,
+              status: error.response?.status,
+            });
           }
           
           // If Amazon failed or returned empty, fetch regular products

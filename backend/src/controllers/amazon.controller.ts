@@ -35,6 +35,7 @@ export const getAmazonProducts = async (req: Request, res: Response) => {
  */
 export const refreshAmazonProducts = async (req: Request, res: Response) => {
   try {
+    logger.info('[AMAZON CONTROLLER] Manual refresh requested');
     await amazonService.refreshProductCache();
     const products = await amazonService.getSkincareProducts();
     res.json({
@@ -43,7 +44,25 @@ export const refreshAmazonProducts = async (req: Request, res: Response) => {
       count: products.length,
     });
   } catch (error: any) {
-    logger.error('Refresh Amazon products error:', error);
+    logger.error('[AMAZON CONTROLLER] Refresh Amazon products error:', error);
     res.status(500).json({ error: error.message || 'Failed to refresh products' });
   }
+};
+
+/**
+ * Diagnostic endpoint to check Amazon API configuration
+ */
+export const checkAmazonConfig = async (req: Request, res: Response) => {
+  const { config } = await import('../config/env');
+  res.json({
+    hasAccessKey: !!config.AMAZON_ACCESS_KEY,
+    accessKeyLength: config.AMAZON_ACCESS_KEY.length,
+    accessKeyPrefix: config.AMAZON_ACCESS_KEY.substring(0, 10),
+    hasSecretKey: !!config.AMAZON_SECRET_KEY,
+    secretKeyLength: config.AMAZON_SECRET_KEY.length,
+    associateTag: config.AMAZON_ASSOCIATE_TAG,
+    associateTagLength: config.AMAZON_ASSOCIATE_TAG.length,
+    region: config.AMAZON_REGION,
+    isConfigured: !!(config.AMAZON_ACCESS_KEY && config.AMAZON_SECRET_KEY && config.AMAZON_ASSOCIATE_TAG),
+  });
 };
