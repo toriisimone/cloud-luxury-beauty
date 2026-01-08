@@ -6,6 +6,16 @@ import { logger } from '../config/logger';
 logger.info('[PRODUCTS CONTROLLER] ✅ Product controller module loaded and ready');
 
 export const getProducts = async (req: Request, res: Response) => {
+  // CRITICAL: Log immediately when function is called
+  logger.info('[PRODUCTS CONTROLLER] ============================================');
+  logger.info('[PRODUCTS CONTROLLER] ✅✅✅ getProducts() FUNCTION CALLED ✅✅✅');
+  logger.info('[PRODUCTS CONTROLLER] This means the route is working!');
+  logger.info('[PRODUCTS CONTROLLER] ============================================');
+  console.log('[PRODUCTS CONTROLLER] ✅✅✅ getProducts() FUNCTION CALLED ✅✅✅');
+  console.log('[PRODUCTS CONTROLLER] Request path:', req.path);
+  console.log('[PRODUCTS CONTROLLER] Request originalUrl:', req.originalUrl);
+  console.log('[PRODUCTS CONTROLLER] Request query:', req.query);
+  
   try {
     const {
       categoryId,
