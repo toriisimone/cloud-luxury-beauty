@@ -322,19 +322,13 @@ const Products = () => {
         )}
 
         {/* Products Grid */}
-        {isAmazonSource ? (
-          amazonProducts.length === 0 ? (
-            <p className={styles.empty}>No products found.</p>
-          ) : (
-            <div className={styles.grid}>
-              {amazonProducts.map((product) => (
-                <AmazonProductCard key={product.asin} product={product} />
-              ))}
-            </div>
-          )
-        ) : products.length === 0 ? (
-          <p className={styles.empty}>No products found.</p>
-        ) : (
+        {isAmazonSource && amazonProducts.length > 0 ? (
+          <div className={styles.grid}>
+            {amazonProducts.map((product) => (
+              <AmazonProductCard key={product.asin} product={product} />
+            ))}
+          </div>
+        ) : products.length > 0 ? (
           <>
             <div className={styles.grid}>
               {products.map((product) => (
@@ -361,6 +355,8 @@ const Products = () => {
               </div>
             )}
           </>
+        ) : (
+          <p className={styles.empty}>No products found.</p>
         )}
       </div>
 
