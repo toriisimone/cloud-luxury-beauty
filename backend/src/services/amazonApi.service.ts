@@ -242,23 +242,62 @@ async function searchAmazonProducts(
       logger.info(`[AMAZON API] Response parsed successfully`);
       logger.info(`[AMAZON API] Response keys: ${Object.keys(data).join(', ')}`);
       
+      // CRITICAL: Log FULL response body
+      console.log('[AMAZON API SERVICE] ========== FULL AMAZON API RESPONSE ==========');
+      console.log('[AMAZON API SERVICE] Raw Amazon response:', JSON.stringify(data, null, 2));
+      logger.info(`[AMAZON API] Full response body:`, JSON.stringify(data, null, 2));
+      console.log('[AMAZON API SERVICE] ==============================================');
+      
       if (data.Errors) {
         logger.error(`[AMAZON API] Response contains Errors:`, JSON.stringify(data.Errors, null, 2));
+        console.error('[AMAZON API SERVICE] ❌ Response contains Errors:', JSON.stringify(data.Errors, null, 2));
         throw new Error(`Amazon API returned errors: ${JSON.stringify(data.Errors)}`);
       }
       
+      // CRITICAL: Check for SearchResult and Items
       if (data.SearchResult) {
         logger.info(`[AMAZON API] SearchResult found`);
         logger.info(`[AMAZON API] TotalResultCount: ${data.SearchResult.TotalResultCount || 'N/A'}`);
-        logger.info(`[AMAZON API] Items count: ${data.SearchResult.Items?.length || 0}`);
-        if (data.SearchResult.Items && data.SearchResult.Items.length > 0) {
+        
+        const itemsCount = data.SearchResult.Items?.length || 0;
+        logger.info(`[AMAZON API] Items count: ${itemsCount}`);
+        console.log(`[AMAZON API SERVICE] Items returned: ${itemsCount}`);
+        
+        if (itemsCount > 0) {
           logger.info(`[AMAZON API] First item ASIN: ${data.SearchResult.Items[0].ASIN}`);
           logger.info(`[AMAZON API] First item title: ${data.SearchResult.Items[0].ItemInfo?.Title?.DisplayValue || 'N/A'}`);
+          console.log(`[AMAZON API SERVICE] ✅ Successfully received ${itemsCount} items`);
+        } else {
+          // CRITICAL: Log warning if Items is empty or undefined
+          logger.warn(`[AMAZON API] ⚠️ WARNING: Amazon returned EMPTY results for this keyword`);
+          console.warn('[AMAZON API SERVICE] ⚠️ WARNING: Amazon returned EMPTY results for this keyword');
+          logger.warn(`[AMAZON API] Keyword that failed: "${keywords}"`);
+          console.warn(`[AMAZON API SERVICE] Keyword that failed: "${keywords}"`);
+          logger.warn(`[AMAZON API] Region being used: ${config.AMAZON_REGION}`);
+          console.warn(`[AMAZON API SERVICE] Region being used: ${config.AMAZON_REGION}`);
+          logger.warn(`[AMAZON API] Associate Tag being used: ${config.AMAZON_ASSOCIATE_TAG}`);
+          console.warn(`[AMAZON API SERVICE] Associate Tag being used: ${config.AMAZON_ASSOCIATE_TAG}`);
+          logger.warn(`[AMAZON API] Access Key prefix: ${config.AMAZON_ACCESS_KEY.substring(0, 10)}...`);
+          console.warn(`[AMAZON API SERVICE] Access Key prefix: ${config.AMAZON_ACCESS_KEY.substring(0, 10)}...`);
+          logger.warn(`[AMAZON API] TotalResultCount: ${data.SearchResult.TotalResultCount || 'N/A'}`);
+          console.warn(`[AMAZON API SERVICE] TotalResultCount: ${data.SearchResult.TotalResultCount || 'N/A'}`);
+          logger.warn(`[AMAZON API] SearchResult structure:`, JSON.stringify(data.SearchResult, null, 2));
         }
       } else {
-        logger.warn(`[AMAZON API] No SearchResult in response`);
+        // CRITICAL: Log warning if SearchResult is missing
+        logger.warn(`[AMAZON API] ⚠️ WARNING: No SearchResult in response - Amazon returned EMPTY results`);
+        console.warn('[AMAZON API SERVICE] ⚠️ WARNING: No SearchResult in response - Amazon returned EMPTY results');
+        logger.warn(`[AMAZON API] Keyword that failed: "${keywords}"`);
+        console.warn(`[AMAZON API SERVICE] Keyword that failed: "${keywords}"`);
+        logger.warn(`[AMAZON API] Region being used: ${config.AMAZON_REGION}`);
+        console.warn(`[AMAZON API SERVICE] Region being used: ${config.AMAZON_REGION}`);
+        logger.warn(`[AMAZON API] Associate Tag being used: ${config.AMAZON_ASSOCIATE_TAG}`);
+        console.warn(`[AMAZON API SERVICE] Associate Tag being used: ${config.AMAZON_ASSOCIATE_TAG}`);
+        logger.warn(`[AMAZON API] Access Key prefix: ${config.AMAZON_ACCESS_KEY.substring(0, 10)}...`);
+        console.warn(`[AMAZON API SERVICE] Access Key prefix: ${config.AMAZON_ACCESS_KEY.substring(0, 10)}...`);
         logger.warn(`[AMAZON API] Response keys: ${Object.keys(data).join(', ')}`);
         logger.warn(`[AMAZON API] Full response structure:`, JSON.stringify(data, null, 2));
+        console.warn(`[AMAZON API SERVICE] Full response structure:`, JSON.stringify(data, null, 2));
       }
     } catch (parseError: any) {
       logger.error(`[AMAZON API] Failed to parse response as JSON:`, parseError.message);
@@ -271,6 +310,7 @@ async function searchAmazonProducts(
     if (data?.SearchResult?.Items) {
       const items = data.SearchResult.Items as any[];
       logger.info(`[AMAZON API] Processing ${items.length} items`);
+      console.log(`[AMAZON API SERVICE] Processing ${items.length} items for keyword: "${keywords}"`);
       
       for (const item of items) {
         try {
@@ -371,9 +411,16 @@ async function searchAmazonProducts(
         }
       }
     } else {
-      logger.warn(`[AMAZON API] No items found in SearchResult`);
+      logger.warn(`[AMAZON API] ⚠️ No items found in SearchResult`);
+      console.warn(`[AMAZON API SERVICE] ⚠️ No items found in SearchResult for keyword: "${keywords}"`);
+      logger.warn(`[AMAZON API] Keyword: "${keywords}"`);
+      logger.warn(`[AMAZON API] Region: ${config.AMAZON_REGION}`);
+      logger.warn(`[AMAZON API] Associate Tag: ${config.AMAZON_ASSOCIATE_TAG}`);
+      console.warn(`[AMAZON API SERVICE] Region: ${config.AMAZON_REGION}`);
+      console.warn(`[AMAZON API SERVICE] Associate Tag: ${config.AMAZON_ASSOCIATE_TAG}`);
       if (data) {
         logger.warn(`[AMAZON API] Response structure:`, JSON.stringify(data, null, 2).substring(0, 2000));
+        console.warn(`[AMAZON API SERVICE] Response structure:`, JSON.stringify(data, null, 2).substring(0, 2000));
       }
     }
 
