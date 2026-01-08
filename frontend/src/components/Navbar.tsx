@@ -50,7 +50,7 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <div className={styles.container}>
         {/* Logo - Top Left */}
-        <Link to="/" className={styles.logo} onMouseEnter={() => setActiveMenu(null)}>
+        <Link to="/" className={styles.logo}>
           AURAPOP
         </Link>
         
