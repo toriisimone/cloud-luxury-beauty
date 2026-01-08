@@ -12,7 +12,7 @@
   min-height: 600px;
   max-height: 900px;
   overflow: hidden;
-  margin-top: 116px; /* Top banner (36px) + Navbar (80px) - sits right under navbar */
+  margin-top: calc(36px + 80px); /* Top banner (36px) + Navbar height - no gap */
 }
 
 .heroBanner {
