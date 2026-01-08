@@ -8,16 +8,18 @@ import { logger } from '../config/logger';
  */
 export const getAmazonProducts = async (req: Request, res: Response) => {
   try {
-    logger.info('Fetching Amazon skincare products...');
+    logger.info('[AMAZON CONTROLLER] Request received for Amazon skincare products');
     const products = await amazonService.getSkincareProducts();
-    logger.info(`Returning ${products.length} Amazon products`);
+    logger.info(`[AMAZON CONTROLLER] Returning ${products.length} Amazon products`);
+    
     res.json({
       products,
       count: products.length,
       source: 'amazon',
     });
   } catch (error: any) {
-    logger.error('Get Amazon products error:', error);
+    logger.error('[AMAZON CONTROLLER] Get Amazon products error:', error);
+    logger.error('[AMAZON CONTROLLER] Error stack:', error.stack);
     // Return empty array instead of error so frontend can fallback gracefully
     res.json({ 
       products: [],

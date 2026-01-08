@@ -42,6 +42,8 @@ function generateSignature(
   const service = 'ProductAdvertisingAPI';
   const region = config.AMAZON_REGION;
 
+  logger.info(`[AMAZON API] Generating signature for region: ${region}`);
+
   // Create canonical request
   const canonicalHeaders = `host:webservices.amazon.com\nx-amz-date:${timestamp}\n`;
   const signedHeaders = 'host;x-amz-date';
@@ -66,7 +68,6 @@ function generateSignature(
 
 /**
  * Search Amazon products using Product Advertising API
- * Note: This is a simplified implementation. For production, consider using the official SDK
  */
 async function searchAmazonProducts(
   keywords: string,
@@ -74,6 +75,21 @@ async function searchAmazonProducts(
   itemPage: number = 1
 ): Promise<AmazonSearchResponse> {
   try {
+    // Verify credentials are set
+    if (!config.AMAZON_ACCESS_KEY || !config.AMAZON_SECRET_KEY || !config.AMAZON_ASSOCIATE_TAG) {
+      const errorMsg = 'Amazon API credentials not configured. Missing: ' + 
+        (!config.AMAZON_ACCESS_KEY ? 'AMAZON_ACCESS_KEY ' : '') +
+        (!config.AMAZON_SECRET_KEY ? 'AMAZON_SECRET_KEY ' : '') +
+        (!config.AMAZON_ASSOCIATE_TAG ? 'AMAZON_ASSOCIATE_TAG' : '');
+      logger.error(`[AMAZON API] ${errorMsg}`);
+      throw new Error(errorMsg);
+    }
+
+    logger.info(`[AMAZON API] Starting search for keywords: "${keywords}", itemCount: ${itemCount}, itemPage: ${itemPage}`);
+    logger.info(`[AMAZON API] Using Access Key: ${config.AMAZON_ACCESS_KEY.substring(0, 10)}...`);
+    logger.info(`[AMAZON API] Using Associate Tag: ${config.AMAZON_ASSOCIATE_TAG}`);
+    logger.info(`[AMAZON API] Using Region: ${config.AMAZON_REGION}`);
+
     const endpoint = 'webservices.amazon.com';
     const uri = '/paapi5/searchitems';
     const method = 'POST';
@@ -83,7 +99,9 @@ async function searchAmazonProducts(
     const dateStamp = now.toISOString().substring(0, 10).replace(/-/g, '');
     const timestamp = `${dateStamp}T${now.toISOString().substring(11, 19).replace(/:/g, '')}Z`;
 
-    // Request payload
+    logger.info(`[AMAZON API] Timestamp: ${timestamp}`);
+
+    // Request payload - EXACT format required by PA-API 5.0
     const payload = JSON.stringify({
       PartnerType: 'Associates',
       PartnerTag: config.AMAZON_ASSOCIATE_TAG,
@@ -113,11 +131,16 @@ async function searchAmazonProducts(
       ItemPage: itemPage,
     });
 
+    logger.info(`[AMAZON API] Request payload: ${payload.substring(0, 200)}...`);
+
     // Create authorization header
     const queryString = '';
     const signature = generateSignature(method, uri, queryString, payload, timestamp);
     const credentialScope = `${timestamp.substring(0, 8)}/${region}/${service}/aws4_request`;
     const authorization = `AWS4-HMAC-SHA256 Credential=${config.AMAZON_ACCESS_KEY}/${credentialScope}, SignedHeaders=host;x-amz-date, Signature=${signature}`;
+
+    logger.info(`[AMAZON API] Authorization header created (length: ${authorization.length})`);
+    logger.info(`[AMAZON API] Making request to: https://${endpoint}${uri}`);
 
     // Make API request
     const response = await fetch(`https://${endpoint}${uri}`, {
@@ -131,32 +154,86 @@ async function searchAmazonProducts(
       body: payload,
     });
 
+    logger.info(`[AMAZON API] Response status: ${response.status} ${response.statusText}`);
+    logger.info(`[AMAZON API] Response headers:`, JSON.stringify(Object.fromEntries(response.headers.entries())));
+
+    const responseText = await response.text();
+    logger.info(`[AMAZON API] RAW RESPONSE (first 500 chars): ${responseText.substring(0, 500)}`);
+    logger.info(`[AMAZON API] RAW RESPONSE (full length): ${responseText.length} characters`);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      logger.error('Amazon API error:', errorText);
-      throw new Error(`Amazon API error: ${response.status} ${errorText}`);
+      logger.error(`[AMAZON API] Error response: ${responseText}`);
+      
+      // Try to parse error response
+      try {
+        const errorData = JSON.parse(responseText);
+        logger.error(`[AMAZON API] Parsed error:`, JSON.stringify(errorData, null, 2));
+        
+        if (errorData.__type) {
+          logger.error(`[AMAZON API] Error type: ${errorData.__type}`);
+        }
+        if (errorData.message) {
+          logger.error(`[AMAZON API] Error message: ${errorData.message}`);
+        }
+        if (errorData.Errors) {
+          logger.error(`[AMAZON API] Errors array:`, JSON.stringify(errorData.Errors, null, 2));
+        }
+      } catch (parseError) {
+        logger.error(`[AMAZON API] Could not parse error response as JSON`);
+      }
+      
+      throw new Error(`Amazon API error: ${response.status} ${response.statusText} - ${responseText.substring(0, 200)}`);
     }
 
-    const data = await response.json() as any;
+    let data: any;
+    try {
+      data = JSON.parse(responseText);
+      logger.info(`[AMAZON API] Response parsed successfully`);
+      logger.info(`[AMAZON API] Response keys: ${Object.keys(data).join(', ')}`);
+      
+      if (data.Errors) {
+        logger.error(`[AMAZON API] Response contains Errors:`, JSON.stringify(data.Errors, null, 2));
+        throw new Error(`Amazon API returned errors: ${JSON.stringify(data.Errors)}`);
+      }
+      
+      if (data.SearchResult) {
+        logger.info(`[AMAZON API] SearchResult found`);
+        logger.info(`[AMAZON API] TotalResultCount: ${data.SearchResult.TotalResultCount || 'N/A'}`);
+        logger.info(`[AMAZON API] Items count: ${data.SearchResult.Items?.length || 0}`);
+      } else {
+        logger.warn(`[AMAZON API] No SearchResult in response`);
+        logger.warn(`[AMAZON API] Full response structure:`, JSON.stringify(data, null, 2).substring(0, 1000));
+      }
+    } catch (parseError: any) {
+      logger.error(`[AMAZON API] Failed to parse response as JSON:`, parseError.message);
+      logger.error(`[AMAZON API] Response text: ${responseText}`);
+      throw new Error(`Failed to parse Amazon API response: ${parseError.message}`);
+    }
 
     // Parse response
     const products: AmazonProduct[] = [];
     if (data?.SearchResult?.Items) {
       const items = data.SearchResult.Items as any[];
+      logger.info(`[AMAZON API] Processing ${items.length} items`);
+      
       for (const item of items) {
         try {
           const asin = item.ASIN;
+          if (!asin) {
+            logger.warn(`[AMAZON API] Item missing ASIN, skipping`);
+            continue;
+          }
+          
           const title = item.ItemInfo?.Title?.DisplayValue || 'Unknown Product';
           const imageUrl = item.Images?.Primary?.Large?.URL || item.Images?.Primary?.Medium?.URL || '';
-          const price = parseFloat(
-            item.Offers?.Listings?.[0]?.Price?.Amount || 
-            item.Offers?.Summaries?.[0]?.LowestPrice?.Amount || 
-            '0'
-          ) / 100; // Amazon returns prices in cents
+          const priceStr = item.Offers?.Listings?.[0]?.Price?.Amount || 
+                          item.Offers?.Summaries?.[0]?.LowestPrice?.Amount || 
+                          '0';
+          const price = parseFloat(priceStr) / 100; // Amazon returns prices in cents
           const rating = parseFloat(item.CustomerReviews?.StarRating?.Value || '0');
           const reviewCount = parseInt(item.CustomerReviews?.Count || '0', 10);
 
-          // Generate affiliate URL
+          // Generate affiliate URL with EXACT tag
           const affiliateUrl = `https://www.amazon.com/dp/${asin}?tag=${config.AMAZON_ASSOCIATE_TAG}`;
 
           // Extract size if available
@@ -192,19 +269,29 @@ async function searchAmazonProducts(
             tags: tags.length > 0 ? tags : undefined,
             affiliateUrl,
           });
-        } catch (itemError) {
-          logger.error('Error parsing Amazon product item:', itemError);
+          
+          logger.debug(`[AMAZON API] Parsed product: ${asin} - ${title.substring(0, 50)}...`);
+        } catch (itemError: any) {
+          logger.error(`[AMAZON API] Error parsing product item:`, itemError);
           continue;
         }
       }
+    } else {
+      logger.warn(`[AMAZON API] No items found in SearchResult`);
+      if (data) {
+        logger.warn(`[AMAZON API] Response structure:`, JSON.stringify(data, null, 2).substring(0, 2000));
+      }
     }
+
+    logger.info(`[AMAZON API] Successfully parsed ${products.length} products from ${keywords} search`);
 
     return {
       products,
       totalResults: (data as any)?.SearchResult?.TotalResultCount || products.length,
     };
   } catch (error: any) {
-    logger.error('Amazon API search error:', error);
+    logger.error(`[AMAZON API] Search error for keywords "${keywords}":`, error);
+    logger.error(`[AMAZON API] Error stack:`, error.stack);
     throw error;
   }
 }
@@ -214,13 +301,22 @@ async function searchAmazonProducts(
  * Uses caching to avoid hitting API rate limits
  */
 export async function getSkincareProducts(): Promise<AmazonProduct[]> {
+  // Check credentials first
+  if (!config.AMAZON_ACCESS_KEY || !config.AMAZON_SECRET_KEY || !config.AMAZON_ASSOCIATE_TAG) {
+    logger.warn('[AMAZON API] Credentials not configured, returning empty array');
+    return [];
+  }
+
   // Check cache first
   if (productCache && Date.now() - productCache.timestamp < CACHE_DURATION) {
-    logger.info('Returning cached Amazon products');
+    logger.info(`[AMAZON API] Returning ${productCache.products.length} cached products`);
     return productCache.products;
   }
 
-  logger.info('Fetching fresh Amazon skincare products...');
+  logger.info('[AMAZON API] Fetching fresh Amazon skincare products...');
+  logger.info(`[AMAZON API] Access Key: ${config.AMAZON_ACCESS_KEY.substring(0, 10)}...`);
+  logger.info(`[AMAZON API] Associate Tag: ${config.AMAZON_ASSOCIATE_TAG}`);
+  logger.info(`[AMAZON API] Region: ${config.AMAZON_REGION}`);
 
   // Amazon API allows max 10 items per request, so we need multiple requests
   const allProducts: AmazonProduct[] = [];
@@ -233,7 +329,9 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
       const itemPage = Math.floor(i / keywords.length) + 1;
       
       try {
+        logger.info(`[AMAZON API] Fetching batch ${i + 1}/10: keyword="${keyword}", page=${itemPage}`);
         const result = await searchAmazonProducts(keyword, 10, itemPage);
+        logger.info(`[AMAZON API] Batch ${i + 1} returned ${result.products.length} products`);
         allProducts.push(...result.products);
         
         // Avoid rate limiting
@@ -241,15 +339,20 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
           await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second between requests
         }
       } catch (error: any) {
-        logger.error(`Error fetching batch ${i + 1}:`, error);
+        logger.error(`[AMAZON API] Error fetching batch ${i + 1}:`, error.message);
+        logger.error(`[AMAZON API] Error details:`, error);
         // Continue with next batch even if one fails
       }
     }
+
+    logger.info(`[AMAZON API] Total products fetched before deduplication: ${allProducts.length}`);
 
     // Remove duplicates by ASIN
     const uniqueProducts = Array.from(
       new Map(allProducts.map(p => [p.asin, p])).values()
     ).slice(0, 100); // Limit to 100 products
+
+    logger.info(`[AMAZON API] Unique products after deduplication: ${uniqueProducts.length}`);
 
     // Update cache
     productCache = {
@@ -257,19 +360,20 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
       timestamp: Date.now(),
     };
 
-    logger.info(`Fetched ${uniqueProducts.length} unique Amazon skincare products`);
+    logger.info(`[AMAZON API] Successfully fetched and cached ${uniqueProducts.length} unique Amazon skincare products`);
     return uniqueProducts;
   } catch (error: any) {
-    logger.error('Error fetching Amazon products:', error);
+    logger.error('[AMAZON API] Error fetching Amazon products:', error);
+    logger.error('[AMAZON API] Error stack:', error.stack);
     
     // Return cached products if available, even if expired
     if (productCache && productCache.products.length > 0) {
-      logger.warn('Returning expired cache due to API error');
+      logger.warn(`[AMAZON API] Returning ${productCache.products.length} expired cached products due to API error`);
       return productCache.products;
     }
     
     // If no cache and API fails, return empty array (frontend will fallback to regular products)
-    logger.warn('No cache available and API failed, returning empty array');
+    logger.warn('[AMAZON API] No cache available and API failed, returning empty array');
     return [];
   }
 }
@@ -278,6 +382,7 @@ export async function getSkincareProducts(): Promise<AmazonProduct[]> {
  * Manually refresh the product cache
  */
 export async function refreshProductCache(): Promise<void> {
+  logger.info('[AMAZON API] Manually refreshing product cache...');
   productCache = null;
   await getSkincareProducts();
 }

@@ -57,6 +57,12 @@ console.log('DEBUG: DATABASE_URL length =', config.DATABASE_URL.length);
 console.log('DEBUG: JWT_SECRET exists?', !!config.JWT_SECRET);
 console.log('DEBUG: JWT_REFRESH_SECRET exists?', !!config.JWT_REFRESH_SECRET);
 console.log('DEBUG: CORS_ORIGIN =', config.CORS_ORIGIN);
+console.log('DEBUG: AMAZON_ACCESS_KEY exists?', !!config.AMAZON_ACCESS_KEY);
+console.log('DEBUG: AMAZON_ACCESS_KEY length =', config.AMAZON_ACCESS_KEY.length);
+console.log('DEBUG: AMAZON_SECRET_KEY exists?', !!config.AMAZON_SECRET_KEY);
+console.log('DEBUG: AMAZON_SECRET_KEY length =', config.AMAZON_SECRET_KEY.length);
+console.log('DEBUG: AMAZON_ASSOCIATE_TAG =', config.AMAZON_ASSOCIATE_TAG);
+console.log('DEBUG: AMAZON_REGION =', config.AMAZON_REGION);
 
 if (!config.DATABASE_URL) {
   console.error('DEBUG: ERROR - DATABASE_URL is missing!');
