@@ -270,44 +270,29 @@ async function searchAmazonProducts(
           
           const title = item.ItemInfo?.Title?.DisplayValue || 'Unknown Product';
           
-          // Extract image URL with multiple fallbacks - try ALL possible image paths
-          // Priority: Primary Large > Primary Medium > Primary Small > Variants Large > Variants Medium > Variants Small
+          // SIMPLE image extraction - use FIRST valid URL found from these paths in order:
           let imageUrl = '';
-          if (item.Images?.Primary?.Large?.URL) {
-            imageUrl = item.Images.Primary.Large.URL;
-          } else if (item.Images?.Primary?.Medium?.URL) {
-            imageUrl = item.Images.Primary.Medium.URL;
-          } else if (item.Images?.Primary?.Small?.URL) {
-            imageUrl = item.Images.Primary.Small.URL;
-          } else if (item.Images?.Variants?.Large?.[0]?.URL) {
-            imageUrl = item.Images.Variants.Large[0].URL;
-          } else if (item.Images?.Variants?.Medium?.[0]?.URL) {
-            imageUrl = item.Images.Variants.Medium[0].URL;
-          } else if (item.Images?.Variants?.Small?.[0]?.URL) {
-            imageUrl = item.Images.Variants.Small[0].URL;
+          const imagePaths = [
+            item.Images?.Primary?.Large?.URL,
+            item.Images?.Primary?.Medium?.URL,
+            item.Images?.Primary?.Small?.URL,
+            item.Images?.Variants?.Large?.[0]?.URL,
+            item.Images?.Variants?.Medium?.[0]?.URL,
+            item.Images?.Variants?.Small?.[0]?.URL,
+          ];
+          
+          // Find first URL that starts with 'http' (http:// or https://)
+          for (const url of imagePaths) {
+            if (url && typeof url === 'string' && url.startsWith('http')) {
+              imageUrl = url;
+              break;
+            }
           }
           
-          // Relaxed validation - accept any non-empty string that looks like a URL
-          // Amazon image URLs can be http:// or https://, and sometimes relative paths
-          const isValidImageUrl = imageUrl && (
-            imageUrl.startsWith('http://') || 
-            imageUrl.startsWith('https://') ||
-            imageUrl.startsWith('//') || // Protocol-relative URL
-            imageUrl.startsWith('/') // Relative path (less common but possible)
-          );
-          
-          if (!isValidImageUrl) {
-            logger.warn(`[AMAZON API] Product "${title}" (ASIN: ${asin}) has no valid image URL, will include anyway with empty image`);
-            logger.debug(`[AMAZON API] Image paths checked:`, {
-              primaryLarge: item.Images?.Primary?.Large?.URL || 'N/A',
-              primaryMedium: item.Images?.Primary?.Medium?.URL || 'N/A',
-              primarySmall: item.Images?.Primary?.Small?.URL || 'N/A',
-              variantsLarge: item.Images?.Variants?.Large?.[0]?.URL || 'N/A',
-              variantsMedium: item.Images?.Variants?.Medium?.[0]?.URL || 'N/A',
-              variantsSmall: item.Images?.Variants?.Small?.[0]?.URL || 'N/A',
-            });
-            // Don't skip - use empty string and let frontend handle it
-            imageUrl = '';
+          // If no image found, skip ONLY this product (don't skip entire batch)
+          if (!imageUrl) {
+            logger.debug(`[AMAZON API] Product "${title}" (ASIN: ${asin}) has no valid image URL, skipping this product only`);
+            continue; // Skip this product, continue with next
           }
           
           const priceStr = item.Offers?.Listings?.[0]?.Price?.Amount || 

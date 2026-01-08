@@ -38,15 +38,14 @@ const AmazonProductCard = ({ product }: AmazonProductCardProps) => {
     });
   };
 
-  // Render product even if image is missing - show product info without image
-  // Only skip if imageUrl is explicitly null/undefined (not empty string)
-  const hasImageUrl = product.imageUrl !== null && product.imageUrl !== undefined;
+  // Simple check: render if imageUrl exists and is not empty
+  const hasImageUrl = product.imageUrl && product.imageUrl.trim().length > 0;
 
   return (
     <div className={styles.card}>
       <div className={styles.link}>
         <div className={styles.imageContainer}>
-          {hasImageUrl && product.imageUrl ? (
+          {hasImageUrl ? (
             <img 
               src={product.imageUrl} 
               alt={product.title} 
@@ -56,8 +55,8 @@ const AmazonProductCard = ({ product }: AmazonProductCardProps) => {
               loading="lazy"
             />
           ) : (
-            <div className={styles.placeholder} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
-              <span>Image Loading...</span>
+            <div className={styles.placeholder} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px', backgroundColor: '#f5f5f5' }}>
+              <span>No Image</span>
             </div>
           )}
           {product.tags && product.tags.length > 0 && (

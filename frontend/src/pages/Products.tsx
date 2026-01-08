@@ -408,16 +408,9 @@ const Products = () => {
         {isAmazonSource && amazonProducts.length > 0 ? (
           <>
             <div className={styles.grid}>
-              {amazonProducts.map((product) => {
-                // Log products without images but still render them
-                if (!product.imageUrl || (!product.imageUrl.startsWith('http://') && !product.imageUrl.startsWith('https://') && !product.imageUrl.startsWith('//'))) {
-                  console.log('[FRONTEND] Product without valid image URL (still rendering):', {
-                    title: product.title,
-                    imageUrl: product.imageUrl || 'empty',
-                  });
-                }
-                return <AmazonProductCard key={product.asin} product={product} />;
-              })}
+              {amazonProducts.map((product) => (
+                <AmazonProductCard key={product.asin} product={product} />
+              ))}
             </div>
             <div className={styles.amazonNote}>
               <p>Products from Amazon • Affiliate links included</p>
