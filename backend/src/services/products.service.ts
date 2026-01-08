@@ -14,10 +14,26 @@ export const getProducts = async (params: GetProductsParams) => {
   const { categoryId, search, minPrice, maxPrice, featured, page, limit } = params;
   const skip = (page - 1) * limit;
 
+  const { logger } = await import('../config/logger');
+  logger.info('[PRODUCTS SERVICE] ========== GET PRODUCTS ==========');
+  logger.info('[PRODUCTS SERVICE] Params:', {
+    categoryId,
+    search,
+    minPrice,
+    maxPrice,
+    featured,
+    page,
+    limit,
+    skip,
+  });
+
   const where: any = {};
 
   if (categoryId) {
     where.categoryId = categoryId;
+    logger.info(`[PRODUCTS SERVICE] Filtering by categoryId: ${categoryId}`);
+  } else {
+    logger.info('[PRODUCTS SERVICE] No categoryId filter - fetching all products');
   }
 
   if (search) {
@@ -37,6 +53,8 @@ export const getProducts = async (params: GetProductsParams) => {
     where.featured = featured;
   }
 
+  logger.info('[PRODUCTS SERVICE] Where clause:', JSON.stringify(where, null, 2));
+
   const [products, total] = await Promise.all([
     prisma.product.findMany({
       where,
@@ -50,6 +68,22 @@ export const getProducts = async (params: GetProductsParams) => {
     }),
     prisma.product.count({ where }),
   ]);
+
+  logger.info(`[PRODUCTS SERVICE] Found ${products.length} products (total: ${total})`);
+  if (products.length > 0) {
+    logger.info(`[PRODUCTS SERVICE] First product: ${products[0].name} (Category: ${products[0].category?.name || 'N/A'})`);
+  } else {
+    logger.warn('[PRODUCTS SERVICE] ⚠️ No products found with current filters');
+    // Log total products in database
+    const totalInDb = await prisma.product.count();
+    logger.info(`[PRODUCTS SERVICE] Total products in database: ${totalInDb}`);
+    if (categoryId) {
+      const category = await prisma.category.findUnique({ where: { id: categoryId } });
+      logger.info(`[PRODUCTS SERVICE] Category: ${category?.name || 'NOT FOUND'} (ID: ${categoryId})`);
+    }
+  }
+
+  logger.info('[PRODUCTS SERVICE] ========== END GET PRODUCTS ==========');
 
   return {
     products,

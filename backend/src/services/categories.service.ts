@@ -19,6 +19,18 @@ export const getCategoryById = async (id: string) => {
   });
 };
 
+export const getCategoryByName = async (name: string) => {
+  // Case-insensitive search
+  return prisma.category.findFirst({
+    where: {
+      name: {
+        equals: name,
+        mode: 'insensitive',
+      },
+    },
+  });
+};
+
 export const createCategory = async (data: any) => {
   const slug = data.slug || data.name.toLowerCase().replace(/\s+/g, '-');
 
