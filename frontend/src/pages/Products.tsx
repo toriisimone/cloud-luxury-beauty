@@ -45,9 +45,10 @@ const Products = () => {
       try {
         setLoading(true);
         const categoryParam = searchParams.get('category');
+        console.log('Category param:', categoryParam);
         
-        // If Skincare category, fetch from Amazon API
-        if (categoryParam === 'Skincare') {
+        // If Skincare category, fetch from Amazon API (case-insensitive check)
+        if (categoryParam && categoryParam.toLowerCase() === 'skincare') {
           try {
             console.log('Fetching Amazon skincare products...');
             const amazonResponse = await amazonApi.getAmazonSkincareProducts();
