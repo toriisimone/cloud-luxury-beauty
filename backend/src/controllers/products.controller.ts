@@ -123,47 +123,70 @@ export const getProducts = async (req: Request, res: Response) => {
     logger.info(`[PRODUCTS CONTROLLER] Total: ${result.total}`);
     logger.info(`[PRODUCTS CONTROLLER] Page: ${result.page}/${result.totalPages}`);
     
-    // If Skincare category and no products, check if we need to seed
-    if (category && (category as string).toLowerCase() === 'skincare' && result.products.length === 0) {
-      logger.warn('[PRODUCTS CONTROLLER] ⚠️ No skincare products found! Attempting to seed all 82 products...');
+    // If Skincare category and no products OR fewer than 82 products, seed all 82 products
+    if (category && (category as string).toLowerCase() === 'skincare') {
+      logger.info(`[PRODUCTS CONTROLLER] ========== SKINCARE CATEGORY CHECK ==========`);
+      logger.info(`[PRODUCTS CONTROLLER] Products found: ${result.products.length}`);
+      logger.info(`[PRODUCTS CONTROLLER] Total in category: ${result.total}`);
       
-      // First check if category exists
+      // Verify category exists and get final ID
       if (!finalCategoryId) {
         const { getCategoryByName } = await import('../services/categories.service');
         const categoryObj = await getCategoryByName('Skincare');
         if (categoryObj) {
           finalCategoryId = categoryObj.id;
+          logger.info(`[PRODUCTS CONTROLLER] ✅ Found Skincare category ID: ${finalCategoryId}`);
         }
       }
       
-      // Seed all 82 products
-      const { seedAll82SkincareProducts } = await import('../utils/seedSkincare82Products');
-      const seeded = await seedAll82SkincareProducts();
-      
-      if (seeded) {
-        logger.info('[PRODUCTS CONTROLLER] ✅ All 82 skincare products seeded, fetching again...');
-        // Fetch again after seeding
-        const newResult = await productsService.getProducts({
-          categoryId: finalCategoryId,
-          search: search as string,
-          minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
-          maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
-          featured: featured === 'true' ? true : featured === 'false' ? false : undefined,
-          page: parseInt(page as string, 10),
-          limit: parseInt(limit as string, 10),
-        });
-        logger.info(`[PRODUCTS CONTROLLER] After seeding: ${newResult.products.length} products returned`);
-        logger.info(`[PRODUCTS CONTROLLER] Total: ${newResult.total} products in category`);
-        return res.json(newResult);
+      // Check if we need to seed (0 products or fewer than 82)
+      if (result.total < 82) {
+        logger.warn(`[PRODUCTS CONTROLLER] ⚠️ Only ${result.total} skincare products found (expected 82)!`);
+        logger.warn(`[PRODUCTS CONTROLLER] Attempting to seed all 82 products...`);
+        
+        // Seed all 82 products
+        const { seedAll82SkincareProducts } = await import('../utils/seedSkincare82Products');
+        logger.info(`[PRODUCTS CONTROLLER] Calling seedAll82SkincareProducts()...`);
+        const seeded = await seedAll82SkincareProducts();
+        
+        if (seeded) {
+          logger.info('[PRODUCTS CONTROLLER] ✅ All 82 skincare products seeded successfully!');
+          logger.info('[PRODUCTS CONTROLLER] Fetching products again...');
+          
+          // Fetch again after seeding with higher limit to get all products
+          const newResult = await productsService.getProducts({
+            categoryId: finalCategoryId,
+            search: search as string,
+            minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
+            maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
+            featured: featured === 'true' ? true : featured === 'false' ? false : undefined,
+            page: parseInt(page as string, 10),
+            limit: 100, // Get all 82 products
+          });
+          
+          logger.info(`[PRODUCTS CONTROLLER] ========== AFTER SEEDING ==========`);
+          logger.info(`[PRODUCTS CONTROLLER] Products returned: ${newResult.products.length}`);
+          logger.info(`[PRODUCTS CONTROLLER] Total in category: ${newResult.total}`);
+          logger.info(`[PRODUCTS CONTROLLER] ✅ Returning ${newResult.products.length} skincare products`);
+          logger.info(`[PRODUCTS CONTROLLER] ===========================================`);
+          
+          return res.json(newResult);
+        } else {
+          logger.error('[PRODUCTS CONTROLLER] ❌ Failed to seed skincare products');
+        }
       } else {
-        logger.error('[PRODUCTS CONTROLLER] ❌ Failed to seed skincare products');
+        logger.info(`[PRODUCTS CONTROLLER] ✅ Sufficient products found (${result.total} >= 82)`);
+        // Still return results even if exactly 82 or more
       }
     }
 
     logger.info('[PRODUCTS CONTROLLER] ========== SENDING RESPONSE TO CLIENT ==========');
     logger.info(`[PRODUCTS CONTROLLER] Final product count: ${result.products.length}`);
+    logger.info(`[PRODUCTS CONTROLLER] Total in database: ${result.total}`);
+    logger.info(`[PRODUCTS CONTROLLER] Page: ${result.page} of ${result.totalPages}`);
     logger.info(`[PRODUCTS CONTROLLER] Response status: 200 OK`);
     logger.info('[PRODUCTS CONTROLLER] ================================================');
+    console.log(`[PRODUCTS CONTROLLER] ✅ Returning ${result.products.length} products (Total: ${result.total})`);
     
     res.json(result);
   } catch (error: any) {

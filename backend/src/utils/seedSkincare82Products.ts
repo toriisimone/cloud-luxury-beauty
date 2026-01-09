@@ -1,7 +1,8 @@
 import prisma from '../config/database';
 import { logger } from '../config/logger';
-import { config } from '../config/env';
-import crypto from 'crypto';
+// AMAZON API DISABLED: No image fetching needed
+// import { config } from '../config/env';
+// import crypto from 'crypto';
 
 /**
  * Seed ALL 82 real Amazon skincare products into the database
@@ -111,90 +112,10 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
     logger.info(`[SEED 82 PRODUCTS] Processing ${productsData.length} products`);
     console.log(`[SEED 82 PRODUCTS] Processing ${productsData.length} products`);
 
-    // 4. Helper function to get product image by ASIN using Amazon API
-    const getProductImageByASIN = async (asin: string): Promise<string | null> => {
-      try {
-        if (!config.AMAZON_ACCESS_KEY || !config.AMAZON_SECRET_KEY || !config.AMAZON_ASSOCIATE_TAG) {
-          logger.warn('[SEED 82 PRODUCTS] Amazon credentials not configured, skipping image fetch');
-          return null;
-        }
-
-        const endpoint = 'webservices.amazon.com';
-        const uri = '/paapi5/getitems';
-        const method = 'POST';
-        const service = 'ProductAdvertisingAPI';
-        const region = config.AMAZON_REGION || 'us-east-1';
-        
-        const now = new Date();
-        const dateStamp = now.toISOString().substring(0, 10).replace(/-/g, '');
-        const timeStamp = now.toISOString().substring(11, 19).replace(/:/g, '');
-        const timestamp = `${dateStamp}T${timeStamp}Z`;
-
-        const payload = JSON.stringify({
-          PartnerType: 'Associates',
-          PartnerTag: config.AMAZON_ASSOCIATE_TAG.trim(),
-          Marketplace: 'www.amazon.com',
-          ItemIds: [asin],
-          Resources: [
-            'Images.Primary.Large',
-            'Images.Primary.Medium',
-            'Images.Primary.Small',
-            'ItemInfo.Title',
-          ],
-        });
-
-        // Generate AWS Signature Version 4
-        const canonicalUri = uri;
-        const canonicalQueryString = '';
-        const canonicalHeaders = `content-type:application/json; charset=utf-8\nhost:${endpoint}\nx-amz-date:${timestamp}\n`;
-        const signedHeaders = 'content-type;host;x-amz-date';
-        const payloadHash = crypto.createHash('sha256').update(payload).digest('hex');
-        const canonicalRequest = `${method}\n${canonicalUri}\n${canonicalQueryString}\n${canonicalHeaders}\n${signedHeaders}\n${payloadHash}`;
-        const algorithm = 'AWS4-HMAC-SHA256';
-        const credentialScope = `${dateStamp}/${region}/${service}/aws4_request`;
-        const stringToSign = `${algorithm}\n${timestamp}\n${credentialScope}\n${crypto.createHash('sha256').update(canonicalRequest).digest('hex')}`;
-        
-        const kDate = crypto.createHmac('sha256', `AWS4${config.AMAZON_SECRET_KEY}`).update(dateStamp).digest();
-        const kRegion = crypto.createHmac('sha256', kDate).update(region).digest();
-        const kService = crypto.createHmac('sha256', kRegion).update(service).digest();
-        const kSigning = crypto.createHmac('sha256', kService).update('aws4_request').digest();
-        const signature = crypto.createHmac('sha256', kSigning).update(stringToSign).digest('hex');
-        
-        const authorization = `${algorithm} Credential=${config.AMAZON_ACCESS_KEY}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
-
-        const response = await fetch(`https://${endpoint}${uri}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-Amz-Date': timestamp,
-            'Authorization': authorization,
-          },
-          body: payload,
-        });
-
-        if (!response.ok) {
-          logger.warn(`[SEED 82 PRODUCTS] Amazon API error for ASIN ${asin}: ${response.status}`);
-          return null;
-        }
-
-        const data = await response.json() as any;
-        
-        if (data?.ItemsResult?.Items?.[0]) {
-          const item = data.ItemsResult.Items[0] as any;
-          const imageUrl = item?.Images?.Primary?.Large?.URL || 
-                          item?.Images?.Primary?.Medium?.URL || 
-                          item?.Images?.Primary?.Small?.URL;
-          if (imageUrl) {
-            return imageUrl;
-          }
-        }
-        
-        return null;
-      } catch (error: any) {
-        logger.warn(`[SEED 82 PRODUCTS] Failed to fetch image for ASIN ${asin}: ${error.message}`);
-        return null;
-      }
-    };
+    // 4. AMAZON API DISABLED: Skip image fetching - products will be inserted without images
+    // Images can be added later manually or via a separate process
+    logger.info('[SEED 82 PRODUCTS] Amazon API disabled - inserting products without images');
+    console.log('[SEED 82 PRODUCTS] Amazon API disabled - inserting products without images');
 
     // 5. Insert all products
     let insertedCount = 0;
@@ -226,25 +147,17 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
           },
         });
 
-        // Fetch image from Amazon API
-        let imageUrl: string | null = null;
-        try {
-          imageUrl = await getProductImageByASIN(product.asin);
-          if (imageUrl) {
-            logger.info(`[SEED 82 PRODUCTS] ✅ Got image for ${product.title}`);
-          } else {
-            logger.warn(`[SEED 82 PRODUCTS] ⚠️ No image for ${product.title}`);
-          }
-        } catch (error: any) {
-          logger.warn(`[SEED 82 PRODUCTS] Image fetch failed for ${product.title}: ${error.message}`);
-        }
+        // AMAZON API DISABLED: Products inserted without images
+        // Images can be added later manually
+        const images: string[] = [];
 
         // Build description with promo code text
         const promoText = `${product.discountPercent}% OFF`;
         const description = `${product.title} - ${promoText} - Now $${product.salePrice.toFixed(2)} (Was $${product.originalPrice.toFixed(2)})`;
-
-        // Build images array
-        const images = imageUrl ? [imageUrl] : [];
+        
+        // Build Amazon URLs for affiliate links
+        const amazonUrl = `https://www.amazon.com/dp/${product.asin}`;
+        const affiliateUrl = `https://www.amazon.com/dp/${product.asin}/?tag=victoria0cdb-20`;
 
         if (existing) {
           // Update existing product
@@ -261,7 +174,7 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
             },
           });
           updatedCount++;
-          logger.info(`[SEED 82 PRODUCTS] ✅ Updated: ${product.title}${imageUrl ? ' (with image)' : ' (no image)'}`);
+          logger.info(`[SEED 82 PRODUCTS] ✅ Updated: ${product.title} (ASIN: ${product.asin})`);
         } else {
           // Create new product
           await prisma.product.create({
@@ -277,13 +190,11 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
             },
           });
           insertedCount++;
-          logger.info(`[SEED 82 PRODUCTS] ✅ Inserted: ${product.title}${imageUrl ? ' (with image)' : ' (no image)'}`);
+          logger.info(`[SEED 82 PRODUCTS] ✅ Inserted: ${product.title} (ASIN: ${product.asin}, Price: $${product.salePrice}, Discount: ${product.discountPercent}%)`);
+          console.log(`[SEED 82 PRODUCTS] ✅ Inserted ${insertedCount}/${productsData.length}: ${product.title}`);
         }
         
-        // Add delay to avoid rate limiting (1.5 seconds between requests)
-        if (i < productsData.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 1500));
-        }
+        // No delay needed - Amazon API is disabled, direct database insert
       } catch (error: any) {
         logger.error(`[SEED 82 PRODUCTS] ❌ Failed to insert ${product.title}: ${error.message}`);
         skippedCount++;
