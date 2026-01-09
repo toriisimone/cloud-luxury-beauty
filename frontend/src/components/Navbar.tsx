@@ -44,6 +44,18 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Sky Blue Cloud Banner - Top Most */}
+      <div className={styles.skyBanner}>
+        <div className={styles.skyBannerClouds}>
+          <div className={styles.skyCloud}></div>
+          <div className={styles.skyCloud}></div>
+          <div className={styles.skyCloud}></div>
+          <div className={styles.skyCloud}></div>
+          <div className={styles.skyCloud}></div>
+          <div className={styles.skyCloud}></div>
+        </div>
+      </div>
+
       {/* Rotating Top Banner - Black */}
       <div className={styles.topBanner}>
         <div className={styles.bannerContent}>
@@ -123,10 +135,10 @@ const Navbar = () => {
             {/* Shopping Bag Icon - Cart */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 6h12l-1 8H7L6 6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M8 8V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <circle cx="9" cy="19" r="1.5" fill="currentColor"/>
-                <circle cx="15" cy="19" r="1.5" fill="currentColor"/>
+                <path d="M8 6h8v12H8V6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M9 6h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M10 8c0 1.1.9 2 2 2s2-.9 2-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>

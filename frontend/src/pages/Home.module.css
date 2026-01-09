@@ -25,7 +25,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: calc(36px + 80px); /* Account for sticky black banner (36px) + navbar height (80px) - image starts right after menu */
+  margin-top: calc(60px + 36px + 80px); /* Account for sky banner (60px) + black banner (36px) + navbar height (80px) - image starts right after menu */
+  border: none; /* Remove any border/line */
+  outline: none; /* Remove any outline */
 }
 
 /* Cloud Overlay */
