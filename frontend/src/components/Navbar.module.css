@@ -136,7 +136,8 @@
 /* Main Navbar - White with subtle cloud gradient */
 .navbar {
   position: fixed;
-  top: 36px; /* Below the top banner */
+  top: 84px; /* Below both banners (48px pink + 36px black) */
+  transition: top 0.3s ease;
   left: 0;
   right: 0;
   z-index: 1000;
