@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import styles from './Navbar.module.css';
-import cloudBannerImage from '../assets/cloud-banner.jpg';
+import cloudBannerImage from '../assets/cloud-beauty.png';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
