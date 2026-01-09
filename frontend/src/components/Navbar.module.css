@@ -1,7 +1,70 @@
+/* Pink Moving Banner - Top Most */
+.pinkBanner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1002;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pinkBannerTop {
+  height: 10%;
+  background: #4ECDC4; /* Teal/turquoise */
+}
+
+.pinkBannerBottom {
+  height: 90%;
+  background: #FFB6C1; /* Light pink/lavender */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pinkBannerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1600px;
+  padding: 0 2rem;
+  gap: 1rem;
+}
+
+.pinkBannerText {
+  flex: 1;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #333;
+  text-transform: lowercase;
+  letter-spacing: 0.3px;
+}
+
+.pinkBannerArrow,
+.pinkBannerClose {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.pinkBannerArrow:hover,
+.pinkBannerClose:hover {
+  opacity: 0.6;
+}
+
 /* Top Rotating Banner - Black */
 .topBanner {
   position: fixed;
-  top: 0;
+  top: 48px; /* Below pink banner */
   left: 0;
   right: 0;
   background: #000;
@@ -12,6 +75,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  transition: top 0.3s ease;
 }
 
 .bannerContent {

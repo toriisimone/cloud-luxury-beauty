@@ -10,22 +10,43 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bannerIndex, setBannerIndex] = useState(0);
+  const [pinkBannerClosed, setPinkBannerClosed] = useState(false);
+  const [pinkBannerIndex, setPinkBannerIndex] = useState(0);
 
-  // Rotating banner messages
+  // Rotating banner messages for black banner
   const bannerMessages = [
+    'Check out only the best Amazon products',
+    'Buy on Aurapop today',
     'Free standard shipping on orders $40+',
     'New arrivals: Cloud Glow Collection',
     'Subscribe & save 15% on your first order',
     'Limited edition: Rose Gold Essentials',
   ];
 
-  // Rotate banner messages every 4 seconds
+  // Rotating messages for pink banner
+  const pinkBannerMessages = [
+    'free u.s. shipping with orders over $40',
+    'Check out only the best Amazon products',
+    'Buy on Aurapop today',
+    'Shop the best deals on Amazon',
+  ];
+
+  // Rotate black banner messages every 4 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setBannerIndex((prev) => (prev + 1) % bannerMessages.length);
     }, 4000);
     return () => clearInterval(interval);
   }, [bannerMessages.length]);
+
+  // Rotate pink banner messages every 4 seconds
+  useEffect(() => {
+    if (pinkBannerClosed) return;
+    const interval = setInterval(() => {
+      setPinkBannerIndex((prev) => (prev + 1) % pinkBannerMessages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [pinkBannerMessages.length, pinkBannerClosed]);
 
   const handleLogout = async () => {
     await logout();
@@ -42,8 +63,49 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Rotating Top Banner */}
-      <div className={styles.topBanner}>
+      {/* Pink Moving Banner - Top Most */}
+      {!pinkBannerClosed && (
+        <div className={styles.pinkBanner}>
+          <div className={styles.pinkBannerTop}></div>
+          <div className={styles.pinkBannerBottom}>
+            <div className={styles.pinkBannerContent}>
+              <button 
+                className={styles.pinkBannerArrow}
+                onClick={() => setPinkBannerIndex((prev) => (prev - 1 + pinkBannerMessages.length) % pinkBannerMessages.length)}
+                aria-label="Previous message"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <span className={styles.pinkBannerText}>{pinkBannerMessages[pinkBannerIndex]}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <button 
+                  className={styles.pinkBannerArrow}
+                  onClick={() => setPinkBannerIndex((prev) => (prev + 1) % pinkBannerMessages.length)}
+                  aria-label="Next message"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.5 9L7.5 6L4.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button 
+                  className={styles.pinkBannerClose}
+                  onClick={() => setPinkBannerClosed(true)}
+                  aria-label="Close banner"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 3L3 9M3 3L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rotating Top Banner - Black */}
+      <div className={styles.topBanner} style={{ top: pinkBannerClosed ? '0' : '48px' }}>
         <div className={styles.bannerContent}>
           <span className={styles.bannerText}>{bannerMessages[bannerIndex]}</span>
           <div className={styles.bannerControls}>
