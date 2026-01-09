@@ -154,14 +154,20 @@ const Navbar = () => {
                 <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
-            {/* Shopping Bag Icon - Cart - Simplified, larger to match other icons */}
+            {/* Shopping Bag Icon - Cart - Reference style: handbag in rounded square frame, pink color */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 7H18V19C18 19.5523 17.5523 20 17 20H7C6.44772 20 6 19.5523 6 19V7Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M6 10H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M10 13L14 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M10 16L14 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Rounded square frame - transparent/white background */}
+                <rect x="2" y="2" width="20" height="20" rx="4" ry="4" fill="transparent" stroke="none"/>
+                {/* Handbag body - trapezoidal, wider at base - PINK */}
+                <path d="M8 10 L16 10 L17.5 18 L6.5 18 Z" fill="#F5E6E8" stroke="none"/>
+                {/* U-shaped handle - PINK */}
+                <path d="M10 10 Q10 6 12 6 Q14 6 14 10" stroke="#F5E6E8" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                {/* Front flap/pocket - horizontal line with angled sides - darker pink */}
+                <path d="M8.5 14 L15.5 14 L15 16 L9 16 Z" fill="#E8D4D8" stroke="none"/>
+                {/* Side protrusions - ear-like on left and right - PINK */}
+                <ellipse cx="6.5" cy="11" rx="1" ry="1.5" fill="#F5E6E8"/>
+                <ellipse cx="17.5" cy="11" rx="1" ry="1.5" fill="#F5E6E8"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>

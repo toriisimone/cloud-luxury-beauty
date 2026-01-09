@@ -481,7 +481,7 @@
   opacity: 0.7;
 }
 
-/* Main Navbar - White with subtle cloud gradient */
+/* Main Navbar - Transparent cloud-like overlay background */
 .navbar {
   position: sticky;
   top: 36px; /* Below black banner */
@@ -489,28 +489,36 @@
   right: 0;
   z-index: 1000;
   background: 
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 1) 100%),
-    radial-gradient(ellipse 1200px 200px at 50% 0%, rgba(253, 242, 244, 0.15) 0%, rgba(255, 255, 255, 0) 60%);
+    /* Cloud-like shapes - soft, rounded, transparent white */
+    radial-gradient(ellipse 800px 150px at 20% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%),
+    radial-gradient(ellipse 600px 120px at 80% 50%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 50%),
+    radial-gradient(ellipse 700px 140px at 50% 50%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%),
+    /* Base transparent overlay */
+    rgba(255, 255, 255, 0.2);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   padding: 1rem 0;
-  backdrop-filter: blur(10px);
-  transition: background 0.5s ease, backdrop-filter 0.5s ease; /* Smooth transition */
+  backdrop-filter: blur(8px);
+  transition: background 0.5s ease, backdrop-filter 0.5s ease, opacity 0.5s ease; /* Smooth transition */
   margin-bottom: 0 !important; /* No margin below navbar */
 }
 
-/* Navbar turns white on hover/click - smooth transition */
+/* Navbar background disappears on hover - content stays visible */
 .navbar:hover,
 .navbar.navbarHovered {
-  background: rgba(255, 255, 255, 1) !important; /* Solid white on hover */
+  background: transparent !important; /* Background disappears */
   backdrop-filter: blur(0px) !important; /* Remove blur on hover */
   border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; /* Keep border visible */
 }
 
-/* Hide centerNav (menu items) on hover - keep only logo and icons */
-.navbar.navbarHovered .centerNav {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+/* Keep all content visible and clickable - logo, menu, icons */
+.navbar .logo,
+.navbar .centerNav,
+.navbar .menuLink,
+.navbar .rightNav,
+.navbar .iconButton {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 .container {
@@ -539,7 +547,7 @@
   opacity: 0.7;
 }
 
-/* Center Navigation - UPPERCASE */
+/* Center Navigation - UPPERCASE - Always visible */
 .centerNav {
   display: flex;
   gap: 2rem;
@@ -547,7 +555,9 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
+  opacity: 1 !important; /* Always visible */
+  visibility: visible !important; /* Always visible */
+  pointer-events: auto !important; /* Always clickable */
 }
 
 .menuLink {

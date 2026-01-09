@@ -312,6 +312,15 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                     </div>
                     </div>
                   </Link>
+                  
+                  {/* Add to Cart Button - "View on Amazon" with hover "Buy on Amazon" */}
+                  <button
+                    className={styles.addToCartButton}
+                    onClick={() => handleBuyOnAmazon(product.affiliate)}
+                    data-hover-text="Buy on Amazon"
+                  >
+                    View on Amazon
+                  </button>
                 </div>
               );
             })}
