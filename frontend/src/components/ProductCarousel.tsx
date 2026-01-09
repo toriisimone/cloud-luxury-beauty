@@ -139,9 +139,9 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                     <button
                       className={styles.addToCartButton}
                       onClick={() => handleBuyOnAmazon(product.affiliate)}
-                      data-hover-text="view now"
+                      data-hover-text={product.badge && product.badge.toLowerCase().includes("bundle") ? "view now" : "buy on amazon"}
                     >
-                      Buy on Amazon
+                      {product.badge && product.badge.toLowerCase().includes("bundle") ? "view bundle" : "buy on amazon"}
                     </button>
                   </div>
                 </div>

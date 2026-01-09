@@ -312,10 +312,11 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    height: 70vh;
-    min-height: 500px;
-    max-height: 600px;
-    margin-top: calc(36px + 80px); /* Keep touching menu line on mobile */
+    height: calc(100vh - 36px - 80px) !important; /* Full viewport minus banner and navbar */
+    min-height: calc(100vh - 36px - 80px) !important;
+    max-height: none !important;
+    margin-top: calc(36px + 80px) !important; /* Keep touching menu line on mobile */
+    padding-top: 0 !important; /* No padding */
   }
 
   .brandTitle {
@@ -366,10 +367,11 @@
 
 @media (max-width: 480px) {
   .heroSection {
-    height: 60vh;
-    min-height: 400px;
-    max-height: 500px;
-    margin-top: calc(36px + 80px); /* Keep touching menu line on mobile */
+    height: calc(100vh - 36px - 80px) !important; /* Full viewport minus banner and navbar */
+    min-height: calc(100vh - 36px - 80px) !important;
+    max-height: none !important;
+    margin-top: calc(36px + 80px) !important; /* Keep touching menu line on mobile */
+    padding-top: 0 !important; /* No padding */
   }
 
   .brandTitle {
