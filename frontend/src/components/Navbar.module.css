@@ -303,7 +303,7 @@
   opacity: 0.6;
 }
 
-/* Top Rotating Banner - Black */
+/* Top Rotating Banner - Pink with animated clouds */
 .topBanner {
   position: sticky;
   top: 0;
@@ -317,6 +317,107 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
+}
+
+/* Animated clouds/fog effect - super slow, continuous movement */
+.bannerClouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  animation: cloudDrift 120s linear infinite; /* Super slow - 120 seconds */
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4); /* Soft white fog */
+  border-radius: 50px;
+  filter: blur(8px);
+  opacity: 0.6;
+}
+
+.cloud:nth-child(1) {
+  width: 120px;
+  height: 30px;
+  top: 10%;
+  left: 5%;
+  animation: cloudFloat1 25s ease-in-out infinite;
+}
+
+.cloud:nth-child(2) {
+  width: 100px;
+  height: 25px;
+  top: 50%;
+  left: 25%;
+  animation: cloudFloat2 30s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+.cloud:nth-child(3) {
+  width: 140px;
+  height: 35px;
+  top: 20%;
+  left: 55%;
+  animation: cloudFloat3 28s ease-in-out infinite;
+  animation-delay: -10s;
+}
+
+.cloud:nth-child(4) {
+  width: 110px;
+  height: 28px;
+  top: 60%;
+  left: 75%;
+  animation: cloudFloat4 32s ease-in-out infinite;
+  animation-delay: -15s;
+}
+
+@keyframes cloudDrift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes cloudFloat1 {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-5px) translateX(10px);
+  }
+}
+
+@keyframes cloudFloat2 {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(3px) translateX(-8px);
+  }
+}
+
+@keyframes cloudFloat3 {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-4px) translateX(12px);
+  }
+}
+
+@keyframes cloudFloat4 {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(2px) translateX(-10px);
+  }
 }
 
 .bannerContent {
@@ -327,6 +428,7 @@
   max-width: 1600px;
   padding: 0 2rem;
   position: relative;
+  z-index: 1; /* Above clouds */
 }
 
 .bannerTextContainer {
@@ -392,14 +494,16 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   padding: 1rem 0;
   backdrop-filter: blur(10px);
-  transition: background 0.3s ease;
+  transition: background 0.5s ease, backdrop-filter 0.5s ease; /* Smooth transition */
   margin-bottom: 0 !important; /* No margin below navbar */
 }
 
-/* Navbar turns white on hover - not blocking models */
-.navbar:hover {
+/* Navbar turns white on hover/click - smooth transition */
+.navbar:hover,
+.navbar.navbarHovered {
   background: rgba(255, 255, 255, 1) !important; /* Solid white on hover */
   backdrop-filter: blur(0px) !important; /* Remove blur on hover */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; /* Keep border visible */
 }
 
 .container {

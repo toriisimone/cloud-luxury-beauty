@@ -10,6 +10,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bannerIndex, setBannerIndex] = useState(0);
+  const [isBannerPaused, setIsBannerPaused] = useState(false);
+  const [isNavbarHovered, setIsNavbarHovered] = useState(false);
 
   // Rotating banner messages for black banner
   const bannerMessages = [
@@ -23,11 +25,12 @@ const Navbar = () => {
 
   // Rotate black banner messages every 10 seconds (very slow, readable)
   useEffect(() => {
+    if (isBannerPaused) return;
     const interval = setInterval(() => {
       setBannerIndex((prev) => (prev + 1) % bannerMessages.length);
     }, 10000);
     return () => clearInterval(interval);
-  }, [bannerMessages.length]);
+  }, [bannerMessages.length, isBannerPaused]);
 
   const handleLogout = async () => {
     await logout();
@@ -44,8 +47,15 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Rotating Top Banner - Pink */}
+      {/* Rotating Top Banner - Pink with animated clouds */}
       <div className={styles.topBanner}>
+        {/* Animated clouds/fog effect */}
+        <div className={styles.bannerClouds}>
+          <div className={styles.cloud}></div>
+          <div className={styles.cloud}></div>
+          <div className={styles.cloud}></div>
+          <div className={styles.cloud}></div>
+        </div>
         <div className={styles.bannerContent}>
           {/* Crossfade technique - always show text, no blank moments */}
           <div className={styles.bannerTextContainer}>
@@ -77,18 +87,32 @@ const Navbar = () => {
                 <path d="M4.5 9L7.5 6L4.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <button className={styles.bannerPause} aria-label="Pause banner">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="2" width="2" height="8" fill="currentColor"/>
-                <rect x="7" y="2" width="2" height="8" fill="currentColor"/>
-              </svg>
+            <button 
+              className={styles.bannerPause} 
+              onClick={() => setIsBannerPaused(!isBannerPaused)}
+              aria-label={isBannerPaused ? "Play banner" : "Pause banner"}
+            >
+              {isBannerPaused ? (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 2 L4 10 L10 6 Z" fill="currentColor"/>
+                </svg>
+              ) : (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="2" width="2" height="8" fill="currentColor"/>
+                  <rect x="7" y="2" width="2" height="8" fill="currentColor"/>
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Navbar */}
-      <nav className={styles.navbar}>
+      <nav 
+        className={`${styles.navbar} ${isNavbarHovered ? styles.navbarHovered : ''}`}
+        onMouseEnter={() => setIsNavbarHovered(true)}
+        onMouseLeave={() => setIsNavbarHovered(false)}
+      >
         <div className={styles.container}>
           {/* Logo - Left */}
           <Link to="/" className={styles.logo}>
@@ -130,15 +154,18 @@ const Navbar = () => {
                 <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
-            {/* Shopping Bag Icon - Cart - Kylie size */}
+            {/* Shopping Bag Icon - Cart - New design based on reference */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Bag body - rectangular with rounded bottom corners, minimalist line art */}
-                <rect x="6" y="9" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                {/* Left handle - small curved handle */}
-                <path d="M8 9C8 7.5 8.5 6.5 9.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                {/* Right handle - small curved handle */}
-                <path d="M16 9C16 7.5 15.5 6.5 14.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Handbag body - trapezoidal, wider at base, tapering to top */}
+                <path d="M7 10 L17 10 L18.5 18 L5.5 18 Z" fill="currentColor" stroke="none"/>
+                {/* U-shaped handle - prominent handle extending upward */}
+                <path d="M10 10 Q10 6 12 6 Q14 6 14 10" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                {/* Front flap/pocket - horizontal line with angled sides */}
+                <path d="M8 14 L16 14 L15.5 16 L8.5 16 Z" fill="currentColor" stroke="none" opacity="0.3"/>
+                {/* Side protrusions - ear-like on left and right */}
+                <ellipse cx="6.5" cy="11" rx="1" ry="1.5" fill="currentColor"/>
+                <ellipse cx="17.5" cy="11" rx="1" ry="1.5" fill="currentColor"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>
