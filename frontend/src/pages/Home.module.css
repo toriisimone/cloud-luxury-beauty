@@ -8,15 +8,17 @@
 .heroSection {
   position: relative;
   width: 100%;
-  height: 85vh;
-  min-height: 600px;
-  max-height: 900px;
+  height: 100vh;
+  min-height: 100vh;
   overflow: hidden;
-  margin-top: 0; /* No spacing - touches menu line */
+  margin-top: 0;
+  padding-top: calc(36px + 80px); /* Account for black banner (36px) + navbar height (80px) */
 }
 
 .heroBanner {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-size: cover;
@@ -25,9 +27,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: calc(60px + 36px + 80px); /* Account for sky banner (60px) + black banner (36px) + navbar height (80px) - image starts right after menu */
-  border: none; /* Remove any border/line */
-  outline: none; /* Remove any outline */
+  border: none;
+  outline: none;
 }
 
 /* Cloud Overlay */

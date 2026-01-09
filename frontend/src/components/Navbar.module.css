@@ -526,7 +526,7 @@
 /* Top Rotating Banner - Black */
 .topBanner {
   position: sticky;
-  top: 60px; /* Below sky banner */
+  top: 0;
   left: 0;
   right: 0;
   background: #000;
@@ -597,7 +597,7 @@
 /* Main Navbar - White with subtle cloud gradient */
 .navbar {
   position: sticky;
-  top: 96px; /* Below sky banner (60px) + black banner (36px) */
+  top: 36px; /* Below black banner */
   left: 0;
   right: 0;
   z-index: 1000;

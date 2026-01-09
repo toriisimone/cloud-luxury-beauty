@@ -44,18 +44,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Sky Blue Cloud Banner - Top Most */}
-      <div className={styles.skyBanner}>
-        <div className={styles.skyBannerClouds}>
-          <div className={styles.skyCloud}></div>
-          <div className={styles.skyCloud}></div>
-          <div className={styles.skyCloud}></div>
-          <div className={styles.skyCloud}></div>
-          <div className={styles.skyCloud}></div>
-          <div className={styles.skyCloud}></div>
-        </div>
-      </div>
-
       {/* Rotating Top Banner - Black */}
       <div className={styles.topBanner}>
         <div className={styles.bannerContent}>
