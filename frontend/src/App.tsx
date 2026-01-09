@@ -27,7 +27,6 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/skincare" element={<Skincare />} />
-                <Route path="/products?category=Skincare" element={<Skincare />} />
                 <Route path="/products/:id" element={<ProductDetails />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/cart" element={<Cart />} />

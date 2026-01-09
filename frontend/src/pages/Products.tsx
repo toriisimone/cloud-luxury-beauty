@@ -17,9 +17,6 @@ const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
-  // AMAZON API DISABLED: Always use database products
-  // const [amazonProducts, setAmazonProducts] = useState<AmazonProduct[]>([]);
-  // const [isAmazonSource, setIsAmazonSource] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
@@ -30,6 +27,15 @@ const Products = () => {
 
   const categoryName = searchParams.get('category') || 'Shop All';
   const sortBy = searchParams.get('sort') || 'featured';
+
+  // Redirect Skincare category to dedicated Skincare page
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam && categoryParam.toLowerCase() === 'skincare') {
+      console.log('[PRODUCTS] Redirecting Skincare category to dedicated Skincare page');
+      navigate('/products/skincare', { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
