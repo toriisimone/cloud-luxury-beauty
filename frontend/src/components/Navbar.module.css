@@ -12,12 +12,12 @@
 
 .pinkBannerTop {
   height: 10%;
-  background: #87CEEB; /* Sky blue top accent */
+  background: linear-gradient(90deg, #FFE5E8 0%, #FFE8F0 50%, #F5E6FF 100%); /* Soft pastel gradient */
 }
 
 .pinkBannerBottom {
   height: 90%;
-  background: linear-gradient(180deg, #B0E0E6 0%, #87CEEB 50%, #B0E0E6 100%); /* Real sky blue gradient */
+  background: linear-gradient(180deg, #FFF5F7 0%, #FFE8F0 30%, #F5E6FF 70%, #FFF5F7 100%); /* Soft pastel overlay - peach, pink, lavender */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,29 +38,30 @@
 
 .pinkCloud {
   position: absolute;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 200px;
-  opacity: 0.9;
-  filter: blur(1.5px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+  background: rgba(255, 240, 230, 0.85); /* Creamy pale peach */
+  border-radius: 300px;
+  opacity: 0.95;
+  filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(255, 200, 180, 0.3);
 }
 
 .pinkCloud:before,
 .pinkCloud:after {
   content: '';
   position: absolute;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 200px;
-  filter: blur(0.5px);
+  background: rgba(255, 220, 210, 0.8); /* Warm pink-peach */
+  border-radius: 300px;
+  filter: blur(6px);
 }
 
-/* Realistic, very long cloud shapes - all different shapes, coming from left side */
+/* Soft, dreamy cloud shapes - pastel colors, heavily blurred, like the image */
 .pinkCloud:nth-child(1) {
   width: 380px;
   height: 45px;
   top: 20%;
   left: 8%;
-  border-radius: 250px;
+  border-radius: 300px;
+  background: rgba(255, 240, 230, 0.9); /* Creamy pale peach */
 }
 
 .pinkCloud:nth-child(1):before {
@@ -69,6 +70,7 @@
   top: -70px;
   left: 70px;
   border-radius: 140px;
+  background: rgba(255, 220, 210, 0.85); /* Warm pink-peach */
 }
 
 .pinkCloud:nth-child(1):after {
@@ -77,6 +79,7 @@
   top: -80px;
   right: 70px;
   border-radius: 160px;
+  background: rgba(245, 230, 255, 0.8); /* Light lavender */
 }
 
 .pinkCloud:nth-child(2) {
@@ -84,7 +87,8 @@
   height: 50px;
   top: 50%;
   left: 22%;
-  border-radius: 200px;
+  border-radius: 300px;
+  background: rgba(255, 235, 240, 0.9); /* Soft pink */
   animation-delay: -2s;
 }
 
@@ -94,6 +98,7 @@
   top: -60px;
   left: 60px;
   border-radius: 120px;
+  background: rgba(255, 240, 230, 0.85); /* Pale peach */
 }
 
 .pinkCloud:nth-child(2):after {
@@ -102,6 +107,7 @@
   top: -75px;
   right: 60px;
   border-radius: 150px;
+  background: rgba(250, 235, 255, 0.8); /* Muted lavender */
 }
 
 .pinkCloud:nth-child(3) {
@@ -110,6 +116,7 @@
   top: 12%;
   left: 42%;
   border-radius: 300px;
+  background: rgba(255, 245, 235, 0.9); /* Very light yellow-peach */
   animation-delay: -4s;
 }
 
@@ -119,6 +126,7 @@
   top: -65px;
   left: 65px;
   border-radius: 130px;
+  background: rgba(255, 230, 220, 0.85); /* Warm peach */
 }
 
 .pinkCloud:nth-child(3):after {
@@ -127,6 +135,7 @@
   top: -85px;
   right: 65px;
   border-radius: 170px;
+  background: rgba(240, 230, 255, 0.8); /* Pale purple */
 }
 
 .pinkCloud:nth-child(4) {
@@ -134,7 +143,8 @@
   height: 52px;
   top: 62%;
   left: 58%;
-  border-radius: 220px;
+  border-radius: 300px;
+  background: rgba(255, 240, 235, 0.9); /* Creamy peach-pink */
   animation-delay: -6s;
 }
 
@@ -144,6 +154,7 @@
   top: -67px;
   left: 67px;
   border-radius: 135px;
+  background: rgba(255, 225, 215, 0.85); /* Warm pink */
 }
 
 .pinkCloud:nth-child(4):after {
@@ -152,6 +163,7 @@
   top: -77px;
   right: 67px;
   border-radius: 155px;
+  background: rgba(245, 235, 255, 0.8); /* Soft lavender */
 }
 
 .pinkCloud:nth-child(5) {
@@ -159,7 +171,8 @@
   height: 46px;
   top: 32%;
   left: 78%;
-  border-radius: 280px;
+  border-radius: 300px;
+  background: rgba(255, 245, 240, 0.9); /* Pale yellow-peach */
   animation-delay: -8s;
 }
 
@@ -169,6 +182,7 @@
   top: -72px;
   left: 72px;
   border-radius: 145px;
+  background: rgba(255, 235, 225, 0.85); /* Creamy peach */
 }
 
 .pinkCloud:nth-child(5):after {
@@ -177,6 +191,7 @@
   top: -82px;
   right: 72px;
   border-radius: 165px;
+  background: rgba(250, 240, 255, 0.8); /* Light purple */
 }
 
 .pinkCloud:nth-child(6) {
@@ -184,7 +199,8 @@
   height: 44px;
   top: 72%;
   left: 98%;
-  border-radius: 180px;
+  border-radius: 300px;
+  background: rgba(255, 230, 240, 0.9); /* Soft pink */
   animation-delay: -10s;
 }
 
@@ -194,6 +210,7 @@
   top: -57px;
   left: 57px;
   border-radius: 115px;
+  background: rgba(255, 240, 230, 0.85); /* Pale peach */
 }
 
 .pinkCloud:nth-child(6):after {
@@ -202,6 +219,7 @@
   top: -70px;
   right: 57px;
   border-radius: 140px;
+  background: rgba(240, 235, 255, 0.8); /* Muted lavender */
 }
 
 @keyframes scrollClouds {
