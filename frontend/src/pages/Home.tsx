@@ -57,7 +57,7 @@ const Home = () => {
           ];
           const filteredProducts = skincareProductsRes.products.filter(
             product => !excludedTitles.some(excluded => 
-              product.title.toLowerCase().includes(excluded.toLowerCase())
+              product.name.toLowerCase().includes(excluded.toLowerCase())
             )
           );
           setSkincareProducts(filteredProducts.slice(0, 12));
@@ -75,7 +75,7 @@ const Home = () => {
           ];
           const filteredProducts = allProductsRes.products.filter(
             product => !excludedTitles.some(excluded => 
-              product.title.toLowerCase().includes(excluded.toLowerCase())
+              product.name.toLowerCase().includes(excluded.toLowerCase())
             )
           );
           setSkincareProducts(filteredProducts.slice(0, 12));
