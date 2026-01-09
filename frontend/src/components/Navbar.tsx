@@ -35,7 +35,7 @@ const Navbar = () => {
   const menuItems = [
     {
       name: 'SKINCARE',
-      href: '/products?category=Skincare',
+      href: '/products/skincare',
     },
     {
       name: 'MAKEUP',
