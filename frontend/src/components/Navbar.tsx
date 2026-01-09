@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import styles from './Navbar.module.css';
+import cloudBannerImage from '../assets/cloud-banner.jpg';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -65,7 +66,7 @@ const Navbar = () => {
     <>
       {/* Pink Moving Banner - Top Most */}
       {!pinkBannerClosed && (
-        <div className={styles.pinkBanner}>
+        <div className={styles.pinkBanner} style={{ backgroundImage: `url(${cloudBannerImage})` }}>
           <div className={styles.pinkBannerTop}></div>
           <div className={styles.pinkBannerBottom}>
             <div className={styles.pinkBannerContent}>

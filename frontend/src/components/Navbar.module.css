@@ -8,7 +8,6 @@
   height: 48px;
   display: flex;
   flex-direction: column;
-  background-image: url('../assets/cloud-banner.jpg'); /* Your cloud banner image */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
