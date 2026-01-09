@@ -1,101 +1,68 @@
 import { useState } from 'react';
 import styles from './Products.module.css';
 
-// All 82 Skincare Products - Hardcoded, No API
+// Static Skincare Products - No API, Just Hardcoded Data
 interface SkincareProduct {
   id: string;
-  name: string;
-  price: number;
-  originalPrice: number;
-  discount: number;
-  amazonUrl: string;
-  affiliateUrl: string;
-  promoText: string;
+  title: string;
+  image: string;
+  asin: string;
+  affiliate: string;
 }
 
-const ALL_82_SKINCARE_PRODUCTS: SkincareProduct[] = [
-  { id: '1', name: 'Grass-Fed Beef Tallow for Skin', price: 10.00, originalPrice: 19.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G4QVNGSR', affiliateUrl: 'https://www.amazon.com/dp/B0G4QVNGSR/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '2', name: '10 Pack Hydrating Sheet Mask', price: 4.99, originalPrice: 9.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0D1XQGXG8', affiliateUrl: 'https://www.amazon.com/dp/B0D1XQGXG8/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '3', name: 'AH-8 Firming Neck Cream', price: 3.99, originalPrice: 7.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0F43M9PXF', affiliateUrl: 'https://www.amazon.com/dp/B0F43M9PXF/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '4', name: 'Body Firming Oil', price: 7.99, originalPrice: 25.99, discount: 69, amazonUrl: 'https://www.amazon.com/dp/B0G2PLRGW5', affiliateUrl: 'https://www.amazon.com/dp/B0G2PLRGW5/?tag=victoria0cdb-20', promoText: '69% OFF' },
-  { id: '5', name: 'Alcura Nerve Cream', price: 9.00, originalPrice: 17.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G292W74Y', affiliateUrl: 'https://www.amazon.com/dp/B0G292W74Y/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '6', name: 'Breast Enhancement Patch', price: 8.42, originalPrice: 16.83, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G3N7LWX3', affiliateUrl: 'https://www.amazon.com/dp/B0G3N7LWX3/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '7', name: 'Salmon DNA PDRN Serum', price: 15.00, originalPrice: 29.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FT8DWLXN', affiliateUrl: 'https://www.amazon.com/dp/B0FT8DWLXN/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '8', name: '5-in-1 Vitamin C Serum', price: 5.99, originalPrice: 9.99, discount: 40, amazonUrl: 'https://www.amazon.com/dp/B0G29G5MXV', affiliateUrl: 'https://www.amazon.com/dp/B0G29G5MXV/?tag=victoria0cdb-20', promoText: '40% OFF' },
-  { id: '9', name: 'Revolution Balm Glow', price: 3.25, originalPrice: 12.00, discount: 73, amazonUrl: 'https://www.amazon.com/dp/B0BTMCH534', affiliateUrl: 'https://www.amazon.com/dp/B0BTMCH534/?tag=victoria0cdb-20', promoText: '73% OFF' },
-  { id: '10', name: 'Salmon DNA PDRN Anti-Aging Serum', price: 9.49, originalPrice: 29.99, discount: 68, amazonUrl: 'https://www.amazon.com/dp/B0FYF8CX7R', affiliateUrl: 'https://www.amazon.com/dp/B0FYF8CX7R/?tag=victoria0cdb-20', promoText: '68% OFF' },
-  { id: '11', name: 'Orange Exfoliating Gel', price: 6.49, originalPrice: 12.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G2S1M266', affiliateUrl: 'https://www.amazon.com/dp/B0G2S1M266/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '12', name: 'PDRN Pink Collagen Capsule Cream', price: 9.85, originalPrice: 16.99, discount: 42, amazonUrl: 'https://www.amazon.com/dp/B0F9XYWFZ8', affiliateUrl: 'https://www.amazon.com/dp/B0F9XYWFZ8/?tag=victoria0cdb-20', promoText: '42% OFF' },
-  { id: '13', name: 'Beaupretty Mini Cosmetic Spatulas', price: 4.81, originalPrice: 8.01, discount: 40, amazonUrl: 'https://www.amazon.com/dp/B094DGZV56', affiliateUrl: 'https://www.amazon.com/dp/B094DGZV56/?tag=victoria0cdb-20', promoText: '40% OFF' },
-  { id: '14', name: 'Salmon DNA PDRN Facial Serum', price: 25.51, originalPrice: 43.99, discount: 42, amazonUrl: 'https://www.amazon.com/dp/B0FRFNFGW7', affiliateUrl: 'https://www.amazon.com/dp/B0FRFNFGW7/?tag=victoria0cdb-20', promoText: '42% OFF' },
-  { id: '15', name: 'Advanced Retinol Firming Serum Stick', price: 7.99, originalPrice: 15.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0F6T9KBWM', affiliateUrl: 'https://www.amazon.com/dp/B0F6T9KBWM/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '16', name: 'Cetaphil Sheer Mineral Sunscreen', price: 7.44, originalPrice: 10.99, discount: 32, amazonUrl: 'https://www.amazon.com/dp/B08HJKQP7X', affiliateUrl: 'https://www.amazon.com/dp/B08HJKQP7X/?tag=victoria0cdb-20', promoText: '32% OFF' },
-  { id: '17', name: 'Rejuvenating Facial Night Cream', price: 13.33, originalPrice: 22.22, discount: 40, amazonUrl: 'https://www.amazon.com/dp/B0CSM3Q54Z', affiliateUrl: 'https://www.amazon.com/dp/B0CSM3Q54Z/?tag=victoria0cdb-20', promoText: '40% OFF' },
-  { id: '18', name: 'Centella Sunscreen', price: 7.99, originalPrice: 15.98, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0F9WXBT5D', affiliateUrl: 'https://www.amazon.com/dp/B0F9WXBT5D/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '19', name: 'Niacinamide 5% Pore Refining Serum', price: 11.99, originalPrice: 19.99, discount: 40, amazonUrl: 'https://www.amazon.com/dp/B0CW61QCPZ', affiliateUrl: 'https://www.amazon.com/dp/B0CW61QCPZ/?tag=victoria0cdb-20', promoText: '40% OFF' },
-  { id: '20', name: 'Natural Amor Vanilla Rose Body Butter', price: 7.49, originalPrice: 14.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FHJPQ44T', affiliateUrl: 'https://www.amazon.com/dp/B0FHJPQ44T/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '21', name: 'Breast Enhancement Cream', price: 8.89, originalPrice: 17.77, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G393G8XL', affiliateUrl: 'https://www.amazon.com/dp/B0G393G8XL/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '22', name: 'Medicube Hyaluronic Acid Jelly Cream', price: 14.90, originalPrice: 16.90, discount: 12, amazonUrl: 'https://www.amazon.com/dp/B0FPQ3Z16S', affiliateUrl: 'https://www.amazon.com/dp/B0FPQ3Z16S/?tag=victoria0cdb-20', promoText: '12% OFF' },
-  { id: '23', name: 'eos Cashmere Pre-Shave Scrub', price: 5.00, originalPrice: 8.99, discount: 44, amazonUrl: 'https://www.amazon.com/dp/B0CPD1JDKF', affiliateUrl: 'https://www.amazon.com/dp/B0CPD1JDKF/?tag=victoria0cdb-20', promoText: '44% OFF' },
-  { id: '24', name: 'Ice Face Mask', price: 7.99, originalPrice: 15.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0CZS7XGVW', affiliateUrl: 'https://www.amazon.com/dp/B0CZS7XGVW/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '25', name: 'Irish Spring Bar Soap', price: 16.74, originalPrice: 25.99, discount: 36, amazonUrl: 'https://www.amazon.com/dp/B07FY17L3N', affiliateUrl: 'https://www.amazon.com/dp/B07FY17L3N/?tag=victoria0cdb-20', promoText: '36% OFF' },
-  { id: '26', name: 'Deep Collagen Face Mask', price: 9.43, originalPrice: 15.99, discount: 41, amazonUrl: 'https://www.amazon.com/dp/B0DJ737LXP', affiliateUrl: 'https://www.amazon.com/dp/B0DJ737LXP/?tag=victoria0cdb-20', promoText: '41% OFF' },
-  { id: '27', name: 'New Beef Tallow for Face', price: 11.94, originalPrice: 23.89, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0F386N56J', affiliateUrl: 'https://www.amazon.com/dp/B0F386N56J/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '28', name: 'CLIO Glazing Milky Essence', price: 16.79, originalPrice: 27.99, discount: 40, amazonUrl: 'https://www.amazon.com/dp/B0FLXK5HVL', affiliateUrl: 'https://www.amazon.com/dp/B0FLXK5HVL/?tag=victoria0cdb-20', promoText: '40% OFF' },
-  { id: '29', name: 'Rice Exfoliating Ampoule Set', price: 7.99, originalPrice: 15.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FND3SWL5', affiliateUrl: 'https://www.amazon.com/dp/B0FND3SWL5/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '30', name: '2% Salicylic Acid Serum', price: 9.92, originalPrice: 18.71, discount: 47, amazonUrl: 'https://www.amazon.com/dp/B0FN3J729X', affiliateUrl: 'https://www.amazon.com/dp/B0FN3J729X/?tag=victoria0cdb-20', promoText: '47% OFF' },
-  { id: '31', name: 'Snail Mucin Toning Pads', price: 15.50, originalPrice: 33.88, discount: 54, amazonUrl: 'https://www.amazon.com/dp/B0FFY6F1FK', affiliateUrl: 'https://www.amazon.com/dp/B0FFY6F1FK/?tag=victoria0cdb-20', promoText: '54% OFF' },
-  { id: '32', name: 'AH-8 Firming Neck Cream (Chamomile)', price: 4.94, originalPrice: 9.89, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G1Y79CSJ', affiliateUrl: 'https://www.amazon.com/dp/B0G1Y79CSJ/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '33', name: 'Salmon DNA PDRN Peptide Serum', price: 19.99, originalPrice: 45.99, discount: 57, amazonUrl: 'https://www.amazon.com/dp/B0FMX8BM4L', affiliateUrl: 'https://www.amazon.com/dp/B0FMX8BM4L/?tag=victoria0cdb-20', promoText: '57% OFF' },
-  { id: '34', name: 'Neck Lift Tape', price: 8.66, originalPrice: 17.33, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G5WVB8Z3', affiliateUrl: 'https://www.amazon.com/dp/B0G5WVB8Z3/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '35', name: 'Acne Patches', price: 3.99, originalPrice: 7.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0CKMY3CS9', affiliateUrl: 'https://www.amazon.com/dp/B0CKMY3CS9/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '36', name: 'Hyaluronic Acid Powder', price: 6.49, originalPrice: 12.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G5YD2MZW', affiliateUrl: 'https://www.amazon.com/dp/B0G5YD2MZW/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '37', name: 'Collagen Face Mask', price: 4.99, originalPrice: 9.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0DXFCS75L', affiliateUrl: 'https://www.amazon.com/dp/B0DXFCS75L/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '38', name: 'Retinol Serum', price: 9.97, originalPrice: 18.82, discount: 47, amazonUrl: 'https://www.amazon.com/dp/B0F62QBWKN', affiliateUrl: 'https://www.amazon.com/dp/B0F62QBWKN/?tag=victoria0cdb-20', promoText: '47% OFF' },
-  { id: '39', name: 'Blue Lagoon GHK-Cu Serum', price: 17.49, originalPrice: 34.98, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0G445XBLQ', affiliateUrl: 'https://www.amazon.com/dp/B0G445XBLQ/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '40', name: 'Turmeric Vitamin C Clay Mask', price: 4.49, originalPrice: 8.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FMK7WDSQ', affiliateUrl: 'https://www.amazon.com/dp/B0FMK7WDSQ/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '41', name: 'Retinol B5 Resurfacing Serum', price: 11.00, originalPrice: 21.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FJFLK22X', affiliateUrl: 'https://www.amazon.com/dp/B0FJFLK22X/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '42', name: 'Tallow Glow Balm', price: 5.49, originalPrice: 9.99, discount: 45, amazonUrl: 'https://www.amazon.com/dp/B0FSWKKY67', affiliateUrl: 'https://www.amazon.com/dp/B0FSWKKY67/?tag=victoria0cdb-20', promoText: '45% OFF' },
-  { id: '43', name: 'Vitamin C Serum', price: 29.90, originalPrice: 46.00, discount: 35, amazonUrl: 'https://www.amazon.com/dp/B0FT71JLYF', affiliateUrl: 'https://www.amazon.com/dp/B0FT71JLYF/?tag=victoria0cdb-20', promoText: '35% OFF' },
-  { id: '44', name: 'PDRN Skin Care Set', price: 43.55, originalPrice: 67.00, discount: 35, amazonUrl: 'https://www.amazon.com/dp/B0FX7SYL6K', affiliateUrl: 'https://www.amazon.com/dp/B0FX7SYL6K/?tag=victoria0cdb-20', promoText: '35% OFF' },
-  { id: '45', name: 'BANOBAGI Milk Thistle Repair Cream', price: 18.90, originalPrice: 27.00, discount: 30, amazonUrl: 'https://www.amazon.com/dp/B08JQF78VV', affiliateUrl: 'https://www.amazon.com/dp/B08JQF78VV/?tag=victoria0cdb-20', promoText: '30% OFF' },
-  { id: '46', name: 'Beef Tallow for Skin', price: 10.00, originalPrice: 19.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FR59XDFD', affiliateUrl: 'https://www.amazon.com/dp/B0FR59XDFD/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '47', name: 'Fed Beef Tallow Balm', price: 12.50, originalPrice: 24.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FSWQZL4S', affiliateUrl: 'https://www.amazon.com/dp/B0FSWQZL4S/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '48', name: 'Medicube Wrapping Mask', price: 16.14, originalPrice: 21.80, discount: 26, amazonUrl: 'https://www.amazon.com/dp/B0FLQ3DCH2', affiliateUrl: 'https://www.amazon.com/dp/B0FLQ3DCH2/?tag=victoria0cdb-20', promoText: '26% OFF' },
-  { id: '49', name: 'HKY Acne Serum', price: 12.50, originalPrice: 24.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0FHJRHXP7', affiliateUrl: 'https://www.amazon.com/dp/B0FHJRHXP7/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '50', name: 'Prickly Pear Seed Oil', price: 18.00, originalPrice: 30.00, discount: 40, amazonUrl: 'https://www.amazon.com/dp/B08R2FSPLL', affiliateUrl: 'https://www.amazon.com/dp/B08R2FSPLL/?tag=victoria0cdb-20', promoText: '40% OFF' },
-  { id: '51', name: 'FRCOLOR Facial Roller', price: 5.45, originalPrice: 9.09, discount: 40, amazonUrl: 'https://www.amazon.com/dp/B0CDF83QRR', affiliateUrl: 'https://www.amazon.com/dp/B0CDF83QRR/?tag=victoria0cdb-20', promoText: '40% OFF' },
-  { id: '52', name: 'CeraVe Skin Renewing Gel Oil', price: 12.99, originalPrice: 25.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B01LZAN652', affiliateUrl: 'https://www.amazon.com/dp/B01LZAN652/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '53', name: 'Hyaluronic Acid Overnight Mask', price: 5.99, originalPrice: 11.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0F28YLSN8', affiliateUrl: 'https://www.amazon.com/dp/B0F28YLSN8/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '54', name: 'Neutrogena Hydro Boost Serum', price: 12.56, originalPrice: 26.79, discount: 53, amazonUrl: 'https://www.amazon.com/dp/B01HOHBS7K', affiliateUrl: 'https://www.amazon.com/dp/B01HOHBS7K/?tag=victoria0cdb-20', promoText: '53% OFF' },
-  { id: '55', name: 'TreeActiv Body & Back Acne Spray', price: 9.79, originalPrice: 19.59, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0DBRH4D1G', affiliateUrl: 'https://www.amazon.com/dp/B0DBRH4D1G/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '56', name: 'Spa Gift Set', price: 8.50, originalPrice: 16.99, discount: 50, amazonUrl: 'https://www.amazon.com/dp/B0DMNV3X3L', affiliateUrl: 'https://www.amazon.com/dp/B0DMNV3X3L/?tag=victoria0cdb-20', promoText: '50% OFF' },
-  { id: '57', name: 'Peel Shot Glow Rice Ampoule Duo', price: 9.99, originalPrice: 15.96, discount: 37, amazonUrl: 'https://www.amazon.com/dp/B0FX3MH5BX', affiliateUrl: 'https://www.amazon.com/dp/B0FX3MH5BX/?tag=victoria0cdb-20', promoText: '37% OFF' },
-  { id: '58', name: 'Aveeno Daily Moisturizing Lotion', price: 13.95, originalPrice: 22.00, discount: 37, amazonUrl: 'https://www.amazon.com/dp/B0BLY1CWJ4', affiliateUrl: 'https://www.amazon.com/dp/B0BLY1CWJ4/?tag=victoria0cdb-20', promoText: '37% OFF' },
-  { id: '59', name: 'FRCOLOR Cotton Facial Mask Sheets', price: 27.43, originalPrice: 34.29, discount: 20, amazonUrl: 'https://www.amazon.com/dp/B0BYD879V4', affiliateUrl: 'https://www.amazon.com/dp/B0BYD879V4/?tag=victoria0cdb-20', promoText: '20% OFF' },
-  { id: '60', name: 'Black & White Rice Peeling Set', price: 8.00, originalPrice: 18.99, discount: 58, amazonUrl: 'https://www.amazon.com/dp/B0FVX2WQ41', affiliateUrl: 'https://www.amazon.com/dp/B0FVX2WQ41/?tag=victoria0cdb-20', promoText: '58% OFF' },
+const ALL_SKINCARE_PRODUCTS: SkincareProduct[] = [
+  { id: '51', title: 'Dr.Melaxin Peel Shot Kojic Acid Turmeric Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71FIL4QFAHL._AC_UL600_SR600,400_.jpg', asin: 'B0FXTGD7LC', affiliate: 'https://www.amazon.com/dp/B0FXTGD7LC/?tag=victoria0cdb-20' },
+  { id: '52', title: 'Dr.Althea PDRN Reju 5000 Cream', image: 'https://images-na.ssl-images-amazon.com/images/I/419qAvG77UL._AC_UL600_SR600,400_.jpg', asin: 'B0G26XC6KT', affiliate: 'https://www.amazon.com/dp/B0G26XC6KT/?tag=victoria0cdb-20' },
+  { id: '53', title: 'Head & Shoulders Anti-Dandruff Shampoo BARE', image: 'https://images-na.ssl-images-amazon.com/images/I/71QJ6y6v99L._AC_UL600_SR600,400_.jpg', asin: 'B0DMT1CJ2Q', affiliate: 'https://www.amazon.com/dp/B0DMT1CJ2Q/?tag=victoria0cdb-20' },
+  { id: '54', title: 'AEEHFENG Timilk ChillErase Bump Renewal Spray', image: 'https://images-na.ssl-images-amazon.com/images/I/71XnLCYLNTL._AC_UL600_SR600,400_.jpg', asin: 'B0GCK5SHXJ', affiliate: 'https://www.amazon.com/dp/B0GCK5SHXJ/?tag=victoria0cdb-20' },
+  { id: '55', title: 'Lymphatic Contour Face Brush', image: 'https://images-na.ssl-images-amazon.com/images/I/71j6xfG0fkL._AC_UL600_SR600,400_.jpg', asin: 'B0FYVG98GM', affiliate: 'https://www.amazon.com/dp/B0FYVG98GM/?tag=victoria0cdb-20' },
+  { id: '56', title: 'JODSONE 3-in-1 Cat Eye Magnet Nail Tool', image: 'https://images-na.ssl-images-amazon.com/images/I/61Sjj++alVL._AC_UL600_SR600,400_.jpg', asin: 'B0FX3MP3W2', affiliate: 'https://www.amazon.com/dp/B0FX3MP3W2/?tag=victoria0cdb-20' },
+  { id: '57', title: 'Native Scalp Detox Shampoo and Conditioner', image: 'https://images-na.ssl-images-amazon.com/images/I/71KXpO6jHwL._AC_UL600_SR600,400_.jpg', asin: 'B0G27P2LGS', affiliate: 'https://www.amazon.com/dp/B0G27P2LGS/?tag=victoria0cdb-20' },
+  { id: '58', title: 'e.l.f. SKIN Bright + Brew-tiful Eye Cream', image: 'https://images-na.ssl-images-amazon.com/images/I/61ax411X7gL._AC_UL600_SR600,400_.jpg', asin: 'B0G1H91LGM', affiliate: 'https://www.amazon.com/dp/B0G1H91LGM/?tag=victoria0cdb-20' },
+  { id: '59', title: 'Lattafa Asad Elixir EDP', image: 'https://images-na.ssl-images-amazon.com/images/I/51f4XfVZtGL._AC_UL600_SR600,400_.jpg', asin: 'B0FWYPY4FX', affiliate: 'https://www.amazon.com/dp/B0FWYPY4FX/?tag=victoria0cdb-20' },
+  { id: '60', title: 'prgislew Nose Hair Trimmer', image: 'https://images-na.ssl-images-amazon.com/images/I/61Fx2TiBpeL._AC_UL600_SR600,400_.jpg', asin: 'B0G18RXVLB', affiliate: 'https://www.amazon.com/dp/B0G18RXVLB/?tag=victoria0cdb-20' },
+  { id: '61', title: 'Saltair Hyaluronic Acid Body Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/51mZFbRKa+L._AC_UL600_SR600,400_.jpg', asin: 'B0FX39VLRL', affiliate: 'https://www.amazon.com/dp/B0FX39VLRL/?tag=victoria0cdb-20' },
+  { id: '63', title: 'grace & stella Hypochlorous Acid Spray', image: 'https://images-na.ssl-images-amazon.com/images/I/719x7jMja2L._AC_UL600_SR600,400_.jpg', asin: 'B0F6TS5HVH', affiliate: 'https://www.amazon.com/dp/B0F6TS5HVH/?tag=victoria0cdb-20' },
+  { id: '64', title: 'GODA for Her Perfume and Silk Body Oil', image: 'https://images-na.ssl-images-amazon.com/images/I/61hUIcbOjrL._AC_UL600_SR600,400_.jpg', asin: 'B0G3RN2SC7', affiliate: 'https://www.amazon.com/dp/B0G3RN2SC7/?tag=victoria0cdb-20' },
+  { id: '65', title: 'Vagilelf Demon Mark Tattoos', image: 'https://images-na.ssl-images-amazon.com/images/I/71Bz-a4mo4L._AC_UL600_SR600,400_.jpg', asin: 'B0FVYGZ255', affiliate: 'https://www.amazon.com/dp/B0FVYGZ255/?tag=victoria0cdb-20' },
+  { id: '66', title: 'NYX Epic Inky Stix Eyeliner', image: 'https://images-na.ssl-images-amazon.com/images/I/51yUxo+5dHL._AC_UL600_SR600,400_.jpg', asin: 'B0FZCBBVDK', affiliate: 'https://www.amazon.com/dp/B0FZCBBVDK/?tag=victoria0cdb-20' },
+  { id: '67', title: 'Lash Serum for Eyelashes & Eyebrows', image: 'https://images-na.ssl-images-amazon.com/images/I/61UQjAx4z5L._AC_UL600_SR600,400_.jpg', asin: 'B0GD12FCYQ', affiliate: 'https://www.amazon.com/dp/B0GD12FCYQ/?tag=victoria0cdb-20' },
+  { id: '68', title: '2 Pcs Texture Comb Set', image: 'https://images-na.ssl-images-amazon.com/images/I/61+6nIreqOL._AC_UL600_SR600,400_.jpg', asin: 'B0G39WCFG2', affiliate: 'https://www.amazon.com/dp/B0G39WCFG2/?tag=victoria0cdb-20' },
+  { id: '69', title: 'eos Cashmere Body Mist', image: 'https://images-na.ssl-images-amazon.com/images/I/61KlSccHHpL._AC_UL600_SR600,400_.jpg', asin: 'B0FRLXNTB2', affiliate: 'https://www.amazon.com/dp/B0FRLXNTB2/?tag=victoria0cdb-20' },
+  { id: '70', title: "L'Oreal Revitalift Triple Power Eye Bag Eraser", image: 'https://images-na.ssl-images-amazon.com/images/I/81RcZcfyRQL._AC_UL600_SR600,400_.jpg', asin: 'B0FXJ4KJZQ', affiliate: 'https://www.amazon.com/dp/B0FXJ4KJZQ/?tag=victoria0cdb-20' },
+  { id: '71', title: "L'Oreal Elvive Glycolic + Gloss Hair Serum", image: 'https://images-na.ssl-images-amazon.com/images/I/61l15UtTN1L._AC_UL600_SR600,400_.jpg', asin: 'B0FWKX1QMC', affiliate: 'https://www.amazon.com/dp/B0FWKX1QMC/?tag=victoria0cdb-20' },
+  { id: '72', title: 'Wavytalk Steam Hair Straightener', image: 'https://images-na.ssl-images-amazon.com/images/I/61-HItePnWL._AC_UL600_SR600,400_.jpg', asin: 'B0FVXPLCKX', affiliate: 'https://www.amazon.com/dp/B0FVXPLCKX/?tag=victoria0cdb-20' },
+  { id: '73', title: 'Prequel Skin Retinaldehyde 0.1%', image: 'https://images-na.ssl-images-amazon.com/images/I/614XaVcFu8L._AC_UL600_SR600,400_.jpg', asin: 'B0FY36QKW8', affiliate: 'https://www.amazon.com/dp/B0FY36QKW8/?tag=victoria0cdb-20' },
+  { id: '74', title: 'Callus Remover for Feet Electric Foot File', image: 'https://images-na.ssl-images-amazon.com/images/I/71foQ8cpEeL._AC_UL600_SR600,400_.jpg', asin: 'B0FVSVVTQK', affiliate: 'https://www.amazon.com/dp/B0FVSVVTQK/?tag=victoria0cdb-20' },
+  { id: '75', title: 'COSRX Advanced Pure Vitamin C 23% Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71LzZAsVE+L._AC_UL600_SR600,400_.jpg', asin: 'B0FWQGLTQV', affiliate: 'https://www.amazon.com/dp/B0FWQGLTQV/?tag=victoria0cdb-20' },
+  { id: '76', title: 'Kitsch Strengthening Rice Water Protein Shampoo', image: 'https://images-na.ssl-images-amazon.com/images/I/71Ng-h0FaTL._AC_UL600_SR600,400_.jpg', asin: 'B0FWDDN77G', affiliate: 'https://www.amazon.com/dp/B0FWDDN77G/?tag=victoria0cdb-20' },
+  { id: '77', title: 'Jawline Shaper Chin Strap', image: 'https://images-na.ssl-images-amazon.com/images/I/61ADwFfmABL._AC_UL600_SR600,400_.jpg', asin: 'B0FNQSMFTN', affiliate: 'https://www.amazon.com/dp/B0FNQSMFTN/?tag=victoria0cdb-20' },
+  { id: '78', title: 'Lymphatic Contour Face Brush', image: 'https://images-na.ssl-images-amazon.com/images/I/61PoCKMjBSL._AC_UL600_SR600,400_.jpg', asin: 'B0FXTTV4NV', affiliate: 'https://www.amazon.com/dp/B0FXTTV4NV/?tag=victoria0cdb-20' },
+  { id: '79', title: 'e.l.f. Soft Glam Brightening Corrector', image: 'https://images-na.ssl-images-amazon.com/images/I/61je2LPc2qL._AC_UL600_SR600,400_.jpg', asin: 'B0G1H283LW', affiliate: 'https://www.amazon.com/dp/B0G1H283LW/?tag=victoria0cdb-20' },
+  { id: '80', title: 'Dove Holiday Treats Body Wash', image: 'https://images-na.ssl-images-amazon.com/images/I/61-fcISkgLL._AC_UL600_SR600,400_.jpg', asin: 'B0CNZ5YLVB', affiliate: 'https://www.amazon.com/dp/B0CNZ5YLVB/?tag=victoria0cdb-20' },
+  { id: '81', title: 'Pnctho Lymphatic Contour Face Brush', image: 'https://images-na.ssl-images-amazon.com/images/I/71yxHDsJMaL._AC_UL300_SR300,200_.jpg', asin: 'B0G356ZQ9T', affiliate: 'https://www.amazon.com/dp/B0G356ZQ9T/?tag=victoria0cdb-20' },
+  { id: '82', title: 'GLORENDA Moringa 10-in-1 Nano Microdarts Patch', image: 'https://images-na.ssl-images-amazon.com/images/I/81g4ijxiCiL._AC_UL300_SR300,200_.jpg', asin: 'B0GD7N2VT3', affiliate: 'https://www.amazon.com/dp/B0GD7N2VT3/?tag=victoria0cdb-20' },
+  { id: '83', title: 'QUIA Toner Pads – PHA Dual-Action', image: 'https://images-na.ssl-images-amazon.com/images/I/712b1iTUJ6L._AC_UL300_SR300,200_.jpg', asin: 'B0G4JQ5M69', affiliate: 'https://www.amazon.com/dp/B0G4JQ5M69/?tag=victoria0cdb-20' },
+  { id: '84', title: 'Maybelline Lifter Plump & Glow Foundation', image: 'https://images-na.ssl-images-amazon.com/images/I/61K1pEfOFCL._AC_UL300_SR300,200_.jpg', asin: 'B0FYGYPK8Q', affiliate: 'https://www.amazon.com/dp/B0FYGYPK8Q/?tag=victoria0cdb-20' },
+  { id: '85', title: 'CeraVe Oil Control Balancing Conditioner', image: 'https://images-na.ssl-images-amazon.com/images/I/618J60UJc8L._AC_UL300_SR300,200_.jpg', asin: 'B0FWVND3JL', affiliate: 'https://www.amazon.com/dp/B0FWVND3JL/?tag=victoria0cdb-20' },
+  { id: '86', title: 'Lattafa Yara Elixir Eau De Parfum', image: 'https://images-na.ssl-images-amazon.com/images/I/51cJib0GC2L._AC_UL300_SR300,200_.jpg', asin: 'B0FY7HQYDD', affiliate: 'https://www.amazon.com/dp/B0FY7HQYDD/?tag=victoria0cdb-20' },
+  { id: '87', title: 'Old Spice Aluminum Free Deodorant', image: 'https://images-na.ssl-images-amazon.com/images/I/71zeAWByUuL._AC_UL300_SR300,200_.jpg', asin: 'B0FXY83ZC1', affiliate: 'https://www.amazon.com/dp/B0FXY83ZC1/?tag=victoria0cdb-20' },
+  { id: '88', title: 'Brush Pro Portable Straightener', image: 'https://images-na.ssl-images-amazon.com/images/I/61Jze2dHszL._AC_UL300_SR300,200_.jpg', asin: 'B0G52WQ17K', affiliate: 'https://www.amazon.com/dp/B0G52WQ17K/?tag=victoria0cdb-20' },
+  { id: '89', title: 'W3W 4D Dual-Ended Brow Pen', image: 'https://images-na.ssl-images-amazon.com/images/I/71myRYqUD3L._AC_UL300_SR300,200_.jpg', asin: 'B0FZ7Z2CHN', affiliate: 'https://www.amazon.com/dp/B0FZ7Z2CHN/?tag=victoria0cdb-20' },
+  { id: '90', title: 'The Ordinary Volufiline 92% Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/61D3pKRpxaL._AC_UL300_SR300,200_.jpg', asin: 'B0FYJ4WQ5J', affiliate: 'https://www.amazon.com/dp/B0FYJ4WQ5J/?tag=victoria0cdb-20' },
+  { id: '91', title: 'CeraVe Invisible Mineral Sunscreen SPF 50', image: 'https://images-na.ssl-images-amazon.com/images/I/61IvJtPa9EL._AC_UL300_SR300,200_.jpg', asin: 'B0FXNHDWM7', affiliate: 'https://www.amazon.com/dp/B0FXNHDWM7/?tag=victoria0cdb-20' },
+  { id: '92', title: 'VFD 30X/1X Makeup Mirror with Lights', image: 'https://images-na.ssl-images-amazon.com/images/I/618O2BajQIL._AC_UL300_SR300,200_.jpg', asin: 'B0FVBFHLHW', affiliate: 'https://www.amazon.com/dp/B0FVBFHLHW/?tag=victoria0cdb-20' },
+  { id: '93', title: 'NYX Buttermelt Highlighter', image: 'https://images-na.ssl-images-amazon.com/images/I/81Of4mXdNeL._AC_UL300_SR300,200_.jpg', asin: 'B0DZ2M8BNF', affiliate: 'https://www.amazon.com/dp/B0DZ2M8BNF/?tag=victoria0cdb-20' },
 ];
 
 const Skincare = () => {
-  const [products] = useState<SkincareProduct[]>(ALL_82_SKINCARE_PRODUCTS);
+  const [products] = useState<SkincareProduct[]>(ALL_SKINCARE_PRODUCTS);
 
   const handleBuyOnAmazon = (affiliateUrl: string) => {
     window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
   };
 
-  // Generate rating for display
-  const getRating = (productId: string) => {
-    // Use product ID to generate consistent rating
-    const seed = productId.charCodeAt(0) + productId.charCodeAt(productId.length - 1);
-    return (4.0 + (seed % 10) / 10).toFixed(1);
-  };
-
-  const getReviewCount = (productId: string) => {
-    const seed = productId.charCodeAt(0) * productId.charCodeAt(productId.length - 1);
-    return Math.floor(seed % 500) + 50;
-  };
-
-  console.log('[SKINCARE PAGE] Rendering', products.length, 'hardcoded products');
+  console.log('[SKINCARE PAGE] Rendering', products.length, 'static products');
   console.log('[SKINCARE PAGE] No API calls - all products are hardcoded');
 
   return (
@@ -110,11 +77,6 @@ const Skincare = () => {
 
         <div className={styles.grid}>
           {products.map((product) => {
-            const rating = getRating(product.id);
-            const reviewCount = getReviewCount(product.id);
-            const stars = Math.floor(parseFloat(rating));
-            const hasHalfStar = parseFloat(rating) % 1 >= 0.5;
-
             return (
               <div key={product.id} className={styles.card} style={{
                 background: '#fff',
@@ -133,64 +95,48 @@ const Skincare = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '1rem',
-                  color: '#999',
-                  fontSize: '14px'
+                  overflow: 'hidden'
                 }}>
-                  Product Image
+                  <img 
+                    src={product.image} 
+                    alt={product.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        parent.innerHTML = '<div style="color: #999; font-size: 14px; text-align: center; padding: 2rem;">Product Image</div>';
+                      }
+                    }}
+                  />
                 </div>
                 
                 <h3 style={{ 
                   fontSize: '16px', 
                   fontWeight: '400', 
-                  marginBottom: '0.5rem',
-                  color: '#000'
+                  marginBottom: '1rem',
+                  color: '#000',
+                  lineHeight: '1.4',
+                  minHeight: '2.8em'
                 }}>
-                  {product.name}
+                  {product.title}
                 </h3>
 
                 <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.5rem',
-                  marginBottom: '0.5rem',
-                  fontSize: '14px',
-                  color: '#666'
+                  fontSize: '12px', 
+                  color: '#666',
+                  marginBottom: '1rem',
+                  fontFamily: 'monospace'
                 }}>
-                  <span>{'★'.repeat(stars)}{hasHalfStar ? '☆' : ''}</span>
-                  <span>{rating} ({reviewCount})</span>
-                </div>
-
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'baseline', 
-                  gap: '0.5rem',
-                  marginBottom: '1rem'
-                }}>
-                  <span style={{ 
-                    fontSize: '18px', 
-                    fontWeight: '500',
-                    color: '#000'
-                  }}>
-                    ${product.price.toFixed(2)}
-                  </span>
-                  <span style={{ 
-                    fontSize: '14px', 
-                    color: '#999',
-                    textDecoration: 'line-through'
-                  }}>
-                    ${product.originalPrice.toFixed(2)}
-                  </span>
-                  <span style={{ 
-                    fontSize: '12px', 
-                    color: '#d32f2f',
-                    fontWeight: '500'
-                  }}>
-                    {product.promoText}
-                  </span>
+                  ASIN: {product.asin}
                 </div>
 
                 <button
-                  onClick={() => handleBuyOnAmazon(product.affiliateUrl)}
+                  onClick={() => handleBuyOnAmazon(product.affiliate)}
                   style={{
                     width: '100%',
                     padding: '0.75rem',
