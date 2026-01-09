@@ -68,14 +68,6 @@ const Navbar = () => {
         <div className={styles.pinkBanner}>
           <div className={styles.pinkBannerTop}></div>
           <div className={styles.pinkBannerBottom}>
-            <div className={styles.pinkBannerClouds}>
-              <div className={styles.pinkCloud}></div>
-              <div className={styles.pinkCloud}></div>
-              <div className={styles.pinkCloud}></div>
-              <div className={styles.pinkCloud}></div>
-              <div className={styles.pinkCloud}></div>
-              <div className={styles.pinkCloud}></div>
-            </div>
             <div className={styles.pinkBannerContent}>
               <button 
                 className={styles.pinkBannerArrow}

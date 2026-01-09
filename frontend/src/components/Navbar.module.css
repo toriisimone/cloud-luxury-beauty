@@ -12,7 +12,7 @@
 
 .pinkBannerTop {
   height: 10%;
-  background: linear-gradient(90deg, #FFE5E8 0%, #FFE8F0 50%, #F5E6FF 100%); /* Soft pastel gradient */
+  background: transparent; /* Top section transparent to show image */
 }
 
 .pinkBannerBottom {
