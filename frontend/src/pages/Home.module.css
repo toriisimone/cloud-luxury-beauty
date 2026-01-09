@@ -13,7 +13,6 @@
   max-height: 900px;
   overflow: hidden;
   margin-top: 0; /* No spacing - touches menu line */
-  padding-top: calc(36px + 80px); /* Account for sticky black banner (36px) + navbar height (80px) */
 }
 
 .heroBanner {
