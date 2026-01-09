@@ -12,6 +12,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: #FFF5F7; /* Fallback color if image doesn't load */
 }
 
 .pinkBannerTop {
@@ -27,6 +28,7 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  min-height: 43px; /* Ensure minimum height */
 }
 
 .pinkBannerClouds {
@@ -245,7 +247,8 @@
   padding: 0 2rem;
   gap: 1rem;
   position: relative;
-  z-index: 1;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0); /* Fully transparent but ensures z-index works */
 }
 
 .pinkBannerText {
@@ -261,6 +264,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 11;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
 }
 
 .pinkBannerArrow,
@@ -274,6 +280,10 @@
   align-items: center;
   justify-content: center;
   transition: opacity 0.2s ease;
+  position: relative;
+  z-index: 11;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
 }
 
 .pinkBannerArrow:hover,
