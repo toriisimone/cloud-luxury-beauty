@@ -232,6 +232,11 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
 
               return (
                 <div key={`${product.id}-${index}`} className={styles.productCard}>
+                  {/* "View Now" overlay button - appears on hover */}
+                  <Link to={`/products/${product.id}`} className={styles.viewNowOverlayButton}>
+                    <span className={styles.viewNowText}>view now</span>
+                  </Link>
+
                   {/* Multiple badges support - Kylie style */}
                   {allBadges.length > 0 && (
                     <div className={styles.badgesContainer}>
@@ -248,22 +253,23 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                     </div>
                   )}
                   
-                  <div className={styles.imageContainer}>
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className={styles.productImage}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const parent = e.currentTarget.parentElement;
-                        if (parent) {
-                          parent.innerHTML = '<div className={styles.placeholder}>Product Image</div>';
-                        }
-                      }}
-                    />
-                  </div>
-                  
-                  <div className={styles.productInfo}>
+                  <Link to={`/products/${product.id}`} className={styles.productLink}>
+                    <div className={styles.imageContainer}>
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className={styles.productImage}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const parent = e.currentTarget.parentElement;
+                          if (parent) {
+                            parent.innerHTML = '<div className={styles.placeholder}>Product Image</div>';
+                          }
+                        }}
+                      />
+                    </div>
+                    
+                    <div className={styles.productInfo}>
                     {/* Shade selection - Kylie style */}
                     {hasShades && (
                       <div className={styles.shadeSelection}>
@@ -309,18 +315,19 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                       )}
                       <span className={styles.price}>${product.price?.toFixed(2) || 'N/A'}</span>
                     </div>
-                    
-                    {/* Button with price - Kylie style */}
-                    <button
-                      className={styles.addToCartButton}
-                      onClick={() => handleBuyOnAmazon(product.affiliate)}
-                      data-hover-text={isBundle ? "view now" : "buy on amazon"}
-                    >
-                      {isBundle 
-                        ? "view bundle" 
-                        : `add to cart - $${product.price?.toFixed(2) || '0.00'}`}
-                    </button>
-                  </div>
+                    </div>
+                  </Link>
+                  
+                  {/* Button - "view on amazon" text - outside productLink */}
+                  <button
+                    className={styles.addToCartButton}
+                    onClick={() => handleBuyOnAmazon(product.affiliate)}
+                    data-hover-text={isBundle ? "view now" : "view on amazon"}
+                  >
+                    {isBundle 
+                      ? "view bundle" 
+                      : "view on amazon"}
+                  </button>
                 </div>
               );
             })}
