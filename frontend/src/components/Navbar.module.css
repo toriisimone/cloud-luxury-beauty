@@ -8,6 +8,10 @@
   height: 48px;
   display: flex;
   flex-direction: column;
+  background-image: url('../assets/banner-clouds.png'); /* Your cloud banner image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .pinkBannerTop {
@@ -17,10 +21,7 @@
 
 .pinkBannerBottom {
   height: 90%;
-  background-image: url('../assets/banner-clouds.png'); /* Your cloud banner image */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: transparent; /* Transparent to show parent background image */
   display: flex;
   align-items: center;
   justify-content: center;
