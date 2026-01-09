@@ -21,14 +21,6 @@ const Navbar = () => {
     'Limited edition: Rose Gold Essentials',
   ];
 
-  // Rotating messages for pink banner
-  const pinkBannerMessages = [
-    'free u.s. shipping with orders over $40',
-    'Check out only the best Amazon products',
-    'Buy on Aurapop today',
-    'Shop the best deals on Amazon',
-  ];
-
   // Rotate black banner messages every 10 seconds (very slow, readable)
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,15 +28,6 @@ const Navbar = () => {
     }, 10000);
     return () => clearInterval(interval);
   }, [bannerMessages.length]);
-
-  // Rotate pink banner messages every 5 seconds (slow, readable - same speed as black banner)
-  useEffect(() => {
-    if (pinkBannerClosed) return;
-    const interval = setInterval(() => {
-      setPinkBannerIndex((prev) => (prev + 1) % pinkBannerMessages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [pinkBannerMessages.length, pinkBannerClosed]);
 
   const handleLogout = async () => {
     await logout();
