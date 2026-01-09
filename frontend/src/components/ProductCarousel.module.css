@@ -56,9 +56,10 @@
 .carouselWrapper {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start !important; /* Start alignment to prevent clipping */
   gap: 1rem;
-  padding-right: 0.5rem; /* Extra padding on right to ensure last item is fully visible */
+  padding-right: 0 !important; /* Remove padding, handled by carousel */
+  overflow: visible !important; /* Ensure nothing is clipped */
 }
 
 .navButton {
@@ -92,13 +93,15 @@
   display: flex;
   gap: 1rem; /* Consistent gap between cards */
   overflow-x: auto;
-  scroll-behavior: smooth;
+  overflow-y: visible !important; /* Allow content to be fully visible */
+  scroll-behavior: smooth !important; /* Smooth scrolling */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   flex: 1;
-  padding: 1rem 0.5rem; /* Padding to ensure last item is fully visible */
-  align-items: stretch; /* Ensure all cards have same height */
-  scroll-padding-right: 1rem; /* Extra padding on right for last item */
+  padding: 1rem 1rem !important; /* Extra padding to ensure last item and button are fully visible */
+  align-items: flex-start !important; /* Start alignment to prevent clipping */
+  scroll-padding-right: 2rem !important; /* Extra padding on right for last item */
+  scroll-padding-left: 1rem !important; /* Extra padding on left */
   flex-wrap: nowrap !important; /* Prevent wrapping - Kylie style */
 }
 
@@ -111,10 +114,11 @@
   min-width: calc((100% - 3rem) / 4) !important;
   max-width: calc((100% - 3rem) / 4) !important;
   width: calc((100% - 3rem) / 4) !important;
-  height: 100% !important; /* Same height for all cards */
-  background: #fff;
+  min-height: 580px !important; /* Fixed minimum height to ensure buttons are visible */
+  height: auto !important; /* Allow content to expand if needed */
+  background: #fff !important; /* Clean white background */
   border-radius: 0; /* Kylie style - sharp edges */
-  overflow: hidden;
+  overflow: visible !important; /* Ensure nothing is cut off */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -161,7 +165,7 @@
   width: 100%;
   height: 320px !important; /* Fixed height for all product images */
   aspect-ratio: 1;
-  background: transparent !important; /* No background color */
+  background: #ffffff !important; /* White background for all images */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,17 +174,19 @@
   flex-shrink: 0 !important; /* Prevent image container from shrinking */
   flex-grow: 0 !important; /* Prevent image container from growing */
   border: none !important; /* No border */
-  padding: 0 !important; /* No padding */
+  padding: 1rem !important; /* Padding to prevent images from touching edges */
 }
 
 .productImage {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important; /* Fill container completely */
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important; /* Show full product without cropping */
   object-position: center;
-  padding: 0 !important; /* No padding */
+  padding: 0 !important; /* No padding on image itself */
   border: none !important; /* No border */
-  background: transparent !important; /* No background */
+  background: transparent !important; /* Transparent image background, container has white */
 }
 
 .placeholder {
@@ -195,13 +201,14 @@
 }
 
 .productInfo {
-  padding: 1.25rem 1.5rem 1.5rem;
+  padding: 1.25rem 1.5rem 1.5rem !important;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   flex: 1;
-  min-height: 200px; /* Minimum height to ensure alignment */
+  min-height: 220px !important; /* Minimum height to ensure button space */
   justify-content: space-between; /* Distribute content evenly */
+  overflow: visible !important; /* Ensure button is never cut off */
 }
 
 /* Shade Selection - Kylie style */
@@ -375,10 +382,12 @@
     min-width: calc((100% - 1rem) / 2) !important;
     max-width: calc((100% - 1rem) / 2) !important;
     width: calc((100% - 1rem) / 2) !important;
+    min-height: 580px !important; /* Same minimum height */
   }
 
   .imageContainer {
     height: calc((100vw - 4rem - 1rem) / 2) !important; /* Match card width for square */
+    background: #ffffff !important; /* White background */
   }
 }
 
@@ -397,11 +406,12 @@
     min-width: calc(100% - 2rem) !important;
     max-width: calc(100% - 2rem) !important;
     width: calc(100% - 2rem) !important;
-    height: 100% !important; /* Same height for all cards */
+    min-height: 550px !important; /* Slightly smaller on mobile but still ensures button visibility */
   }
 
   .imageContainer {
     height: calc(100vw - 4rem) !important; /* Match card width for square on mobile */
+    background: #ffffff !important; /* White background */
   }
 
   .navButton {

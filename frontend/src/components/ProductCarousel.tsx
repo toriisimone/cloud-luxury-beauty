@@ -43,37 +43,43 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
     }
   };
 
-  // Auto-scroll function
+  // Auto-scroll function - smooth Kylie-style transition with seamless infinite loop
   const autoScroll = () => {
     if (scrollContainerRef.current && !isPaused) {
       const container = scrollContainerRef.current;
-      // Get actual card width from first card or use responsive calculation
+      // Get actual card width from first card
       const firstCard = container.querySelector('.productCard') as HTMLElement;
-      const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 336; // Card width + gap
-      const maxScroll = container.scrollWidth / 3; // Divide by 3 since we duplicated 3 times
+      if (!firstCard) return;
+      
+      const cardWidth = firstCard.offsetWidth;
+      const gap = 16; // 1rem gap
+      const scrollAmount = cardWidth + gap;
+      const oneSetWidth = (cardWidth + gap) * products.length; // Width of one set of products
       const currentScroll = container.scrollLeft;
-      let newScroll = currentScroll + cardWidth;
+      let newScroll = currentScroll + scrollAmount;
 
-      // Reset to beginning if we've scrolled past the first set of products
-      if (newScroll >= maxScroll) {
-        newScroll = 0;
-        // Instantly jump to start (no animation) then continue
-        container.scrollLeft = 0;
-        setTimeout(() => {
-          container.scrollTo({
-            left: cardWidth,
-            behavior: 'smooth',
-          });
-        }, 50);
+      // Check if we're at the end of the second set (2/3 through total width)
+      // When we reach this point, we seamlessly jump back to start (invisible to user)
+      if (newScroll >= oneSetWidth * 2 - scrollAmount) {
+        // Calculate how far into the second set we are
+        const offsetFromSecondSet = newScroll - oneSetWidth * 2;
+        // Jump back to first set at same relative position (invisible reset)
+        container.scrollLeft = offsetFromSecondSet + scrollAmount;
+        // Continue scrolling smoothly from reset position
+        container.scrollTo({
+          left: offsetFromSecondSet + scrollAmount * 2,
+          behavior: 'smooth',
+        });
         return;
       }
 
+      // Normal smooth scroll forward
       container.scrollTo({
         left: newScroll,
         behavior: 'smooth',
       });
 
-      const newIndex = Math.round(newScroll / cardWidth) % products.length;
+      const newIndex = Math.round((newScroll % oneSetWidth) / scrollAmount) % products.length;
       setCurrentIndex(newIndex);
     }
   };
