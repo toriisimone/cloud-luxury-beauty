@@ -98,25 +98,37 @@ const Navbar = () => {
           
           {/* Right Side Icons */}
           <div className={styles.rightNav}>
+            {/* Heart Icon - Wishlist */}
+            <button className={styles.iconButton} aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 15.5L8.1 14.7C4.5 11.5 2 9.3 2 6.5C2 4.3 3.8 2.5 6 2.5C7.1 2.5 8.1 3 8.8 3.7L9 4L9.2 3.7C9.9 3 10.9 2.5 12 2.5C14.2 2.5 16 4.3 16 6.5C16 9.3 13.5 11.5 9.9 14.7L9 15.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+            </button>
+            {/* Person Icon - Account */}
+            <Link to="/account" className={styles.iconButton} aria-label="Account">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="9" cy="6" r="3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M3 15C3 12.5 5.5 10.5 9 10.5C12.5 10.5 15 12.5 15 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+            </Link>
+            {/* Search Icon - Magnifying Glass */}
             <button className={styles.iconButton} aria-label="Search">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z" fill="currentColor"/>
+                <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M13 13L16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
-            <button className={styles.iconButton} aria-label="Region">
+            {/* Shopping Bag Icon - Cart */}
+            <Link to="/cart" className={styles.iconButton} aria-label="Cart">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="9" cy="9" r="8" stroke="currentColor" strokeWidth="1.5"/>
-                <path d="M9 1C9 1 12 4 12 6C12 8 10.5 9 9 9C7.5 9 6 8 6 6C6 4 9 1 9 1Z" fill="currentColor"/>
+                <path d="M4 5H14L13 11H5L4 5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M6 7V4C6 2.9 6.9 2 8 2H10C11.1 2 12 2.9 12 4V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="7" cy="14" r="1" fill="currentColor"/>
+                <circle cx="11" cy="14" r="1" fill="currentColor"/>
               </svg>
-            </button>
-            <div className={styles.countrySelector}>US</div>
-            {isAuthenticated ? (
-              <Link to="/account" className={styles.navLink}>LOG IN</Link>
-            ) : (
-              <Link to="/account" className={styles.navLink}>LOG IN</Link>
-            )}
-            <Link to="/cart" className={styles.cartLink}>
-              BAG ({getItemCount()})
+              {getItemCount() > 0 && (
+                <span className={styles.cartBadge}>{getItemCount()}</span>
+              )}
             </Link>
             
             {/* Mobile Menu Toggle */}
