@@ -17,10 +17,117 @@
 
 .pinkBannerBottom {
   height: 90%;
-  background: #FFB6C1; /* Light pink/lavender */
+  background: linear-gradient(135deg, #FFE5E5 0%, #FFD6E8 50%, #FFE5F0 100%); /* Cute light pink gradient */
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.pinkBannerClouds {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pinkCloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  opacity: 0.7;
+  animation: floatCloud 15s infinite ease-in-out;
+  filter: blur(1px);
+}
+
+.pinkCloud:before,
+.pinkCloud:after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+}
+
+.pinkCloud:nth-child(1) {
+  width: 80px;
+  height: 40px;
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.pinkCloud:nth-child(1):before {
+  width: 40px;
+  height: 40px;
+  top: -20px;
+  left: 20px;
+}
+
+.pinkCloud:nth-child(1):after {
+  width: 60px;
+  height: 60px;
+  top: -30px;
+  right: 20px;
+}
+
+.pinkCloud:nth-child(2) {
+  width: 100px;
+  height: 50px;
+  top: 20%;
+  right: 10%;
+  animation-delay: -5s;
+}
+
+.pinkCloud:nth-child(2):before {
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  left: 25px;
+}
+
+.pinkCloud:nth-child(2):after {
+  width: 70px;
+  height: 70px;
+  top: -35px;
+  right: 25px;
+}
+
+.pinkCloud:nth-child(3) {
+  width: 70px;
+  height: 35px;
+  bottom: 15%;
+  left: 15%;
+  animation-delay: -10s;
+}
+
+.pinkCloud:nth-child(3):before {
+  width: 35px;
+  height: 35px;
+  top: -17px;
+  left: 17px;
+}
+
+.pinkCloud:nth-child(3):after {
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  right: 17px;
+}
+
+@keyframes floatCloud {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-10px) translateX(15px);
+  }
+  66% {
+    transform: translateY(10px) translateX(-15px);
+  }
 }
 
 .pinkBannerContent {
@@ -31,16 +138,43 @@
   max-width: 1600px;
   padding: 0 2rem;
   gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .pinkBannerText {
   flex: 1;
   text-align: center;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: #333;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-style: italic;
+  color: #8B4A6B;
   text-transform: lowercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.pinkBannerEmoji {
+  font-size: 1rem;
+  display: inline-block;
+  animation: bounceEmoji 2s infinite ease-in-out;
+}
+
+.pinkBannerEmoji:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+@keyframes bounceEmoji {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 .pinkBannerArrow,
@@ -212,19 +346,22 @@
 .iconButton {
   background: none;
   border: none;
-  padding: 0;
+  padding: 0.5rem;
   cursor: pointer;
   color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
   position: relative;
   text-decoration: none;
+  width: 40px;
+  height: 40px;
 }
 
 .iconButton:hover {
-  opacity: 0.6;
+  opacity: 0.7;
+  transform: scale(1.05);
 }
 
 .cartBadge {

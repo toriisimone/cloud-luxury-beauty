@@ -68,24 +68,33 @@ const Navbar = () => {
         <div className={styles.pinkBanner}>
           <div className={styles.pinkBannerTop}></div>
           <div className={styles.pinkBannerBottom}>
+            <div className={styles.pinkBannerClouds}>
+              <div className={styles.pinkCloud}></div>
+              <div className={styles.pinkCloud}></div>
+              <div className={styles.pinkCloud}></div>
+            </div>
             <div className={styles.pinkBannerContent}>
               <button 
                 className={styles.pinkBannerArrow}
                 onClick={() => setPinkBannerIndex((prev) => (prev - 1 + pinkBannerMessages.length) % pinkBannerMessages.length)}
                 aria-label="Previous message"
               >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
-              <span className={styles.pinkBannerText}>{pinkBannerMessages[pinkBannerIndex]}</span>
+              <span className={styles.pinkBannerText}>
+                <span className={styles.pinkBannerEmoji}>✨</span>
+                {pinkBannerMessages[pinkBannerIndex]}
+                <span className={styles.pinkBannerEmoji}>💖</span>
+              </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button 
                   className={styles.pinkBannerArrow}
                   onClick={() => setPinkBannerIndex((prev) => (prev + 1) % pinkBannerMessages.length)}
                   aria-label="Next message"
                 >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4.5 9L7.5 6L4.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
@@ -94,7 +103,7 @@ const Navbar = () => {
                   onClick={() => setPinkBannerClosed(true)}
                   aria-label="Close banner"
                 >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 3L3 9M3 3L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
@@ -162,31 +171,31 @@ const Navbar = () => {
           <div className={styles.rightNav}>
             {/* Heart Icon - Wishlist */}
             <button className={styles.iconButton} aria-label="Wishlist">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 15.5L8.1 14.7C4.5 11.5 2 9.3 2 6.5C2 4.3 3.8 2.5 6 2.5C7.1 2.5 8.1 3 8.8 3.7L9 4L9.2 3.7C9.9 3 10.9 2.5 12 2.5C14.2 2.5 16 4.3 16 6.5C16 9.3 13.5 11.5 9.9 14.7L9 15.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
             {/* Person Icon - Account */}
             <Link to="/account" className={styles.iconButton} aria-label="Account">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="9" cy="6" r="3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M3 15C3 12.5 5.5 10.5 9 10.5C12.5 10.5 15 12.5 15 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M6 20c0-3.33 2.67-6 6-6s6 2.67 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </Link>
             {/* Search Icon - Magnifying Glass */}
             <button className={styles.iconButton} aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M13 13L16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
             {/* Shopping Bag Icon - Cart */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 5H14L13 11H5L4 5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M6 7V4C6 2.9 6.9 2 8 2H10C11.1 2 12 2.9 12 4V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <circle cx="7" cy="14" r="1" fill="currentColor"/>
-                <circle cx="11" cy="14" r="1" fill="currentColor"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 6h12l-1 8H7L6 6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M8 8V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="9" cy="19" r="1.5" fill="currentColor"/>
+                <circle cx="15" cy="19" r="1.5" fill="currentColor"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>
