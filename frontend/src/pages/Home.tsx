@@ -126,7 +126,7 @@ const Home = () => {
               ))}
             </div>
             <div className={styles.viewMoreContainer}>
-              <Link to="/products?category=Skincare" className={styles.viewMoreButton}>
+              <Link to="/products/skincare" className={styles.viewMoreButton}>
                 View All Skincare
               </Link>
             </div>

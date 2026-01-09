@@ -32,34 +32,11 @@ const Navbar = () => {
     navigate('/');
   };
 
+  // SIMPLIFIED MENU: Only Home and Skincare
   const menuItems = [
     {
       name: 'SKINCARE',
       href: '/products/skincare',
-    },
-    {
-      name: 'MAKEUP',
-      href: '/products?category=Makeup',
-    },
-    {
-      name: 'BALMS',
-      href: '/products?category=Balms',
-    },
-    {
-      name: 'BODY',
-      href: '/products?category=Body',
-    },
-    {
-      name: 'FRAGRANCE',
-      href: '/products?category=Fragrance',
-    },
-    {
-      name: 'SETS',
-      href: '/products?category=Sets',
-    },
-    {
-      name: 'SHOP ALL',
-      href: '/products',
     },
   ];
 

@@ -20,7 +20,7 @@ const Skincare = () => {
 
         const response = await productsApi.getProducts({
           category: 'Skincare',
-          limit: 100, // Get all products
+          limit: 200, // Get ALL products (82+)
         });
 
         console.log('[SKINCARE PAGE] ========== RAW RESPONSE ==========');
