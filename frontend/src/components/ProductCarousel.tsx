@@ -26,7 +26,12 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
   const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Duplicate products for infinite loop
+  const duplicatedProducts = [...products, ...products, ...products];
 
   // Check scroll position to enable/disable buttons
   const checkScrollPosition = () => {
@@ -35,6 +40,41 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
       const { scrollLeft, scrollWidth, clientWidth } = container;
       setCanScrollLeft(scrollLeft > 10);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  // Auto-scroll function
+  const autoScroll = () => {
+    if (scrollContainerRef.current && !isPaused) {
+      const container = scrollContainerRef.current;
+      // Get actual card width from first card or use responsive calculation
+      const firstCard = container.querySelector('.productCard') as HTMLElement;
+      const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 336; // Card width + gap
+      const maxScroll = container.scrollWidth / 3; // Divide by 3 since we duplicated 3 times
+      const currentScroll = container.scrollLeft;
+      let newScroll = currentScroll + cardWidth;
+
+      // Reset to beginning if we've scrolled past the first set of products
+      if (newScroll >= maxScroll) {
+        newScroll = 0;
+        // Instantly jump to start (no animation) then continue
+        container.scrollLeft = 0;
+        setTimeout(() => {
+          container.scrollTo({
+            left: cardWidth,
+            behavior: 'smooth',
+          });
+        }, 50);
+        return;
+      }
+
+      container.scrollTo({
+        left: newScroll,
+        behavior: 'smooth',
+      });
+
+      const newIndex = Math.round(newScroll / cardWidth) % products.length;
+      setCurrentIndex(newIndex);
     }
   };
 
@@ -52,12 +92,40 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
     }
   }, [products]);
 
+  // Auto-scroll effect
+  useEffect(() => {
+    // Clear any existing interval
+    if (autoScrollIntervalRef.current) {
+      clearInterval(autoScrollIntervalRef.current);
+    }
+
+    // Set up auto-scroll (4 seconds)
+    if (!isPaused) {
+      autoScrollIntervalRef.current = setInterval(() => {
+        autoScroll();
+      }, 4000);
+    }
+
+    return () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+    };
+  }, [isPaused]);
+
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
-      const cardWidth = 336; // Exact card width with gap (320px card + 16px gap)
+      const firstCard = container.querySelector('.productCard') as HTMLElement;
+      const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 336; // Card width + gap
       const scrollAmount = cardWidth;
-      const newScrollLeft = Math.max(0, container.scrollLeft - scrollAmount);
+      const maxScroll = container.scrollWidth / 3; // Divide by 3 for infinite loop
+      let newScrollLeft = container.scrollLeft - scrollAmount;
+      
+      // Loop to end if at beginning
+      if (newScrollLeft < 0) {
+        newScrollLeft = maxScroll - cardWidth;
+      }
       
       container.scrollTo({
         left: newScrollLeft,
@@ -65,7 +133,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
       });
       
       // Update index based on actual scroll position
-      const newIndex = Math.round(newScrollLeft / cardWidth);
+      const newIndex = Math.round(newScrollLeft / cardWidth) % products.length;
       setCurrentIndex(newIndex);
     }
   };
@@ -73,10 +141,16 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
   const scrollRight = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
-      const cardWidth = 336; // Exact card width with gap (320px card + 16px gap)
+      const firstCard = container.querySelector('.productCard') as HTMLElement;
+      const cardWidth = firstCard ? firstCard.offsetWidth + 16 : 336; // Card width + gap
       const scrollAmount = cardWidth;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      const newScrollLeft = Math.min(maxScroll, container.scrollLeft + scrollAmount);
+      const maxScroll = container.scrollWidth / 3; // Divide by 3 for infinite loop
+      let newScrollLeft = container.scrollLeft + scrollAmount;
+      
+      // Reset to beginning if past the first set
+      if (newScrollLeft >= maxScroll) {
+        newScrollLeft = 0;
+      }
       
       container.scrollTo({
         left: newScrollLeft,
@@ -84,7 +158,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
       });
       
       // Update index based on actual scroll position
-      const newIndex = Math.round(newScrollLeft / cardWidth);
+      const newIndex = Math.round(newScrollLeft / cardWidth) % products.length;
       setCurrentIndex(newIndex);
     }
   };
@@ -131,8 +205,13 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
             </svg>
           </button>
 
-          <div className={styles.carousel} ref={scrollContainerRef}>
-            {products.map((product) => {
+          <div 
+            className={styles.carousel} 
+            ref={scrollContainerRef}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            {duplicatedProducts.map((product, index) => {
               const rating = parseFloat(getRating(product));
               const reviewCount = getReviewCount(product);
               const fullStars = Math.floor(rating);
@@ -144,7 +223,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
               const hasShades = product.shadeCount && product.shadeCount > 0;
 
               return (
-                <div key={product.id} className={styles.productCard}>
+                <div key={`${product.id}-${index}`} className={styles.productCard}>
                   {/* Multiple badges support - Kylie style */}
                   {allBadges.length > 0 && (
                     <div className={styles.badgesContainer}>
