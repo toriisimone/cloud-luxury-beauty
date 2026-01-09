@@ -397,7 +397,8 @@
 
 /* Navbar turns white on hover - not blocking models */
 .navbar:hover {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 1) !important; /* Solid white on hover */
+  backdrop-filter: blur(0px) !important; /* Remove blur on hover */
 }
 
 .container {

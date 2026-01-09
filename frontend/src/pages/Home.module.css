@@ -8,11 +8,11 @@
 .heroSection {
   position: relative;
   width: 100%;
-  height: calc(100vh - 36px - 80px); /* Full viewport minus banner and navbar */
-  min-height: calc(100vh - 36px - 80px);
+  height: calc(100vh - 36px - 80px) !important; /* Full viewport minus banner and navbar */
+  min-height: calc(100vh - 36px - 80px) !important;
   overflow: hidden;
-  margin-top: calc(36px + 80px); /* Start right below navbar - touches menu line */
-  padding-top: 0; /* No padding */
+  margin-top: calc(36px + 80px) !important; /* Start right below navbar - touches menu line */
+  padding-top: 0 !important; /* No padding */
 }
 
 .heroBanner {

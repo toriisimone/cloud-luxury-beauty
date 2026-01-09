@@ -169,18 +169,18 @@
 .buyOnAmazon {
   margin: 0 1rem 1rem;
   padding: 0.8rem;
-  background: #000;
-  color: white;
+  background: #000 !important;
+  color: white !important;
   border: none;
   border-radius: 0; /* Sharp edges */
-  font-weight: 700; /* Bold - matching logo */
-  font-style: italic; /* Slanted - matching logo font */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; /* Matching logo font */
-  font-size: 0.9rem;
+  font-weight: 700 !important; /* Bold - matching logo */
+  font-style: italic !important; /* Slanted - matching logo font */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important; /* Matching logo font */
+  font-size: 0.9rem !important;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-transform: uppercase; /* Uppercase - matching logo */
-  letter-spacing: 0.5px;
+  text-transform: uppercase !important; /* Uppercase - matching logo */
+  letter-spacing: 0.5px !important;
 }
 
 .buyOnAmazon:hover {
