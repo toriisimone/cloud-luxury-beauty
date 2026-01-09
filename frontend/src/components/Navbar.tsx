@@ -31,11 +31,11 @@ const Navbar = () => {
     'Shop the best deals on Amazon',
   ];
 
-  // Rotate black banner messages every 5 seconds (slow, readable)
+  // Rotate black banner messages every 10 seconds (very slow, readable)
   useEffect(() => {
     const interval = setInterval(() => {
       setBannerIndex((prev) => (prev + 1) % bannerMessages.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [bannerMessages.length]);
 
