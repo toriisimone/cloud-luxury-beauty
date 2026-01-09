@@ -120,15 +120,15 @@ const Navbar = () => {
                 <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
-            {/* Shopping Bag Icon - Cart */}
+            {/* Shopping Bag Icon - Cart - Exact match to uploaded image */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Bag body with rounded bottom corners - larger to match other icons */}
-                <rect x="6" y="8" width="12" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                {/* Left handle - larger and more visible */}
-                <path d="M8 8C8 6.5 8.5 5 10 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                {/* Right handle - larger and more visible */}
-                <path d="M16 8C16 6.5 15.5 5 14 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Bag body - rectangular with rounded bottom corners, minimalist line art */}
+                <rect x="6" y="9" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Left handle - small curved handle */}
+                <path d="M8 9C8 7.5 8.5 6.5 9.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Right handle - small curved handle */}
+                <path d="M16 9C16 7.5 15.5 6.5 14.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>

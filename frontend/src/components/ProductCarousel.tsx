@@ -99,7 +99,11 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
               return (
                 <div key={product.id} className={styles.productCard}>
                   {product.badge && (
-                    <div className={styles.badge}>{product.badge}</div>
+                    <div className={styles.badge}>
+                      {product.badge.toLowerCase().includes("kylie's favorite") || product.badge.toLowerCase().includes("kylies favorite")
+                        ? "Tori's favorite"
+                        : product.badge}
+                    </div>
                   )}
                   <div className={styles.imageContainer}>
                     <img
@@ -135,6 +139,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                     <button
                       className={styles.addToCartButton}
                       onClick={() => handleBuyOnAmazon(product.affiliate)}
+                      data-hover-text="view now"
                     >
                       Buy on Amazon
                     </button>

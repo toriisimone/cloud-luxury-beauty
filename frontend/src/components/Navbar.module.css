@@ -309,8 +309,8 @@
   top: 0;
   left: 0;
   right: 0;
-  background: #000;
-  color: #fff;
+  background: #F5E6E8; /* Exact pink from promotional banner */
+  color: #000; /* Black text for readability */
   z-index: 1001;
   height: 36px;
   display: flex;
@@ -360,7 +360,7 @@
 .bannerPause {
   background: none;
   border: none;
-  color: #fff;
+  color: #000; /* Black for pink background */
   cursor: pointer;
   padding: 0.25rem;
   display: flex;
