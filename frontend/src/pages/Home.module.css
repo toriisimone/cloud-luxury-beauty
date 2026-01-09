@@ -12,7 +12,8 @@
   min-height: 600px;
   max-height: 900px;
   overflow: hidden;
-  margin-top: calc(36px + 80px); /* Black banner (36px) + Navbar height - sits directly under menu */
+  margin-top: 0; /* No spacing - touches menu line */
+  padding-top: calc(36px + 80px); /* Account for sticky black banner (36px) + navbar height (80px) */
 }
 
 .heroBanner {

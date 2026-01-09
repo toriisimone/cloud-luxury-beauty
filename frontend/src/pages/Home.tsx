@@ -135,9 +135,6 @@ const Home = () => {
         title="featured skincare"
       />
 
-      {/* Cloud Divider - Only show if we have skincare products */}
-      {hasSkincareProducts && <div className={styles.cloudDivider}></div>}
-
       {/* Shop Skincare Section - Only render if we have products */}
       {hasSkincareProducts && (
         <section className={styles.skincareSection}>

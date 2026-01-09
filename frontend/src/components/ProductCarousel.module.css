@@ -3,6 +3,8 @@
   padding: 4rem 0;
   background: #fdf2f4; /* Light pink background matching Kylie style */
   position: relative;
+  margin-top: 0; /* No spacing above - directly after hero banner */
+  border-top: none; /* Remove any top border/line */
 }
 
 .container {
