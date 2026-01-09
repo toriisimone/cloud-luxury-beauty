@@ -31,20 +31,20 @@ const Navbar = () => {
     'Shop the best deals on Amazon',
   ];
 
-  // Rotate black banner messages every 4 seconds
+  // Rotate black banner messages every 6 seconds (slower)
   useEffect(() => {
     const interval = setInterval(() => {
       setBannerIndex((prev) => (prev + 1) % bannerMessages.length);
-    }, 4000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [bannerMessages.length]);
 
-  // Rotate pink banner messages every 4 seconds
+  // Rotate pink banner messages every 6 seconds (slower)
   useEffect(() => {
     if (pinkBannerClosed) return;
     const interval = setInterval(() => {
       setPinkBannerIndex((prev) => (prev + 1) % pinkBannerMessages.length);
-    }, 4000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [pinkBannerMessages.length, pinkBannerClosed]);
 
@@ -87,7 +87,12 @@ const Navbar = () => {
                 </svg>
               </button>
               <span className={styles.pinkBannerText}>
+                <span className={styles.pinkBannerEmoji}>☁️</span>
+                <span className={styles.pinkBannerEmoji}>🖤</span>
+                <span className={styles.pinkBannerEmoji}>💙</span>
                 {pinkBannerMessages[pinkBannerIndex]}
+                <span className={styles.pinkBannerEmoji}>🐦</span>
+                <span className={styles.pinkBannerEmoji}>✨</span>
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button 
