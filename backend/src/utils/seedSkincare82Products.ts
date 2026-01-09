@@ -150,10 +150,6 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
         // Build description with promo code text
         const promoText = `${product.discountPercent}% OFF`;
         const description = `${product.title} - ${promoText} - Now $${product.salePrice.toFixed(2)} (Was $${product.originalPrice.toFixed(2)})`;
-        
-        // Build Amazon URLs for affiliate links (stored in description for now, can be added to separate field later)
-        // Amazon URL: https://www.amazon.com/dp/${product.asin}
-        // Affiliate URL: https://www.amazon.com/dp/${product.asin}/?tag=victoria0cdb-20
 
         if (existing) {
           // Update existing product
