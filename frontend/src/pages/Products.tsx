@@ -108,16 +108,53 @@ const Products = () => {
         const response = await productsApi.getProducts(params);
         
         console.log('[FRONTEND] ========== DATABASE PRODUCTS RESPONSE ==========');
+        console.log('[FRONTEND] RAW RESPONSE:', JSON.stringify(response, null, 2));
+        console.log('[FRONTEND] Response type:', typeof response);
+        console.log('[FRONTEND] Response keys:', Object.keys(response || {}));
+        console.log('[FRONTEND] Response.products type:', typeof response.products);
+        console.log('[FRONTEND] Response.products is array:', Array.isArray(response.products));
         console.log('[FRONTEND] Response status: OK');
-        console.log('[FRONTEND] Products returned:', response.products.length);
-        console.log('[FRONTEND] Total:', response.total);
-        console.log('[FRONTEND] Page:', response.page);
-        console.log('[FRONTEND] Total pages:', response.totalPages);
+        console.log('[FRONTEND] Products returned:', response.products?.length || 0);
+        console.log('[FRONTEND] Total:', response.total || 0);
+        console.log('[FRONTEND] Page:', response.page || 0);
+        console.log('[FRONTEND] Total pages:', response.totalPages || 0);
+        
+        // CRITICAL: Verify products array exists and is not empty
+        if (!response.products) {
+          console.error('[FRONTEND] ❌ ERROR: response.products is undefined or null!');
+          console.error('[FRONTEND] Response structure:', response);
+          setProducts([]);
+          setTotalPages(1);
+          setCurrentPage(1);
+          setTotal(0);
+          return;
+        }
+        
+        if (!Array.isArray(response.products)) {
+          console.error('[FRONTEND] ❌ ERROR: response.products is not an array!');
+          console.error('[FRONTEND] Response.products type:', typeof response.products);
+          console.error('[FRONTEND] Response.products value:', response.products);
+          setProducts([]);
+          setTotalPages(1);
+          setCurrentPage(1);
+          setTotal(0);
+          return;
+        }
+        
+        console.log('[FRONTEND] ✅ Products array verified: length =', response.products.length);
         console.log('[FRONTEND] First product:', response.products[0] ? {
           id: response.products[0].id,
           name: response.products[0].name,
+          price: response.products[0].price,
           categoryId: response.products[0].categoryId,
+          hasImage: !!response.products[0].images && response.products[0].images.length > 0,
         } : 'N/A');
+        
+        if (response.products.length > 0) {
+          console.log('[FRONTEND] ✅✅✅ PRODUCTS FOUND: Will render', response.products.length, 'products ✅✅✅');
+        } else {
+          console.warn('[FRONTEND] ⚠️ WARNING: Products array is empty!');
+        }
         console.log('[FRONTEND] ===============================================');
         
         // Sort products
@@ -133,10 +170,11 @@ const Products = () => {
         }
         // 'featured' and 'newest' use default order from API
 
+        console.log('[FRONTEND] Setting products state:', sortedProducts.length, 'products');
         setProducts(sortedProducts);
-        setTotalPages(response.totalPages);
-        setCurrentPage(response.page);
-        setTotal(response.total);
+        setTotalPages(response.totalPages || 1);
+        setCurrentPage(response.page || 1);
+        setTotal(response.total || 0);
       } catch (error: any) {
         console.error('[FRONTEND] ❌ Failed to fetch products:', error);
         console.error('[FRONTEND] Error details:', {
@@ -190,10 +228,17 @@ const Products = () => {
     return <Loader />;
   }
 
-  // Determine if we have products to show
-  const hasProducts = products.length > 0;
+  // Determine if we have products to show - check both products array and total
+  const hasProducts = Array.isArray(products) && products.length > 0;
 
-  console.log('[FRONTEND RENDER] Has products:', hasProducts);
+  console.log('[FRONTEND RENDER] ========== RENDERING DECISION ==========');
+  console.log('[FRONTEND RENDER] Loading:', loading);
+  console.log('[FRONTEND RENDER] Products array:', products);
+  console.log('[FRONTEND RENDER] Products is array:', Array.isArray(products));
+  console.log('[FRONTEND RENDER] Products length:', products?.length || 0);
+  console.log('[FRONTEND RENDER] Total:', total);
+  console.log('[FRONTEND RENDER] Has products (will render):', hasProducts);
+  console.log('[FRONTEND RENDER] ========================================');
 
   return (
     <div className={styles.products}>
@@ -272,13 +317,19 @@ const Products = () => {
           </div>
         )}
 
-        {/* Products Grid - Always render database products */}
+        {/* Products Grid - Render products if they exist */}
         {hasProducts ? (
           <>
             <div className={styles.grid}>
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {products.map((product) => {
+                console.log('[FRONTEND RENDER] Rendering product:', product.id, product.name);
+                return (
+                  <ProductCard key={product.id} product={product} />
+                );
+              })}
+            </div>
+            <div style={{ marginTop: '20px', textAlign: 'center', color: '#666' }}>
+              <p>Showing {products.length} of {total} products</p>
             </div>
             
             {totalPages > 1 && (
@@ -303,6 +354,9 @@ const Products = () => {
         ) : (
           <div className={styles.emptyState}>
             <p>No products found.</p>
+            <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
+              {total === 0 ? 'The database appears to be empty.' : `Expected ${total} products but none were returned.`}
+            </p>
             <button onClick={() => navigate('/')} className={styles.backBtn}>
               Back to Home
             </button>
