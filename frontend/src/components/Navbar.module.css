@@ -17,7 +17,10 @@
 
 .pinkBannerBottom {
   height: 90%;
-  background: linear-gradient(180deg, #FFF5F7 0%, #FFE8F0 30%, #F5E6FF 70%, #FFF5F7 100%); /* Soft pastel overlay - peach, pink, lavender */
+  background-image: url('../assets/banner-clouds.png'); /* Your cloud banner image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
