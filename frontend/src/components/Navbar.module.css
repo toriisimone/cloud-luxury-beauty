@@ -506,6 +506,13 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; /* Keep border visible */
 }
 
+/* Hide centerNav (menu items) on hover - keep only logo and icons */
+.navbar.navbarHovered .centerNav {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
 .container {
   max-width: 1600px;
   margin: 0 auto;
@@ -540,6 +547,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
 }
 
 .menuLink {

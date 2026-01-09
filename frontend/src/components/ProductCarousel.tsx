@@ -232,11 +232,6 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
 
               return (
                 <div key={`${product.id}-${index}`} className={styles.productCard}>
-                  {/* "View Now" overlay button - appears on hover */}
-                  <Link to={`/products/${product.id}`} className={styles.viewNowOverlayButton}>
-                    <span className={styles.viewNowText}>view now</span>
-                  </Link>
-
                   {/* Multiple badges support - Kylie style */}
                   {allBadges.length > 0 && (
                     <div className={styles.badgesContainer}>
@@ -317,17 +312,6 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                     </div>
                     </div>
                   </Link>
-                  
-                  {/* Button - "view on amazon" text - outside productLink */}
-                  <button
-                    className={styles.addToCartButton}
-                    onClick={() => handleBuyOnAmazon(product.affiliate)}
-                    data-hover-text={isBundle ? "view now" : "view on amazon"}
-                  >
-                    {isBundle 
-                      ? "view bundle" 
-                      : "view on amazon"}
-                  </button>
                 </div>
               );
             })}

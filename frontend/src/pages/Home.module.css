@@ -8,11 +8,12 @@
 .heroSection {
   position: relative;
   width: 100%;
-  height: calc(100vh - 36px - 80px) !important; /* Full viewport minus banner and navbar - desktop */
-  min-height: calc(100vh - 36px - 80px) !important;
+  height: calc(100vh - 36px) !important; /* Full viewport minus top banner only - sits on top of navbar */
+  min-height: calc(100vh - 36px) !important;
   overflow: hidden;
-  margin-top: 0 !important; /* No margin - navbar is sticky, hero starts immediately below */
-  padding-top: 0 !important; /* No padding */
+  margin-top: -80px !important; /* Negative margin to move hero image up behind navbar */
+  padding-top: 80px !important; /* Padding to compensate for negative margin */
+  z-index: 1; /* Behind navbar */
 }
 
 .heroBanner {
@@ -30,6 +31,7 @@
   border: none;
   outline: none;
   object-fit: cover; /* Ensure seamless fit on all devices */
+  z-index: 0; /* Behind navbar */
 }
 
 /* Cloud Overlay */
@@ -313,11 +315,11 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    height: 70vh !important; /* Kylie Cosmetics mobile size - 70% viewport height */
-    min-height: 70vh !important;
+    height: calc(70vh - 36px) !important; /* Kylie Cosmetics mobile size - 70% viewport height minus banner */
+    min-height: calc(70vh - 36px) !important;
     max-height: none !important;
-    margin-top: 0 !important; /* No margin - navbar is sticky */
-    padding-top: 0 !important; /* No padding */
+    margin-top: -80px !important; /* Negative margin to move hero image up behind navbar */
+    padding-top: 80px !important; /* Padding to compensate */
   }
 
   .brandTitle {
@@ -368,11 +370,11 @@
 
 @media (max-width: 480px) {
   .heroSection {
-    height: 60vh !important; /* Kylie Cosmetics small mobile size - 60% viewport height */
-    min-height: 60vh !important;
+    height: calc(60vh - 36px) !important; /* Kylie Cosmetics small mobile size - 60% viewport height minus banner */
+    min-height: calc(60vh - 36px) !important;
     max-height: none !important;
-    margin-top: 0 !important; /* No margin - navbar is sticky */
-    padding-top: 0 !important; /* No padding */
+    margin-top: -80px !important; /* Negative margin to move hero image up behind navbar */
+    padding-top: 80px !important; /* Padding to compensate */
   }
 
   .brandTitle {
