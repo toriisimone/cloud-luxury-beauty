@@ -28,7 +28,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const autoScrollIntervalRef = useRef<number | null>(null);
 
   // Duplicate products for infinite loop
   const duplicatedProducts = [...products, ...products, ...products];
@@ -95,20 +95,22 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
   // Auto-scroll effect
   useEffect(() => {
     // Clear any existing interval
-    if (autoScrollIntervalRef.current) {
+    if (autoScrollIntervalRef.current !== null) {
       clearInterval(autoScrollIntervalRef.current);
+      autoScrollIntervalRef.current = null;
     }
 
     // Set up auto-scroll (4 seconds)
     if (!isPaused) {
-      autoScrollIntervalRef.current = setInterval(() => {
+      autoScrollIntervalRef.current = window.setInterval(() => {
         autoScroll();
       }, 4000);
     }
 
     return () => {
-      if (autoScrollIntervalRef.current) {
+      if (autoScrollIntervalRef.current !== null) {
         clearInterval(autoScrollIntervalRef.current);
+        autoScrollIntervalRef.current = null;
       }
     };
   }, [isPaused]);
