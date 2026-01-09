@@ -175,6 +175,10 @@
   font-size: 1.1rem;
   margin-top: 1.5rem;
   transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none; /* No borders as requested */
 }
 
 .checkoutBtn:hover {

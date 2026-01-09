@@ -83,6 +83,12 @@ const Cart = () => {
               <span>${(total + shipping).toFixed(2)}</span>
             </div>
             <button onClick={() => navigate('/checkout')} className={styles.checkoutBtn}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '0.5rem' }}>
+                {/* Shopping bag icon - same design as navbar, black and white, no borders */}
+                <rect x="6" y="9" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M8 9C8 7.5 8.5 6.5 9.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M16 9C16 7.5 15.5 6.5 14.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
               Proceed to Checkout
             </button>
             <button onClick={clearCart} className={styles.clearBtn}>
