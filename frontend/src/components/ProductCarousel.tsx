@@ -7,10 +7,14 @@ interface CarouselProduct {
   title: string;
   image: string;
   price?: number;
+  originalPrice?: number; // For strikethrough pricing
   rating?: number;
   reviewCount?: number;
   affiliate: string;
   badge?: string;
+  badges?: string[]; // Multiple badges support
+  shadeCount?: number; // Number of shades available
+  shadeColors?: string[]; // Color swatches for shades
 }
 
 interface ProductCarouselProps {
@@ -96,15 +100,29 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
               const fullStars = Math.floor(rating);
               const hasHalfStar = rating % 1 >= 0.5;
 
+              // Get all badges (support both single badge and badges array)
+              const allBadges = product.badges || (product.badge ? [product.badge] : []);
+              const isBundle = product.badge?.toLowerCase().includes("bundle") || product.badges?.some(b => b.toLowerCase().includes("bundle"));
+              const hasShades = product.shadeCount && product.shadeCount > 0;
+
               return (
                 <div key={product.id} className={styles.productCard}>
-                  {product.badge && (
-                    <div className={styles.badge}>
-                      {product.badge.toLowerCase().includes("kylie's favorite") || product.badge.toLowerCase().includes("kylies favorite")
-                        ? "Tori's favorite"
-                        : product.badge}
+                  {/* Multiple badges support - Kylie style */}
+                  {allBadges.length > 0 && (
+                    <div className={styles.badgesContainer}>
+                      {allBadges.map((badge, idx) => {
+                        const badgeText = badge.toLowerCase().includes("kylie's favorite") || badge.toLowerCase().includes("kylies favorite")
+                          ? "tori's favorite"
+                          : badge.toLowerCase();
+                        return (
+                          <div key={idx} className={styles.badge}>
+                            {badgeText}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
+                  
                   <div className={styles.imageContainer}>
                     <img
                       src={product.image}
@@ -119,8 +137,28 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                       }}
                     />
                   </div>
+                  
                   <div className={styles.productInfo}>
-                    <h3 className={styles.productName}>{product.title}</h3>
+                    {/* Shade selection - Kylie style */}
+                    {hasShades && (
+                      <div className={styles.shadeSelection}>
+                        <span className={styles.shadeText}>+{product.shadeCount} shades</span>
+                        {product.shadeColors && product.shadeColors.length > 0 && (
+                          <div className={styles.shadeSwatches}>
+                            {product.shadeColors.slice(0, 6).map((color, idx) => (
+                              <div
+                                key={idx}
+                                className={styles.shadeSwatch}
+                                style={{ backgroundColor: color }}
+                                title={`Shade ${idx + 1}`}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Rating - Kylie style */}
                     <div className={styles.rating}>
                       <div className={styles.stars}>
                         {Array.from({ length: fullStars }).map((_, i) => (
@@ -135,13 +173,27 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                         {rating.toFixed(1)} ({reviewCount})
                       </span>
                     </div>
-                    <div className={styles.price}>${product.price?.toFixed(2) || 'N/A'}</div>
+                    
+                    {/* Product name - lowercase Kylie style */}
+                    <h3 className={styles.productName}>{product.title.toLowerCase()}</h3>
+                    
+                    {/* Price with strikethrough support - Kylie style */}
+                    <div className={styles.priceContainer}>
+                      {product.originalPrice && product.originalPrice > (product.price || 0) && (
+                        <span className={styles.originalPrice}>${product.originalPrice.toFixed(2)}</span>
+                      )}
+                      <span className={styles.price}>${product.price?.toFixed(2) || 'N/A'}</span>
+                    </div>
+                    
+                    {/* Button with price - Kylie style */}
                     <button
                       className={styles.addToCartButton}
                       onClick={() => handleBuyOnAmazon(product.affiliate)}
-                      data-hover-text={product.badge && product.badge.toLowerCase().includes("bundle") ? "view now" : "buy on amazon"}
+                      data-hover-text={isBundle ? "view now" : "buy on amazon"}
                     >
-                      {product.badge && product.badge.toLowerCase().includes("bundle") ? "view bundle" : "buy on amazon"}
+                      {isBundle 
+                        ? "view bundle" 
+                        : `add to cart - $${product.price?.toFixed(2) || '0.00'}`}
                     </button>
                   </div>
                 </div>
