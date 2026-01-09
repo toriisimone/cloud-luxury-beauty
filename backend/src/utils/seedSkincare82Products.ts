@@ -127,17 +127,13 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
       try {
         logger.info(`[SEED 82 PRODUCTS] Processing ${i + 1}/${productsData.length}: ${product.title} (ASIN: ${product.asin})`);
         
-        // Build URLs
-        const amazonUrl = `https://www.amazon.com/dp/${product.asin}`;
-        const affiliateUrl = `https://www.amazon.com/dp/${product.asin}/?tag=victoria0cdb-20`;
-        
         // Generate slug from title
         const slug = product.title
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
 
-        // Check if product already exists (by ASIN in slug or name)
+        // Check if product already exists (by slug or name)
         const existing = await prisma.product.findFirst({
           where: {
             OR: [
@@ -155,9 +151,9 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
         const promoText = `${product.discountPercent}% OFF`;
         const description = `${product.title} - ${promoText} - Now $${product.salePrice.toFixed(2)} (Was $${product.originalPrice.toFixed(2)})`;
         
-        // Build Amazon URLs for affiliate links
-        const amazonUrl = `https://www.amazon.com/dp/${product.asin}`;
-        const affiliateUrl = `https://www.amazon.com/dp/${product.asin}/?tag=victoria0cdb-20`;
+        // Build Amazon URLs for affiliate links (stored in description for now, can be added to separate field later)
+        // Amazon URL: https://www.amazon.com/dp/${product.asin}
+        // Affiliate URL: https://www.amazon.com/dp/${product.asin}/?tag=victoria0cdb-20
 
         if (existing) {
           // Update existing product
