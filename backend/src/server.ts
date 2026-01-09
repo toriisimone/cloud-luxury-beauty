@@ -17,6 +17,7 @@ import { logger } from './config/logger';
 import { connectDatabase } from './config/database';
 import { autoMigrate } from './utils/autoMigrate';
 import { autoSeedIfEmpty } from './utils/autoSeed';
+import { seedAll82SkincareProducts } from './utils/seedSkincare82Products';
 // AMAZON API DISABLED: No cache refresh
 // import { refreshProductCache } from './services/amazonApi.service';
 
@@ -60,14 +61,22 @@ async function startServer() {
 
     // FORCE SEED ALL 82 SKINCARE PRODUCTS ON STARTUP
     // This ensures all 82 products are always in the database
+    // This runs AFTER migrations and BEFORE starting the Express server
     logger.info('========== FORCING SEED OF ALL 82 SKINCARE PRODUCTS ==========');
-    console.log('[SERVER STARTUP] ========== FORCING SEED OF ALL 82 SKINCARE PRODUCTS ==========');
+    console.log('[SERVER STARTUP] ===========================================');
+    console.log('[SERVER STARTUP] FORCING SEED OF ALL 82 SKINCARE PRODUCTS');
+    console.log('[SERVER STARTUP] This runs AFTER migrations and BEFORE app.listen()');
+    console.log('[SERVER STARTUP] ===========================================');
+    
     try {
-      const { seedAll82SkincareProducts } = await import('./utils/seedSkincare82Products');
-      logger.info('[SERVER STARTUP] Calling seedAll82SkincareProducts()...');
-      console.log('[SERVER STARTUP] Calling seedAll82SkincareProducts()...');
+      logger.info('[SERVER STARTUP] About to call seedAll82SkincareProducts()...');
+      console.log('[SERVER STARTUP] About to call seedAll82SkincareProducts()...');
+      console.log('[SERVER STARTUP] Function exists:', typeof seedAll82SkincareProducts);
       
       const seeded = await seedAll82SkincareProducts();
+      
+      logger.info('[SERVER STARTUP] Seed function returned:', seeded);
+      console.log('[SERVER STARTUP] Seed function returned:', seeded);
       
       if (seeded) {
         logger.info('[SERVER STARTUP] ✅✅✅ ALL 82 SKINCARE PRODUCTS SEEDED SUCCESSFULLY ✅✅✅');
@@ -79,11 +88,19 @@ async function startServer() {
     } catch (error: any) {
       // If seeding fails, log but continue - server can still run
       logger.error('[SERVER STARTUP] ❌ Failed to seed 82 skincare products:', error);
-      console.error('[SERVER STARTUP] ❌ Failed to seed 82 skincare products:', error.message);
-      console.error('[SERVER STARTUP] Error stack:', error.stack);
+      logger.error('[SERVER STARTUP] Error message:', error?.message);
+      logger.error('[SERVER STARTUP] Error stack:', error?.stack);
+      console.error('[SERVER STARTUP] ❌ Failed to seed 82 skincare products');
+      console.error('[SERVER STARTUP] Error type:', error?.constructor?.name);
+      console.error('[SERVER STARTUP] Error message:', error?.message);
+      console.error('[SERVER STARTUP] Error stack:', error?.stack);
     }
+    
     logger.info('========== SKINCARE PRODUCT SEEDING COMPLETE ==========');
-    console.log('[SERVER STARTUP] ========== SKINCARE PRODUCT SEEDING COMPLETE ==========');
+    console.log('[SERVER STARTUP] ===========================================');
+    console.log('[SERVER STARTUP] FINISHED SEEDING SKINCARE PRODUCTS');
+    console.log('[SERVER STARTUP] About to start Express server...');
+    console.log('[SERVER STARTUP] ===========================================');
 
     console.log('DEBUG: About to start Express server on port', PORT);
     app.listen(PORT, () => {
