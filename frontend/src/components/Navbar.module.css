@@ -393,6 +393,7 @@
   padding: 1rem 0;
   backdrop-filter: blur(10px);
   transition: background 0.3s ease;
+  margin-bottom: 0 !important; /* No margin below navbar */
 }
 
 /* Navbar turns white on hover - not blocking models */

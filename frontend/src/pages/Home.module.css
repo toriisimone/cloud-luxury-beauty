@@ -11,7 +11,7 @@
   height: calc(100vh - 36px - 80px) !important; /* Full viewport minus banner and navbar - desktop */
   min-height: calc(100vh - 36px - 80px) !important;
   overflow: hidden;
-  margin-top: calc(36px + 80px) !important; /* Start right below navbar - touches menu line */
+  margin-top: 0 !important; /* No margin - navbar is sticky, hero starts immediately below */
   padding-top: 0 !important; /* No padding */
 }
 
@@ -316,7 +316,7 @@
     height: 70vh !important; /* Kylie Cosmetics mobile size - 70% viewport height */
     min-height: 70vh !important;
     max-height: none !important;
-    margin-top: calc(36px + 80px) !important; /* Keep touching menu line on mobile */
+    margin-top: 0 !important; /* No margin - navbar is sticky */
     padding-top: 0 !important; /* No padding */
   }
 
@@ -371,7 +371,7 @@
     height: 60vh !important; /* Kylie Cosmetics small mobile size - 60% viewport height */
     min-height: 60vh !important;
     max-height: none !important;
-    margin-top: calc(36px + 80px) !important; /* Keep touching menu line on mobile */
+    margin-top: 0 !important; /* No margin - navbar is sticky */
     padding-top: 0 !important; /* No padding */
   }
 
