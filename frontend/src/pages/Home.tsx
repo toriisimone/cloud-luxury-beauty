@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
 import ProductCarousel from '../components/ProductCarousel';
+import BrandBanner from '../components/BrandBanner';
 import Loader from '../components/Loader';
 import { Product, Category } from '../types/global';
 import * as productsApi from '../api/productsApi';
@@ -112,6 +113,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Brand Banner - Moving brands between hero and featured */}
+      <BrandBanner />
 
       {/* Product Carousel Section - Kylie Style */}
       <ProductCarousel

@@ -44,10 +44,20 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Rotating Top Banner - Black */}
+      {/* Rotating Top Banner - Pink */}
       <div className={styles.topBanner}>
         <div className={styles.bannerContent}>
-          <span className={styles.bannerText}>{bannerMessages[bannerIndex]}</span>
+          {/* Crossfade technique - always show text, no blank moments */}
+          <div className={styles.bannerTextContainer}>
+            {bannerMessages.map((message, index) => (
+              <span
+                key={index}
+                className={`${styles.bannerText} ${index === bannerIndex ? styles.bannerTextActive : ''}`}
+              >
+                {message}
+              </span>
+            ))}
+          </div>
           <div className={styles.bannerControls}>
             <button 
               className={styles.bannerArrow}

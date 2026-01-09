@@ -1,0 +1,64 @@
+.brandBanner {
+  width: 100%;
+  background: #fff;
+  padding: 1.5rem 0;
+  overflow: hidden;
+  position: relative;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brandBannerContainer {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.brandScrollWrapper {
+  display: flex;
+  gap: 3rem;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.brandItem {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  padding: 0 1rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.brandItem:hover {
+  opacity: 1;
+}
+
+/* Responsive - perfect for phones and computers */
+@media (max-width: 768px) {
+  .brandBanner {
+    padding: 1rem 0;
+  }
+
+  .brandItem {
+    font-size: 0.85rem;
+    padding: 0 0.75rem;
+  }
+
+  .brandScrollWrapper {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brandItem {
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .brandScrollWrapper {
+    gap: 1.5rem;
+  }
+}
