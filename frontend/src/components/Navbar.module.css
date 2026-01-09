@@ -12,12 +12,12 @@
 
 .pinkBannerTop {
   height: 10%;
-  background: #4ECDC4; /* Teal/turquoise */
+  background: #E8B4B8; /* Rose gold pink - subtle teal accent */
 }
 
 .pinkBannerBottom {
   height: 90%;
-  background: linear-gradient(135deg, #FFE5E5 0%, #FFD6E8 50%, #FFE5F0 100%); /* Cute light pink gradient */
+  background: linear-gradient(90deg, #F5D7DA 0%, #F0C8CD 50%, #F5D7DA 100%); /* Rose gold pink - so pink you can't tell it's rose gold */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,59 +27,61 @@
 
 .pinkBannerClouds {
   position: absolute;
-  width: 100%;
+  width: 200%;
   height: 100%;
   top: 0;
-  left: 0;
+  left: -100%;
   pointer-events: none;
   z-index: 0;
+  animation: scrollClouds 30s linear infinite;
 }
 
 .pinkCloud {
   position: absolute;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 50px;
-  opacity: 0.7;
-  animation: floatCloud 15s infinite ease-in-out;
-  filter: blur(1px);
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 100px;
+  opacity: 0.85;
+  filter: blur(2px);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 }
 
 .pinkCloud:before,
 .pinkCloud:after {
   content: '';
   position: absolute;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 100px;
+  filter: blur(1px);
 }
 
+/* Realistic cloud shapes - coming from left side */
 .pinkCloud:nth-child(1) {
-  width: 80px;
-  height: 40px;
-  top: 10%;
-  left: 5%;
-  animation-delay: 0s;
+  width: 120px;
+  height: 60px;
+  top: 20%;
+  left: 10%;
 }
 
 .pinkCloud:nth-child(1):before {
-  width: 40px;
-  height: 40px;
-  top: -20px;
-  left: 20px;
-}
-
-.pinkCloud:nth-child(1):after {
   width: 60px;
   height: 60px;
   top: -30px;
-  right: 20px;
+  left: 30px;
+}
+
+.pinkCloud:nth-child(1):after {
+  width: 80px;
+  height: 80px;
+  top: -40px;
+  right: 30px;
 }
 
 .pinkCloud:nth-child(2) {
   width: 100px;
   height: 50px;
-  top: 20%;
-  right: 10%;
-  animation-delay: -5s;
+  top: 50%;
+  left: 25%;
+  animation-delay: -2s;
 }
 
 .pinkCloud:nth-child(2):before {
@@ -97,36 +99,99 @@
 }
 
 .pinkCloud:nth-child(3) {
-  width: 70px;
-  height: 35px;
-  bottom: 15%;
-  left: 15%;
-  animation-delay: -10s;
+  width: 140px;
+  height: 70px;
+  top: 10%;
+  left: 45%;
+  animation-delay: -4s;
 }
 
 .pinkCloud:nth-child(3):before {
-  width: 35px;
-  height: 35px;
-  top: -17px;
-  left: 17px;
+  width: 70px;
+  height: 70px;
+  top: -35px;
+  left: 35px;
 }
 
 .pinkCloud:nth-child(3):after {
-  width: 50px;
-  height: 50px;
-  top: -25px;
-  right: 17px;
+  width: 90px;
+  height: 90px;
+  top: -45px;
+  right: 35px;
 }
 
-@keyframes floatCloud {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
+.pinkCloud:nth-child(4) {
+  width: 110px;
+  height: 55px;
+  top: 60%;
+  left: 60%;
+  animation-delay: -6s;
+}
+
+.pinkCloud:nth-child(4):before {
+  width: 55px;
+  height: 55px;
+  top: -27px;
+  left: 27px;
+}
+
+.pinkCloud:nth-child(4):after {
+  width: 75px;
+  height: 75px;
+  top: -37px;
+  right: 27px;
+}
+
+.pinkCloud:nth-child(5) {
+  width: 130px;
+  height: 65px;
+  top: 30%;
+  left: 80%;
+  animation-delay: -8s;
+}
+
+.pinkCloud:nth-child(5):before {
+  width: 65px;
+  height: 65px;
+  top: -32px;
+  left: 32px;
+}
+
+.pinkCloud:nth-child(5):after {
+  width: 85px;
+  height: 85px;
+  top: -42px;
+  right: 32px;
+}
+
+.pinkCloud:nth-child(6) {
+  width: 95px;
+  height: 48px;
+  top: 70%;
+  left: 100%;
+  animation-delay: -10s;
+}
+
+.pinkCloud:nth-child(6):before {
+  width: 48px;
+  height: 48px;
+  top: -24px;
+  left: 24px;
+}
+
+.pinkCloud:nth-child(6):after {
+  width: 65px;
+  height: 65px;
+  top: -32px;
+  right: 24px;
+}
+
+@keyframes scrollClouds {
+  0% {
+    transform: translateX(0);
   }
-  33% {
-    transform: translateY(-10px) translateX(15px);
-  }
-  66% {
-    transform: translateY(10px) translateX(-15px);
+  100% {
+    transform: translateX(50%);
   }
 }
 
@@ -145,36 +210,16 @@
 .pinkBannerText {
   flex: 1;
   text-align: center;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   font-style: italic;
   color: #8B4A6B;
   text-transform: lowercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-}
-
-.pinkBannerEmoji {
-  font-size: 1rem;
-  display: inline-block;
-  animation: bounceEmoji 2s infinite ease-in-out;
-}
-
-.pinkBannerEmoji:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
-@keyframes bounceEmoji {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-3px);
-  }
 }
 
 .pinkBannerArrow,

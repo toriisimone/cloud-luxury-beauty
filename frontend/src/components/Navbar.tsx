@@ -72,6 +72,9 @@ const Navbar = () => {
               <div className={styles.pinkCloud}></div>
               <div className={styles.pinkCloud}></div>
               <div className={styles.pinkCloud}></div>
+              <div className={styles.pinkCloud}></div>
+              <div className={styles.pinkCloud}></div>
+              <div className={styles.pinkCloud}></div>
             </div>
             <div className={styles.pinkBannerContent}>
               <button 
@@ -84,9 +87,7 @@ const Navbar = () => {
                 </svg>
               </button>
               <span className={styles.pinkBannerText}>
-                <span className={styles.pinkBannerEmoji}>✨</span>
                 {pinkBannerMessages[pinkBannerIndex]}
-                <span className={styles.pinkBannerEmoji}>💖</span>
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button 
