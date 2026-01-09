@@ -29,7 +29,7 @@ export async function seedAll82SkincareProducts(): Promise<boolean> {
         data: {
           name: 'Skincare',
           slug: 'skincare',
-          description: 'Premium skincare products from Amazon',
+          description: 'Premium skincare products',
         },
       });
       logger.info(`[SEED 82 PRODUCTS] ✅ Created category: ${skincareCategory.id}`);

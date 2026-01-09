@@ -353,9 +353,9 @@ const Products = () => {
           </>
         ) : (
           <div className={styles.emptyState}>
-            <p>No products found.</p>
+            <p>No products found in this category.</p>
             <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
-              {total === 0 ? 'The database appears to be empty.' : `Expected ${total} products but none were returned.`}
+              Please try a different category or check back later.
             </p>
             <button onClick={() => navigate('/')} className={styles.backBtn}>
               Back to Home

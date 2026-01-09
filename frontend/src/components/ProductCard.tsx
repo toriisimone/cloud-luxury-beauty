@@ -37,10 +37,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
     <div className={styles.card}>
       <Link to={`/products/${product.id}`} className={styles.link}>
         <div className={styles.imageContainer}>
-          {product.images && product.images.length > 0 ? (
-            <img src={product.images[0]} alt={product.name} className={styles.image} />
+          {product.images && product.images.length > 0 && product.images[0] ? (
+            <img src={product.images[0]} alt={product.name} className={styles.image} onError={(e) => {
+              // If image fails to load, hide the broken image element
+              e.currentTarget.style.display = 'none';
+            }} />
           ) : (
-            <div className={styles.placeholder}>No Image</div>
+            <div className={styles.placeholder}>Product Image</div>
           )}
           {randomLabel && (
             <span className={styles.label}>{randomLabel}</span>
