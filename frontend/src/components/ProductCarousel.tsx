@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ProductCarousel.module.css';
 
@@ -24,30 +24,68 @@ interface ProductCarouselProps {
 
 const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Check scroll position to enable/disable buttons
+  const checkScrollPosition = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  // Update scroll position on mount and resize
+  useEffect(() => {
+    checkScrollPosition();
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScrollPosition);
+      window.addEventListener('resize', checkScrollPosition);
+      return () => {
+        container.removeEventListener('scroll', checkScrollPosition);
+        window.removeEventListener('resize', checkScrollPosition);
+      };
+    }
+  }, [products]);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      const cardWidth = 340; // Approximate card width with gap (320px card + 20px gap)
-      const newIndex = Math.max(0, currentIndex - 1);
-      setCurrentIndex(newIndex);
-      scrollContainerRef.current.scrollTo({
-        left: newIndex * cardWidth,
+      const container = scrollContainerRef.current;
+      const cardWidth = 336; // Exact card width with gap (320px card + 16px gap)
+      const scrollAmount = cardWidth;
+      const newScrollLeft = Math.max(0, container.scrollLeft - scrollAmount);
+      
+      container.scrollTo({
+        left: newScrollLeft,
         behavior: 'smooth',
       });
+      
+      // Update index based on actual scroll position
+      const newIndex = Math.round(newScrollLeft / cardWidth);
+      setCurrentIndex(newIndex);
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      const cardWidth = 340; // Approximate card width with gap (320px card + 20px gap)
-      const maxIndex = Math.max(0, products.length - 4); // Show 4 products at a time
-      const newIndex = Math.min(maxIndex, currentIndex + 1);
-      setCurrentIndex(newIndex);
-      scrollContainerRef.current.scrollTo({
-        left: newIndex * cardWidth,
+      const container = scrollContainerRef.current;
+      const cardWidth = 336; // Exact card width with gap (320px card + 16px gap)
+      const scrollAmount = cardWidth;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const newScrollLeft = Math.min(maxScroll, container.scrollLeft + scrollAmount);
+      
+      container.scrollTo({
+        left: newScrollLeft,
         behavior: 'smooth',
       });
+      
+      // Update index based on actual scroll position
+      const newIndex = Math.round(newScrollLeft / cardWidth);
+      setCurrentIndex(newIndex);
     }
   };
 
@@ -85,7 +123,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
           <button
             className={styles.navButton}
             onClick={scrollLeft}
-            disabled={currentIndex === 0}
+            disabled={!canScrollLeft}
             aria-label="Previous products"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -204,7 +242,11 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
           <button
             className={styles.navButton}
             onClick={scrollRight}
-            disabled={currentIndex >= Math.max(0, products.length - 4)}
+            disabled={scrollContainerRef.current ? 
+              scrollContainerRef.current.scrollLeft >= 
+              (scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth - 10) 
+              : false
+            }
             aria-label="Next products"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -58,6 +58,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding-right: 0.5rem; /* Extra padding on right to ensure last item is fully visible */
 }
 
 .navButton {
@@ -89,14 +90,15 @@
 
 .carousel {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem; /* Reduced gap for better alignment */
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   flex: 1;
-  padding: 1rem 0;
+  padding: 1rem 0.5rem; /* Padding to ensure last item is fully visible */
   align-items: stretch; /* Ensure all cards have same height */
+  scroll-padding-right: 1rem; /* Extra padding on right for last item */
 }
 
 .carousel::-webkit-scrollbar {
@@ -117,7 +119,8 @@
   box-shadow: none; /* Kylie style - no shadow */
   border: 1px solid rgba(0, 0, 0, 0.05); /* Subtle border */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex-shrink: 0; /* Prevent cards from shrinking */
+  flex-shrink: 0 !important; /* Prevent cards from shrinking - critical for alignment */
+  flex-grow: 0 !important; /* Prevent cards from growing */
 }
 
 .productCard:hover {
@@ -162,13 +165,16 @@
   justify-content: center;
   overflow: hidden;
   position: relative;
-  flex-shrink: 0; /* Prevent image container from shrinking */
+  flex-shrink: 0 !important; /* Prevent image container from shrinking */
+  flex-grow: 0 !important; /* Prevent image container from growing */
 }
 
 .productImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* Show entire product without cropping */
+  object-position: center;
+  padding: 0.5rem; /* Add padding so product doesn't touch edges */
 }
 
 .placeholder {
@@ -188,7 +194,8 @@
   flex-direction: column;
   gap: 0.5rem;
   flex: 1;
-  min-height: 180px; /* Minimum height to ensure alignment */
+  min-height: 200px; /* Minimum height to ensure alignment */
+  justify-content: space-between; /* Distribute content evenly */
 }
 
 /* Shade Selection - Kylie style */
@@ -309,10 +316,14 @@
   transition: all 0.2s ease;
   text-transform: lowercase !important; /* Lowercase - Kylie style */
   letter-spacing: 0.3px !important;
-  margin-top: 0.75rem;
+  margin-top: auto; /* Push button to bottom */
   position: relative;
   z-index: 1;
   border-radius: 0; /* Sharp edges - Kylie style */
+  flex-shrink: 0; /* Prevent button from shrinking */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .addToCartButton:hover {

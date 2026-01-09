@@ -45,15 +45,41 @@ const Home = () => {
           console.log('[HOME] Fetching skincare products from database (category:', skincareCategory.id, ')');
           const skincareProductsRes = await productsApi.getProducts({ 
             category: 'Skincare', // Use category name
-            limit: 12 
+            limit: 20 
           });
-          setSkincareProducts(skincareProductsRes.products);
-          console.log('[HOME] ✅ Skincare products fetched:', skincareProductsRes.products.length);
+          // Filter out removed products
+          const excludedTitles = [
+            'Lymphatic Contour Face Brush',
+            'e.l.f. SKIN Bright + Brew-tiful Eye Cream',
+            'Lattafa Asad Elixir EDP',
+            'The Ordinary Volufiline 92% Serum',
+            'CeraVe Invisible Mineral Sunscreen SPF 50'
+          ];
+          const filteredProducts = skincareProductsRes.products.filter(
+            product => !excludedTitles.some(excluded => 
+              product.title.toLowerCase().includes(excluded.toLowerCase())
+            )
+          );
+          setSkincareProducts(filteredProducts.slice(0, 12));
+          console.log('[HOME] ✅ Skincare products fetched:', filteredProducts.length);
         } else {
           console.warn('[HOME] Skincare category not found. Displaying all products instead.');
-          const allProductsRes = await productsApi.getProducts({ limit: 12 });
-          setSkincareProducts(allProductsRes.products);
-          console.log('[HOME] ✅ All products fetched:', allProductsRes.products.length);
+          const allProductsRes = await productsApi.getProducts({ limit: 20 });
+          // Filter out removed products
+          const excludedTitles = [
+            'Lymphatic Contour Face Brush',
+            'e.l.f. SKIN Bright + Brew-tiful Eye Cream',
+            'Lattafa Asad Elixir EDP',
+            'The Ordinary Volufiline 92% Serum',
+            'CeraVe Invisible Mineral Sunscreen SPF 50'
+          ];
+          const filteredProducts = allProductsRes.products.filter(
+            product => !excludedTitles.some(excluded => 
+              product.title.toLowerCase().includes(excluded.toLowerCase())
+            )
+          );
+          setSkincareProducts(filteredProducts.slice(0, 12));
+          console.log('[HOME] ✅ All products fetched:', filteredProducts.length);
         }
         
       } catch (error: any) {
@@ -122,19 +148,13 @@ const Home = () => {
         products={[
           { id: '51', title: 'Dr.Melaxin Peel Shot Kojic Acid Turmeric Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71FIL4QFAHL._AC_UL600_SR600,400_.jpg', price: 24.99, originalPrice: 29.99, rating: 4.5, reviewCount: 1000, affiliate: 'https://www.amazon.com/dp/B0FXTGD7LC/?tag=victoria0cdb-20', badges: ['allure best of beauty award winner 2020', "tori's favorite"] },
           { id: '52', title: 'Dr.Althea PDRN Reju 5000 Cream', image: 'https://images-na.ssl-images-amazon.com/images/I/419qAvG77UL._AC_UL600_SR600,400_.jpg', price: 32.99, rating: 4.3, reviewCount: 850, affiliate: 'https://www.amazon.com/dp/B0G26XC6KT/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '55', title: 'Lymphatic Contour Face Brush', image: 'https://images-na.ssl-images-amazon.com/images/I/71j6xfG0fkL._AC_UL600_SR600,400_.jpg', price: 12.99, rating: 4.7, reviewCount: 320, affiliate: 'https://www.amazon.com/dp/B0FYVG98GM/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '58', title: 'e.l.f. SKIN Bright + Brew-tiful Eye Cream', image: 'https://images-na.ssl-images-amazon.com/images/I/61ax411X7gL._AC_UL600_SR600,400_.jpg', price: 10.99, rating: 4.4, reviewCount: 1200, affiliate: 'https://www.amazon.com/dp/B0G1H91LGM/?tag=victoria0cdb-20', badges: ['best seller', "tori's favorite"] },
-          { id: '59', title: 'Lattafa Asad Elixir EDP', image: 'https://images-na.ssl-images-amazon.com/images/I/51f4XfVZtGL._AC_UL600_SR600,400_.jpg', price: 22.99, rating: 4.6, reviewCount: 650, affiliate: 'https://www.amazon.com/dp/B0FWYPY4FX/?tag=victoria0cdb-20', badges: ['best seller'], shadeCount: 24, shadeColors: ['#8B4513', '#D2691E', '#CD853F', '#DEB887', '#F4A460', '#D2B48C'] },
           { id: '61', title: 'Saltair Hyaluronic Acid Body Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/51mZFbRKa+L._AC_UL600_SR600,400_.jpg', price: 14.99, rating: 4.5, reviewCount: 890, affiliate: 'https://www.amazon.com/dp/B0FX39VLRL/?tag=victoria0cdb-20', badges: ['best seller'] },
           { id: '64', title: 'GODA for Her Perfume and Silk Body Oil', image: 'https://images-na.ssl-images-amazon.com/images/I/61hUIcbOjrL._AC_UL600_SR600,400_.jpg', price: 28.99, originalPrice: 34.99, rating: 4.8, reviewCount: 450, affiliate: 'https://www.amazon.com/dp/B0G3RN2SC7/?tag=victoria0cdb-20', badges: ['best seller', "tori's favorite"] },
           { id: '67', title: 'Lash Serum for Eyelashes & Eyebrows', image: 'https://images-na.ssl-images-amazon.com/images/I/61UQjAx4z5L._AC_UL600_SR600,400_.jpg', price: 19.99, rating: 4.6, reviewCount: 1100, affiliate: 'https://www.amazon.com/dp/B0GD12FCYQ/?tag=victoria0cdb-20', badges: ['best seller'] },
           { id: '70', title: "L'Oreal Revitalift Triple Power Eye Bag Eraser", image: 'https://images-na.ssl-images-amazon.com/images/I/81RcZcfyRQL._AC_UL600_SR600,400_.jpg', price: 18.99, rating: 4.4, reviewCount: 750, affiliate: 'https://www.amazon.com/dp/B0FXJ4KJZQ/?tag=victoria0cdb-20', badges: ['best seller'] },
           { id: '73', title: 'Prequel Skin Retinaldehyde 0.1%', image: 'https://images-na.ssl-images-amazon.com/images/I/614XaVcFu8L._AC_UL600_SR600,400_.jpg', price: 26.99, rating: 4.7, reviewCount: 520, affiliate: 'https://www.amazon.com/dp/B0FY36QKW8/?tag=victoria0cdb-20', badges: ['allure best of beauty award winner 2020', 'best seller'] },
           { id: '75', title: 'COSRX Advanced Pure Vitamin C 23% Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71LzZAsVE+L._AC_UL600_SR600,400_.jpg', price: 24.99, rating: 4.5, reviewCount: 980, affiliate: 'https://www.amazon.com/dp/B0FWQGLTQV/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '78', title: 'Lymphatic Contour Face Brush', image: 'https://images-na.ssl-images-amazon.com/images/I/61PoCKMjBSL._AC_UL600_SR600,400_.jpg', price: 12.99, rating: 4.6, reviewCount: 410, affiliate: 'https://www.amazon.com/dp/B0FXTTV4NV/?tag=victoria0cdb-20', badges: ['best seller'] },
           { id: '79', title: 'e.l.f. Soft Glam Brightening Corrector', image: 'https://images-na.ssl-images-amazon.com/images/I/61je2LPc2qL._AC_UL600_SR600,400_.jpg', price: 7.99, rating: 4.3, reviewCount: 1350, affiliate: 'https://www.amazon.com/dp/B0G1H283LW/?tag=victoria0cdb-20', badges: ['best seller', 'view bundle'] },
-          { id: '90', title: 'The Ordinary Volufiline 92% Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/61D3pKRpxaL._AC_UL300_SR300,200_.jpg', price: 28.99, rating: 4.8, reviewCount: 720, affiliate: 'https://www.amazon.com/dp/B0FYJ4WQ5J/?tag=victoria0cdb-20', badges: ['best seller', "tori's favorite"] },
-          { id: '91', title: 'CeraVe Invisible Mineral Sunscreen SPF 50', image: 'https://images-na.ssl-images-amazon.com/images/I/61IvJtPa9EL._AC_UL300_SR300,200_.jpg', price: 14.99, rating: 4.5, reviewCount: 1600, affiliate: 'https://www.amazon.com/dp/B0FXNHDWM7/?tag=victoria0cdb-20', badges: ['best seller'] },
         ]}
         title="featured skincare"
       />
