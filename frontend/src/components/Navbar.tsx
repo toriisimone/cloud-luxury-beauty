@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import styles from './Navbar.module.css';
-import cloudBannerImage from '../assets/cloud-beauty.png';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -11,8 +10,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bannerIndex, setBannerIndex] = useState(0);
-  const [pinkBannerClosed, setPinkBannerClosed] = useState(false);
-  const [pinkBannerIndex, setPinkBannerIndex] = useState(0);
 
   // Rotating banner messages for black banner
   const bannerMessages = [
@@ -64,51 +61,8 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Pink Moving Banner - Top Most */}
-      {!pinkBannerClosed && (
-        <div className={styles.pinkBanner} style={{ backgroundImage: `url(${cloudBannerImage})` }}>
-          <div className={styles.pinkBannerTop}></div>
-          <div className={styles.pinkBannerBottom}>
-            <div className={styles.pinkBannerContent}>
-              <button 
-                className={styles.pinkBannerArrow}
-                onClick={() => setPinkBannerIndex((prev) => (prev - 1 + pinkBannerMessages.length) % pinkBannerMessages.length)}
-                aria-label="Previous message"
-              >
-                <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <span className={styles.pinkBannerText}>
-                {pinkBannerMessages[pinkBannerIndex]}
-              </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <button 
-                  className={styles.pinkBannerArrow}
-                  onClick={() => setPinkBannerIndex((prev) => (prev + 1) % pinkBannerMessages.length)}
-                  aria-label="Next message"
-                >
-                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.5 9L7.5 6L4.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                <button 
-                  className={styles.pinkBannerClose}
-                  onClick={() => setPinkBannerClosed(true)}
-                  aria-label="Close banner"
-                >
-                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 3L3 9M3 3L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Rotating Top Banner - Black */}
-      <div className={styles.topBanner} style={{ top: pinkBannerClosed ? '0' : '48px' }}>
+      <div className={styles.topBanner}>
         <div className={styles.bannerContent}>
           <span className={styles.bannerText}>{bannerMessages[bannerIndex]}</span>
           <div className={styles.bannerControls}>

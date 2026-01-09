@@ -24,7 +24,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      const cardWidth = 320; // Approximate card width with gap
+      const cardWidth = 340; // Approximate card width with gap (320px card + 20px gap)
       const newIndex = Math.max(0, currentIndex - 1);
       setCurrentIndex(newIndex);
       scrollContainerRef.current.scrollTo({
@@ -36,7 +36,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      const cardWidth = 320;
+      const cardWidth = 340; // Approximate card width with gap (320px card + 20px gap)
       const maxIndex = Math.max(0, products.length - 4); // Show 4 products at a time
       const newIndex = Math.min(maxIndex, currentIndex + 1);
       setCurrentIndex(newIndex);
@@ -136,7 +136,7 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
                       className={styles.addToCartButton}
                       onClick={() => handleBuyOnAmazon(product.affiliate)}
                     >
-                      add to cart - ${product.price?.toFixed(2) || 'N/A'}
+                      Buy on Amazon
                     </button>
                   </div>
                 </div>

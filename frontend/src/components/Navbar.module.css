@@ -305,8 +305,8 @@
 
 /* Top Rotating Banner - Black */
 .topBanner {
-  position: fixed;
-  top: 48px; /* Below pink banner */
+  position: sticky;
+  top: 0;
   left: 0;
   right: 0;
   background: #000;
@@ -317,7 +317,6 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: top 0.3s ease;
 }
 
 .bannerContent {
