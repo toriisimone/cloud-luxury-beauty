@@ -52,12 +52,12 @@ const ProductCarousel = ({ products, title = 'Featured Products' }: ProductCarou
   };
 
   // Generate random rating if not provided
-  const getRating = (product: CarouselProduct) => {
-    if (product.rating) return product.rating;
+  const getRating = (product: CarouselProduct): string => {
+    if (product.rating) return product.rating.toFixed(1);
     return (4.0 + Math.random() * 1.0).toFixed(1);
   };
 
-  const getReviewCount = (product: CarouselProduct) => {
+  const getReviewCount = (product: CarouselProduct): number => {
     if (product.reviewCount) return product.reviewCount;
     return Math.floor(Math.random() * 500) + 50;
   };
