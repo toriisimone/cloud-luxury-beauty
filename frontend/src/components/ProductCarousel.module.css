@@ -325,14 +325,14 @@
   color: #000;
 }
 
-/* Add to Cart Button - "View on Amazon" with hover "Buy on Amazon" in pink */
+/* Add to Cart Button - "View on Amazon" with hover "Buy on Amazon" in pink - Kylie Cosmetics size */
 .addToCartButton {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 1.125rem 1.5rem !important; /* Larger padding - Kylie Cosmetics size */
   background: #000 !important;
   color: #fff !important;
   border: none !important;
-  font-size: 0.8rem !important;
+  font-size: 0.95rem !important; /* Larger font size - Kylie Cosmetics size */
   font-weight: 500 !important;
   font-style: normal !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
@@ -348,6 +348,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 48px !important; /* Minimum height for better touch targets */
 }
 
 .addToCartButton:hover {
@@ -377,7 +378,7 @@
   font-style: normal !important;
   font-weight: 500 !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
-  font-size: 0.8rem !important;
+  font-size: 0.95rem !important; /* Match button font size */
   z-index: 2 !important;
   pointer-events: none !important;
 }

@@ -4,15 +4,15 @@
   overflow-x: hidden;
 }
 
-/* Hero Banner Section - Single Image - Kylie Cosmetics size */
+/* Hero Banner Section - Single Image - Positioned right behind menu */
 .heroSection {
   position: relative;
   width: 100%;
-  height: calc(100vh - 36px) !important; /* Full viewport minus top banner only - sits on top of navbar */
+  height: calc(100vh - 36px) !important; /* Full viewport minus top banner */
   min-height: calc(100vh - 36px) !important;
   overflow: hidden;
-  margin-top: -80px !important; /* Negative margin to move hero image up behind navbar */
-  padding-top: 80px !important; /* Padding to compensate for negative margin */
+  margin-top: -116px !important; /* Negative margin to bring image up behind navbar (36px banner + 80px navbar) */
+  padding-top: 116px !important; /* Padding to compensate - image starts at top */
   z-index: 1; /* Behind navbar */
 }
 
@@ -23,7 +23,7 @@
   width: 100%;
   height: 100%;
   background-size: cover !important; /* Kylie Cosmetics - full cover */
-  background-position: center !important; /* Kylie Cosmetics - centered */
+  background-position: center top !important; /* Position from top to show behind menu */
   background-repeat: no-repeat !important;
   display: flex;
   align-items: center;
@@ -31,7 +31,7 @@
   border: none;
   outline: none;
   object-fit: cover; /* Ensure seamless fit on all devices */
-  z-index: 0; /* Behind navbar */
+  z-index: 0; /* Behind navbar - image shows through when navbar background fades */
 }
 
 /* Cloud Overlay */
@@ -318,8 +318,8 @@
     height: calc(70vh - 36px) !important; /* Kylie Cosmetics mobile size - 70% viewport height minus banner */
     min-height: calc(70vh - 36px) !important;
     max-height: none !important;
-    margin-top: -80px !important; /* Negative margin to move hero image up behind navbar */
-    padding-top: 80px !important; /* Padding to compensate */
+    margin-top: -116px !important; /* Negative margin to bring image up behind navbar */
+    padding-top: 116px !important; /* Padding to compensate */
   }
 
   .brandTitle {
@@ -373,8 +373,8 @@
     height: calc(60vh - 36px) !important; /* Kylie Cosmetics small mobile size - 60% viewport height minus banner */
     min-height: calc(60vh - 36px) !important;
     max-height: none !important;
-    margin-top: -80px !important; /* Negative margin to move hero image up behind navbar */
-    padding-top: 80px !important; /* Padding to compensate */
+    margin-top: -116px !important; /* Negative margin to bring image up behind navbar */
+    padding-top: 116px !important; /* Padding to compensate */
   }
 
   .brandTitle {
