@@ -123,9 +123,12 @@ const Navbar = () => {
             {/* Shopping Bag Icon - Cart */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="8" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M9 10c0 .55.45 1 1 1h4c.55 0 1-.45 1-1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Bag body with rounded bottom corners */}
+                <rect x="7" y="9" width="10" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Left handle */}
+                <path d="M9 9C9 7.5 9.5 6 11 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                {/* Right handle */}
+                <path d="M15 9C15 7.5 14.5 6 13 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>
