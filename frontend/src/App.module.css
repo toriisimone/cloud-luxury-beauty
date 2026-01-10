@@ -2,9 +2,11 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: transparent !important; /* No white background - let hero image show */
 }
 
 .main {
   flex: 1;
   padding-top: 0; /* Hero section handles its own positioning */
+  background: transparent !important; /* No white background behind navbar area */
 }

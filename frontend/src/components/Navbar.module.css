@@ -481,27 +481,32 @@
   opacity: 0.7;
 }
 
-/* Main Navbar - Completely transparent */
+/* Main Navbar - Completely transparent - NO WHITE BACKGROUND */
 .navbar {
   position: sticky;
-  top: 36px; /* Below black banner */
+  top: 36px; /* Below top banner */
   left: 0;
   right: 0;
   z-index: 1000;
   background: transparent !important; /* Completely transparent - no white */
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: none !important; /* Remove border that creates visual line */
   padding: 1rem 0;
   backdrop-filter: none !important; /* No blur */
-  transition: all 0.5s ease; /* Smooth transition */
+  transition: all 0.5s ease;
+  margin: 0 !important; /* No margins */
   margin-bottom: 0 !important; /* No margin below navbar */
+  box-shadow: none !important; /* No shadows */
 }
 
-/* Navbar stays transparent on hover */
+/* Navbar stays transparent on hover - NO WHITE BACKGROUND EVER */
 .navbar:hover,
-.navbar.navbarHovered {
-  background: transparent !important; /* Stay transparent */
+.navbar.navbarHovered,
+.navbar:active,
+.navbar:focus {
+  background: transparent !important; /* Stay transparent always */
   backdrop-filter: none !important; /* No blur */
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; /* Keep border visible */
+  border-bottom: none !important; /* No border */
+  box-shadow: none !important; /* No shadows */
 }
 
 /* Keep all content visible and clickable - logo, menu, icons */
@@ -523,6 +528,7 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
+  background: transparent !important; /* Container must be transparent too */
 }
 
 /* Logo - Left (Bold, Italicized, with period) */
