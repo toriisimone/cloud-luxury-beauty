@@ -4,17 +4,17 @@
   overflow-x: hidden;
 }
 
-/* Hero Banner Section - Full image fills viewport, appears behind navbar, then brand banner below */
+/* Hero Banner Section - Full image visible first, then brand banner appears below after scrolling */
 .heroSection {
   position: relative;
   width: 100%;
-  height: 100vh !important; /* Full viewport height - entire image visible */
-  min-height: 100vh !important;
-  max-height: 100vh !important; /* Ensure it doesn't exceed viewport */
+  height: calc(100vh - 36px) !important; /* Full viewport minus top banner height - entire image visible */
+  min-height: calc(100vh - 36px) !important;
+  max-height: calc(100vh - 36px) !important;
   overflow: hidden;
   margin: 0 !important;
   padding: 0 !important;
-  margin-top: 0 !important; /* Start from top - image appears behind navbar */
+  margin-top: 0 !important; /* No margin - starts right after navbar */
   z-index: 0; /* Behind navbar */
   display: flex;
   align-items: center;
@@ -27,7 +27,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-size: cover !important; /* Cover entire area */
+  background-size: cover !important; /* Cover entire area - show full image */
   background-position: center center !important; /* Center the image */
   background-repeat: no-repeat !important;
   display: flex;
@@ -36,7 +36,7 @@
   border: none;
   outline: none;
   object-fit: cover;
-  z-index: 0; /* Behind navbar */
+  z-index: 0; /* Behind navbar - image shows through transparent navbar */
 }
 
 /* Cloud Overlay */
@@ -320,10 +320,10 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    height: 100vh !important; /* Full viewport - entire image visible */
-    min-height: 100vh !important;
-    max-height: none !important;
-    margin-top: 0 !important; /* No negative margin */
+    height: calc(100vh - 36px) !important; /* Full viewport minus top banner - entire image visible */
+    min-height: calc(100vh - 36px) !important;
+    max-height: calc(100vh - 36px) !important;
+    margin-top: 0 !important;
     padding-top: 0 !important;
   }
   
@@ -379,10 +379,10 @@
 
 @media (max-width: 480px) {
   .heroSection {
-    height: 100vh !important; /* Full viewport - entire image visible */
-    min-height: 100vh !important;
-    max-height: none !important;
-    margin-top: 0 !important; /* No negative margin */
+    height: calc(100vh - 36px) !important; /* Full viewport minus top banner - entire image visible */
+    min-height: calc(100vh - 36px) !important;
+    max-height: calc(100vh - 36px) !important;
+    margin-top: 0 !important;
     padding-top: 0 !important;
   }
   
