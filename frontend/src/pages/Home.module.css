@@ -4,41 +4,39 @@
   overflow-x: hidden;
 }
 
-/* Hero Banner Section - Full image fills entire space including behind menu - NO WHITE SPACE */
+/* Hero Banner Section - Full image fills viewport, appears behind navbar, then brand banner below */
 .heroSection {
-  position: fixed !important; /* Fixed positioning so it stays behind menu when scrolling */
-  top: 0 !important; /* Start at very top */
-  left: 0;
-  right: 0;
-  width: 100% !important;
-  height: 100vh !important; /* Full viewport height */
+  position: relative;
+  width: 100%;
+  height: 100vh !important; /* Full viewport height - entire image visible */
   min-height: 100vh !important;
-  overflow: hidden !important;
-  margin: 0 !important; /* NO MARGINS */
-  padding: 0 !important; /* NO PADDING */
-  z-index: 0 !important; /* Behind navbar */
+  max-height: 100vh !important; /* Ensure it doesn't exceed viewport */
+  overflow: hidden;
+  margin: 0 !important;
+  padding: 0 !important;
+  margin-top: 0 !important; /* Start from top - image appears behind navbar */
+  z-index: 0; /* Behind navbar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .heroBanner {
   position: absolute;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100vh !important; /* Full viewport height */
-  min-height: 100vh !important;
-  background-size: cover !important; /* Cover entire area - don't cut off */
-  background-position: center top !important; /* Start from top - fill space behind menu */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover !important; /* Cover entire area */
+  background-position: center center !important; /* Center the image */
   background-repeat: no-repeat !important;
-  background-attachment: fixed !important; /* Keep image fixed when scrolling */
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none !important;
-  outline: none !important;
+  border: none;
+  outline: none;
   object-fit: cover;
-  z-index: 0 !important; /* Behind navbar */
-  margin: 0 !important;
-  padding: 0 !important;
+  z-index: 0; /* Behind navbar */
 }
 
 /* Cloud Overlay */
@@ -322,15 +320,15 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    height: 100vh !important; /* Full viewport - don't cut off */
+    height: 100vh !important; /* Full viewport - entire image visible */
     min-height: 100vh !important;
     max-height: none !important;
-    margin-top: -116px !important; /* Negative margin to bring image up behind navbar */
-    padding-top: 0 !important; /* No padding */
+    margin-top: 0 !important; /* No negative margin */
+    padding-top: 0 !important;
   }
   
   .heroBanner {
-    min-height: 100vh !important; /* Full height on mobile too */
+    height: 100% !important; /* Fill container */
   }
 
   .brandTitle {
@@ -381,15 +379,15 @@
 
 @media (max-width: 480px) {
   .heroSection {
-    height: 100vh !important; /* Full viewport - don't cut off */
+    height: 100vh !important; /* Full viewport - entire image visible */
     min-height: 100vh !important;
     max-height: none !important;
-    margin-top: -116px !important; /* Negative margin to bring image up behind navbar */
-    padding-top: 0 !important; /* No padding */
+    margin-top: 0 !important; /* No negative margin */
+    padding-top: 0 !important;
   }
   
   .heroBanner {
-    min-height: 100vh !important; /* Full height on small mobile too */
+    height: 100% !important; /* Fill container */
   }
 
   .brandTitle {
