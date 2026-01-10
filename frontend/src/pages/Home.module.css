@@ -2,19 +2,22 @@
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  padding-top: calc(36px + 80px + 100vh) !important; /* Top banner + navbar + hero height to push content below */
 }
 
-/* Hero Banner Section - Full image visible first, then brand banner appears below after scrolling */
+/* Hero Banner Section - Positioned directly behind menu, top touches bottom of menu */
 .heroSection {
-  position: relative;
+  position: absolute;
+  top: 36px !important; /* Start right below top banner - behind navbar */
+  left: 0;
+  right: 0;
   width: 100%;
-  height: calc(100vh - 36px) !important; /* Full viewport minus top banner height - entire image visible */
+  height: calc(100vh - 36px) !important; /* Full viewport minus top banner - entire image visible */
   min-height: calc(100vh - 36px) !important;
   max-height: calc(100vh - 36px) !important;
   overflow: hidden;
   margin: 0 !important;
   padding: 0 !important;
-  margin-top: 0 !important; /* No margin - starts right after navbar */
   z-index: 0; /* Behind navbar */
   display: flex;
   align-items: center;
@@ -23,10 +26,11 @@
 
 .heroBanner {
   position: absolute;
-  top: 0;
+  top: 0 !important; /* Start from top of hero section */
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100% !important; /* Fill hero section completely - show entire image */
+  min-height: 100% !important;
   background-size: cover !important; /* Cover entire area - show full image */
   background-position: center center !important; /* Center the image */
   background-repeat: no-repeat !important;
@@ -37,6 +41,8 @@
   outline: none;
   object-fit: cover;
   z-index: 0; /* Behind navbar - image shows through transparent navbar */
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Cloud Overlay */
@@ -87,16 +93,7 @@
 }
 
 .cloudOverlay::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 150px;
-  background: 
-    radial-gradient(ellipse 2000px 100px at 50% 0%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%),
-    linear-gradient(180deg, rgba(253, 242, 244, 0.2) 0%, rgba(243, 240, 255, 0.2) 100%);
-  pointer-events: none;
+  display: none !important; /* Remove white stripe overlay completely */
 }
 
 
@@ -319,16 +316,19 @@
 }
 
 @media (max-width: 768px) {
+  .home {
+    padding-top: calc(36px + 80px + 100vh) !important; /* Account for all elements */
+  }
+  
   .heroSection {
-    height: calc(100vh - 36px) !important; /* Full viewport minus top banner - entire image visible */
+    height: calc(100vh - 36px) !important; /* Full viewport minus top banner */
     min-height: calc(100vh - 36px) !important;
     max-height: calc(100vh - 36px) !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
   }
   
   .heroBanner {
     height: 100% !important; /* Fill container */
+    min-height: 100% !important;
   }
 
   .brandTitle {
@@ -378,16 +378,19 @@
 }
 
 @media (max-width: 480px) {
+  .home {
+    padding-top: calc(36px + 80px + 100vh) !important; /* Account for all elements */
+  }
+  
   .heroSection {
-    height: calc(100vh - 36px) !important; /* Full viewport minus top banner - entire image visible */
+    height: calc(100vh - 36px) !important; /* Full viewport minus top banner */
     min-height: calc(100vh - 36px) !important;
     max-height: calc(100vh - 36px) !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
   }
   
   .heroBanner {
     height: 100% !important; /* Fill container */
+    min-height: 100% !important;
   }
 
   .brandTitle {

@@ -6,7 +6,7 @@
   position: relative;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  margin-top: 0 !important; /* Appears immediately after hero section ends */
+  margin-top: 0 !important; /* Appears immediately after hero section ends - no gap */
   z-index: 10 !important; /* Above hero section */
 }
 
