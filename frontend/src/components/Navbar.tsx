@@ -23,12 +23,12 @@ const Navbar = () => {
     'Limited edition: Rose Gold Essentials',
   ];
 
-  // Rotate black banner messages every 10 seconds (very slow, readable)
+  // Rotate black banner messages every 15 seconds (slower, more luxury feel)
   useEffect(() => {
     if (isBannerPaused) return;
     const interval = setInterval(() => {
       setBannerIndex((prev) => (prev + 1) % bannerMessages.length);
-    }, 10000);
+    }, 15000); // Slower - 15 seconds like luxury beauty brands
     return () => clearInterval(interval);
   }, [bannerMessages.length, isBannerPaused]);
 
@@ -154,14 +154,12 @@ const Navbar = () => {
                 <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
-            {/* Shopping Bag Icon - Cart - Simple outline icon like other icons, same size */}
+            {/* Shopping Bag Icon - Cart - Simple clean outline matching other icons */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 7H18V19C18 19.5523 17.5523 20 17 20H7C6.44772 20 6 19.5523 6 19V7Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M6 10H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M10 13L14 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M10 16L14 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9 6V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 6H18L17.5 20H6.5L6 6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9 10V14M15 10V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>

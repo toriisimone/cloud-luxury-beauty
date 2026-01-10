@@ -29,9 +29,9 @@ const BrandBanner = () => {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
 
-    // Smooth infinite scroll - very slow
+    // Smooth infinite scroll - luxury slow speed
     let scrollPosition = 0;
-    const scrollSpeed = 0.3; // Very slow scroll speed
+    const scrollSpeed = 0.15; // Slower, more luxury feel - half the previous speed
 
     const scroll = () => {
       scrollPosition += scrollSpeed;

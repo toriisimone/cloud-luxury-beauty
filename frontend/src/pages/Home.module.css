@@ -2,22 +2,25 @@
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  padding-top: calc(36px + 80px + 100vh) !important; /* Top banner + navbar + hero height to push content below */
+  padding-top: calc(36px + 80px + 100vh) !important; /* Top banner + navbar + hero height to push brand banner below */
+  margin: 0 !important;
+  padding-bottom: 0 !important; /* No bottom padding that creates white space */
 }
 
 /* Hero Banner Section - Positioned directly behind menu, top touches bottom of menu */
 .heroSection {
   position: absolute;
-  top: 36px !important; /* Start right below top banner - behind navbar */
+  top: 0 !important; /* Start from very top - behind top banner and navbar */
   left: 0;
   right: 0;
   width: 100%;
-  height: calc(100vh - 36px) !important; /* Full viewport minus top banner - entire image visible */
-  min-height: calc(100vh - 36px) !important;
-  max-height: calc(100vh - 36px) !important;
+  height: 100vh !important; /* Full viewport height - entire image visible */
+  min-height: 100vh !important;
+  max-height: 100vh !important;
   overflow: hidden;
   margin: 0 !important;
   padding: 0 !important;
+  padding-bottom: 0 !important; /* No padding that creates white space */
   z-index: 0; /* Behind navbar */
   display: flex;
   align-items: center;
@@ -321,14 +324,14 @@
   }
   
   .heroSection {
-    height: calc(100vh - 36px) !important; /* Full viewport minus top banner */
-    min-height: calc(100vh - 36px) !important;
-    max-height: calc(100vh - 36px) !important;
+    height: 100vh !important; /* Full viewport */
+    min-height: 100vh !important;
+    max-height: 100vh !important;
   }
   
   .heroBanner {
-    height: 100% !important; /* Fill container */
-    min-height: 100% !important;
+    height: 100vh !important; /* Full viewport height */
+    min-height: 100vh !important;
   }
 
   .brandTitle {
@@ -383,14 +386,14 @@
   }
   
   .heroSection {
-    height: calc(100vh - 36px) !important; /* Full viewport minus top banner */
-    min-height: calc(100vh - 36px) !important;
-    max-height: calc(100vh - 36px) !important;
+    height: 100vh !important; /* Full viewport */
+    min-height: 100vh !important;
+    max-height: 100vh !important;
   }
   
   .heroBanner {
-    height: 100% !important; /* Fill container */
-    min-height: 100% !important;
+    height: 100vh !important; /* Full viewport height */
+    min-height: 100vh !important;
   }
 
   .brandTitle {
