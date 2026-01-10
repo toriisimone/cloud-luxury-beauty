@@ -486,7 +486,7 @@
   opacity: 0.7;
 }
 
-/* Main Navbar - Fixed position - NEVER MOVES */
+/* Main Navbar - Fixed position - NEVER MOVES - White background */
 .navbar {
   position: fixed !important; /* Fixed, not sticky - never moves */
   top: 36px !important; /* Below top banner - always fixed here */
@@ -494,25 +494,25 @@
   right: 0;
   width: 100% !important;
   z-index: 1000 !important;
-  background: transparent !important; /* Completely transparent - no white */
-  border-bottom: none !important; /* Remove border that creates visual line */
+  background: #ffffff !important; /* White background */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; /* Subtle border */
   padding: 1rem 0;
   backdrop-filter: none !important; /* No blur */
   transition: none !important; /* No transitions that might cause movement */
   margin: 0 !important; /* No margins */
   margin-bottom: 0 !important; /* No margin below navbar */
-  box-shadow: none !important; /* No shadows */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important; /* Subtle shadow for depth */
 }
 
-/* Navbar stays transparent on hover - NO WHITE BACKGROUND EVER */
+/* Navbar stays white on hover */
 .navbar:hover,
 .navbar.navbarHovered,
 .navbar:active,
 .navbar:focus {
-  background: transparent !important; /* Stay transparent always */
+  background: #ffffff !important; /* Stay white always */
   backdrop-filter: none !important; /* No blur */
-  border-bottom: none !important; /* No border */
-  box-shadow: none !important; /* No shadows */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; /* Keep border */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important; /* Keep shadow */
 }
 
 /* Keep all content visible and clickable - logo, menu, icons */
@@ -534,7 +534,7 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-  background: transparent !important; /* Container must be transparent too */
+  background: #ffffff !important; /* White background to match navbar */
 }
 
 /* Logo - Left (Bold, Italicized, with period) */
