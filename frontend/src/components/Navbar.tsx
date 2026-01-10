@@ -154,18 +154,14 @@ const Navbar = () => {
                 <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
             </button>
-            {/* Shopping Bag Icon - Cart - Reference style: handbag in rounded square frame, pink color - Same size as other icons */}
+            {/* Shopping Bag Icon - Cart - Simple outline icon like other icons, same size */}
             <Link to="/cart" className={styles.iconButton} aria-label="Cart">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '20px', height: '20px', display: 'block' }}>
-                {/* Handbag body - trapezoidal, wider at base - PINK - larger to fill space */}
-                <path d="M7 9 L17 9 L18.5 19 L5.5 19 Z" fill="#F5E6E8" stroke="none"/>
-                {/* U-shaped handle - PINK - larger */}
-                <path d="M9.5 9 Q9.5 5 12 5 Q14.5 5 14.5 9" stroke="#F5E6E8" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                {/* Front flap/pocket - horizontal line with angled sides - darker pink */}
-                <path d="M8 14 L16 14 L15.5 17 L8.5 17 Z" fill="#E8D4D8" stroke="none"/>
-                {/* Side protrusions - ear-like on left and right - PINK - larger */}
-                <ellipse cx="6" cy="10.5" rx="1.2" ry="1.8" fill="#F5E6E8"/>
-                <ellipse cx="18" cy="10.5" rx="1.2" ry="1.8" fill="#F5E6E8"/>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 7H18V19C18 19.5523 17.5523 20 17 20H7C6.44772 20 6 19.5523 6 19V7Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 10H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M10 13L14 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M10 16L14 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               {getItemCount() > 0 && (
                 <span className={styles.cartBadge}>{getItemCount()}</span>

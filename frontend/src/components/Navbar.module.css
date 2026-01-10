@@ -481,32 +481,26 @@
   opacity: 0.7;
 }
 
-/* Main Navbar - Transparent cloud-like overlay background */
+/* Main Navbar - Completely transparent */
 .navbar {
   position: sticky;
   top: 36px; /* Below black banner */
   left: 0;
   right: 0;
   z-index: 1000;
-  background: 
-    /* Cloud-like shapes - soft, rounded, transparent white */
-    radial-gradient(ellipse 800px 150px at 20% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%),
-    radial-gradient(ellipse 600px 120px at 80% 50%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 50%),
-    radial-gradient(ellipse 700px 140px at 50% 50%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%),
-    /* Base transparent overlay */
-    rgba(255, 255, 255, 0.2);
+  background: transparent !important; /* Completely transparent - no white */
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   padding: 1rem 0;
-  backdrop-filter: blur(8px);
-  transition: background 0.5s ease, backdrop-filter 0.5s ease, opacity 0.5s ease; /* Smooth transition */
+  backdrop-filter: none !important; /* No blur */
+  transition: all 0.5s ease; /* Smooth transition */
   margin-bottom: 0 !important; /* No margin below navbar */
 }
 
-/* Navbar background disappears on hover - content stays visible */
+/* Navbar stays transparent on hover */
 .navbar:hover,
 .navbar.navbarHovered {
-  background: transparent !important; /* Background disappears */
-  backdrop-filter: blur(0px) !important; /* Remove blur on hover */
+  background: transparent !important; /* Stay transparent */
+  backdrop-filter: none !important; /* No blur */
   border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important; /* Keep border visible */
 }
 
