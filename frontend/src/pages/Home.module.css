@@ -433,8 +433,8 @@
   }
   
   .productsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* 2-3 columns tablet */
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns tablet like Kylie */
+    gap: 1.25rem;
   }
 }
 
