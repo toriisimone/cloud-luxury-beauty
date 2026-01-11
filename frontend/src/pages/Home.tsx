@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
-import ProductCarousel from '../components/ProductCarousel';
 import BrandBanner from '../components/BrandBanner';
 import Loader from '../components/Loader';
 import { Product, Category } from '../types/global';
@@ -152,21 +151,19 @@ const Home = () => {
       {/* Brand Banner - Moving brands between hero and featured */}
       <BrandBanner />
 
-      {/* Product Carousel Section - Kylie Style */}
-      <ProductCarousel
-        products={[
-          { id: '51', title: 'Dr.Melaxin Peel Shot Kojic Acid Turmeric Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71FIL4QFAHL._AC_UL600_SR600,400_.jpg', price: 24.99, originalPrice: 29.99, rating: 4.5, reviewCount: 1000, affiliate: 'https://www.amazon.com/dp/B0FXTGD7LC/?tag=victoria0cdb-20', badges: ['allure best of beauty award winner 2020', "tori's favorite"] },
-          { id: '52', title: 'Dr.Althea PDRN Reju 5000 Cream', image: 'https://images-na.ssl-images-amazon.com/images/I/419qAvG77UL._AC_UL600_SR600,400_.jpg', price: 32.99, rating: 4.3, reviewCount: 850, affiliate: 'https://www.amazon.com/dp/B0G26XC6KT/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '61', title: 'Saltair Hyaluronic Acid Body Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/51mZFbRKa+L._AC_UL600_SR600,400_.jpg', price: 14.99, rating: 4.5, reviewCount: 890, affiliate: 'https://www.amazon.com/dp/B0FX39VLRL/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '64', title: 'GODA for Her Perfume and Silk Body Oil', image: 'https://images-na.ssl-images-amazon.com/images/I/61hUIcbOjrL._AC_UL600_SR600,400_.jpg', price: 28.99, originalPrice: 34.99, rating: 4.8, reviewCount: 450, affiliate: 'https://www.amazon.com/dp/B0G3RN2SC7/?tag=victoria0cdb-20', badges: ['best seller', "tori's favorite"] },
-          { id: '67', title: 'Lash Serum for Eyelashes & Eyebrows', image: 'https://images-na.ssl-images-amazon.com/images/I/61UQjAx4z5L._AC_UL600_SR600,400_.jpg', price: 19.99, rating: 4.6, reviewCount: 1100, affiliate: 'https://www.amazon.com/dp/B0GD12FCYQ/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '70', title: "L'Oreal Revitalift Triple Power Eye Bag Eraser", image: 'https://images-na.ssl-images-amazon.com/images/I/81RcZcfyRQL._AC_UL600_SR600,400_.jpg', price: 18.99, rating: 4.4, reviewCount: 750, affiliate: 'https://www.amazon.com/dp/B0FXJ4KJZQ/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '73', title: 'Prequel Skin Retinaldehyde 0.1%', image: 'https://images-na.ssl-images-amazon.com/images/I/614XaVcFu8L._AC_UL600_SR600,400_.jpg', price: 26.99, rating: 4.7, reviewCount: 520, affiliate: 'https://www.amazon.com/dp/B0FY36QKW8/?tag=victoria0cdb-20', badges: ['allure best of beauty award winner 2020', 'best seller'] },
-          { id: '75', title: 'COSRX Advanced Pure Vitamin C 23% Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71LzZAsVE+L._AC_UL600_SR600,400_.jpg', price: 24.99, rating: 4.5, reviewCount: 980, affiliate: 'https://www.amazon.com/dp/B0FWQGLTQV/?tag=victoria0cdb-20', badges: ['best seller'] },
-          { id: '79', title: 'e.l.f. Soft Glam Brightening Corrector', image: 'https://images-na.ssl-images-amazon.com/images/I/61je2LPc2qL._AC_UL600_SR600,400_.jpg', price: 7.99, rating: 4.3, reviewCount: 1350, affiliate: 'https://www.amazon.com/dp/B0G1H283LW/?tag=victoria0cdb-20', badges: ['best seller', 'view bundle'] },
-        ]}
-        title="featured skincare"
-      />
+      {/* Featured Skincare Section - Kylie Cosmetics Style Grid */}
+      {hasSkincareProducts && (
+        <section className={styles.featuredSection}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>featured skincare</h2>
+            <div className={styles.productsGrid}>
+              {skincareProducts.slice(0, 8).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Shop Skincare Section - Only render if we have products */}
       {hasSkincareProducts && (
