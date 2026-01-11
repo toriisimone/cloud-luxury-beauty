@@ -84,6 +84,20 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+
+  const totalSlides = Math.ceil(FEATURED_SKINCARE_PRODUCTS.length / 4);
+
+  // Auto-scroll carousel with pause on hover
+  useEffect(() => {
+    if (isCarouselPaused) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    }, 4500); // 4.5 seconds per slide - slow and smooth
+
+    return () => clearInterval(interval);
+  }, [isCarouselPaused, totalSlides]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -148,7 +162,11 @@ const Home = () => {
       </section>
 
       {/* Featured Skincare Section - Kylie Style */}
-      <section className={styles.featuredSection}>
+      <section 
+        className={styles.featuredSection}
+        onMouseEnter={() => setIsCarouselPaused(true)}
+        onMouseLeave={() => setIsCarouselPaused(false)}
+      >
         <div className={styles.featuredContainer}>
           {/* Top Navigation Bar - Dots + Arrows */}
           <div className={styles.carouselNav}>
@@ -189,9 +207,11 @@ const Home = () => {
           {/* Featured Title */}
           <h2 className={styles.featuredTitle}>featured skincare</h2>
 
-          {/* Product Grid */}
+          {/* Product Grid - Auto-scrolling carousel */}
           <div className={styles.productsGrid}>
-            {FEATURED_SKINCARE_PRODUCTS.slice(currentSlide * 4, (currentSlide + 1) * 4).map((product, index) => (
+            {FEATURED_SKINCARE_PRODUCTS.slice(currentSlide * 4, (currentSlide + 1) * 4).map((product, index) => {
+              const globalIndex = currentSlide * 4 + index;
+              return (
               <div key={product.id} className={styles.productCard}>
                 {/* Product Image Area */}
                 <div className={styles.productImageWrapper}>
@@ -217,11 +237,11 @@ const Home = () => {
                   {/* Rating and Reviews */}
                   <div className={styles.productRating}>
                     <div className={styles.stars}>
-                      {generateReviewData(parseInt(product.id)).stars.split('').map((star, i) => (
+                      {generateReviewData(globalIndex).stars.split('').map((star, i) => (
                         <span key={i} className={styles.star}>{star}</span>
                       ))}
                     </div>
-                    <span className={styles.reviewCount}>{generateReviewData(parseInt(product.id)).count} reviews</span>
+                    <span className={styles.reviewCount}>{generateReviewData(globalIndex).count} reviews</span>
                   </div>
 
                   {/* CTA Button */}
@@ -235,7 +255,8 @@ const Home = () => {
                   </button>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>

@@ -231,6 +231,7 @@
   padding: 0 2rem;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 
 /* Top Navigation Bar - Dots + Arrows */
@@ -292,10 +293,10 @@
   cursor: not-allowed;
 }
 
-/* Featured Title - Logo Font Style */
+/* Featured Title - Logo Font Style - Matches Banner Size */
 .featuredTitle {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
   font-style: italic;
   color: #000;
@@ -305,12 +306,14 @@
   text-align: center;
 }
 
-/* Product Grid */
+/* Product Grid - Auto-scrolling carousel */
 .productsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   width: 100%;
+  transition: transform 0.6s ease;
+  overflow: hidden;
 }
 
 /* Product Card */
@@ -343,13 +346,13 @@
   background: #FFFFFF;
 }
 
-/* Badge Label - Pink matching section background */
+/* Badge Label - Burgundy Red Brand Color */
 .productBadge {
   position: absolute;
   top: 8px;
   left: 8px;
-  background: #F5C2D1;
-  color: #000;
+  background: #7E1E2B;
+  color: #FFFFFF;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 8px;
@@ -357,7 +360,6 @@
   text-transform: lowercase;
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
   z-index: 2;
-  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Product Content Area */
@@ -432,12 +434,12 @@
 
 .addToCartButton:hover,
 .addToCartButton.buttonHovered {
-  background: #b33639;
+  background: #7E1E2B;
   color: #FFFFFF;
 }
 
 .addToCartButton:active {
-  background: #b33639;
+  background: #7E1E2B;
   color: #FFFFFF;
 }
 
@@ -476,6 +478,8 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Section Styles */
@@ -687,7 +691,7 @@
   }
 
   .featuredTitle {
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 700;
     font-style: italic;
   }
@@ -733,7 +737,7 @@
   }
 
   .featuredTitle {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 700;
     font-style: italic;
   }
