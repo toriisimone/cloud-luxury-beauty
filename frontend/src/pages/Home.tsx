@@ -7,6 +7,39 @@ import * as categoriesApi from '../api/categoriesApi';
 import * as productsApi from '../api/productsApi';
 import styles from './Home.module.css';
 
+// Import the same skincare products data from Skincare page
+const ALL_SKINCARE_PRODUCTS = [
+  { id: '51', title: 'Dr.Melaxin Peel Shot Kojic Acid Turmeric Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71FIL4QFAHL._AC_UL600_SR600,400_.jpg', asin: 'B0FXTGD7LC', affiliate: 'https://www.amazon.com/dp/B0FXTGD7LC/?tag=victoria0cdb-20' },
+  { id: '52', title: 'Dr.Althea PDRN Reju 5000 Cream', image: 'https://images-na.ssl-images-amazon.com/images/I/419qAvG77UL._AC_UL600_SR600,400_.jpg', asin: 'B0G26XC6KT', affiliate: 'https://www.amazon.com/dp/B0G26XC6KT/?tag=victoria0cdb-20' },
+  { id: '53', title: 'Head & Shoulders Anti-Dandruff Shampoo BARE', image: 'https://images-na.ssl-images-amazon.com/images/I/71QJ6y6v99L._AC_UL600_SR600,400_.jpg', asin: 'B0DMT1CJ2Q', affiliate: 'https://www.amazon.com/dp/B0DMT1CJ2Q/?tag=victoria0cdb-20' },
+  { id: '54', title: 'AEEHFENG Timilk ChillErase Bump Renewal Spray', image: 'https://images-na.ssl-images-amazon.com/images/I/71XnLCYLNTL._AC_UL600_SR600,400_.jpg', asin: 'B0GCK5SHXJ', affiliate: 'https://www.amazon.com/dp/B0GCK5SHXJ/?tag=victoria0cdb-20' },
+  { id: '55', title: 'Lymphatic Contour Face Brush', image: 'https://images-na.ssl-images-amazon.com/images/I/71j6xfG0fkL._AC_UL600_SR600,400_.jpg', asin: 'B0FYVG98GM', affiliate: 'https://www.amazon.com/dp/B0FYVG98GM/?tag=victoria0cdb-20' },
+  { id: '56', title: 'JODSONE 3-in-1 Cat Eye Magnet Nail Tool', image: 'https://images-na.ssl-images-amazon.com/images/I/61Sjj++alVL._AC_UL600_SR600,400_.jpg', asin: 'B0FX3MP3W2', affiliate: 'https://www.amazon.com/dp/B0FX3MP3W2/?tag=victoria0cdb-20' },
+  { id: '57', title: 'Native Scalp Detox Shampoo and Conditioner', image: 'https://images-na.ssl-images-amazon.com/images/I/71KXpO6jHwL._AC_UL600_SR600,400_.jpg', asin: 'B0G27P2LGS', affiliate: 'https://www.amazon.com/dp/B0G27P2LGS/?tag=victoria0cdb-20' },
+  { id: '58', title: 'e.l.f. SKIN Bright + Brew-tiful Eye Cream', image: 'https://images-na.ssl-images-amazon.com/images/I/61ax411X7gL._AC_UL600_SR600,400_.jpg', asin: 'B0G1H91LGM', affiliate: 'https://www.amazon.com/dp/B0G1H91LGM/?tag=victoria0cdb-20' },
+  { id: '59', title: 'Lattafa Asad Elixir EDP', image: 'https://images-na.ssl-images-amazon.com/images/I/51f4XfVZtGL._AC_UL600_SR600,400_.jpg', asin: 'B0FWYPY4FX', affiliate: 'https://www.amazon.com/dp/B0FWYPY4FX/?tag=victoria0cdb-20' },
+  { id: '60', title: 'prgislew Nose Hair Trimmer', image: 'https://images-na.ssl-images-amazon.com/images/I/61Fx2TiBpeL._AC_UL600_SR600,400_.jpg', asin: 'B0G18RXVLB', affiliate: 'https://www.amazon.com/dp/B0G18RXVLB/?tag=victoria0cdb-20' },
+  { id: '61', title: 'Saltair Hyaluronic Acid Body Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/51mZFbRKa+L._AC_UL600_SR600,400_.jpg', asin: 'B0FX39VLRL', affiliate: 'https://www.amazon.com/dp/B0FX39VLRL/?tag=victoria0cdb-20' },
+  { id: '63', title: 'grace & stella Hypochlorous Acid Spray', image: 'https://images-na.ssl-images-amazon.com/images/I/719x7jMja2L._AC_UL600_SR600,400_.jpg', asin: 'B0F6TS5HVH', affiliate: 'https://www.amazon.com/dp/B0F6TS5HVH/?tag=victoria0cdb-20' },
+  { id: '64', title: 'GODA for Her Perfume and Silk Body Oil', image: 'https://images-na.ssl-images-amazon.com/images/I/61hUIcbOjrL._AC_UL600_SR600,400_.jpg', asin: 'B0G3RN2SC7', affiliate: 'https://www.amazon.com/dp/B0G3RN2SC7/?tag=victoria0cdb-20' },
+  { id: '65', title: 'Vagilelf Demon Mark Tattoos', image: 'https://images-na.ssl-images-amazon.com/images/I/71Bz-a4mo4L._AC_UL600_SR600,400_.jpg', asin: 'B0FVYGZ255', affiliate: 'https://www.amazon.com/dp/B0FVYGZ255/?tag=victoria0cdb-20' },
+  { id: '66', title: 'NYX Epic Inky Stix Eyeliner', image: 'https://images-na.ssl-images-amazon.com/images/I/51yUxo+5dHL._AC_UL600_SR600,400_.jpg', asin: 'B0FZCBBVDK', affiliate: 'https://www.amazon.com/dp/B0FZCBBVDK/?tag=victoria0cdb-20' },
+  { id: '67', title: 'Lash Serum for Eyelashes & Eyebrows', image: 'https://images-na.ssl-images-amazon.com/images/I/61UQjAx4z5L._AC_UL600_SR600,400_.jpg', asin: 'B0GD12FCYQ', affiliate: 'https://www.amazon.com/dp/B0GD12FCYQ/?tag=victoria0cdb-20' },
+  { id: '68', title: '2 Pcs Texture Comb Set', image: 'https://images-na.ssl-images-amazon.com/images/I/61+6nIreqOL._AC_UL600_SR600,400_.jpg', asin: 'B0G39WCFG2', affiliate: 'https://www.amazon.com/dp/B0G39WCFG2/?tag=victoria0cdb-20' },
+  { id: '69', title: 'eos Cashmere Body Mist', image: 'https://images-na.ssl-images-amazon.com/images/I/61KlSccHHpL._AC_UL600_SR600,400_.jpg', asin: 'B0FRLXNTB2', affiliate: 'https://www.amazon.com/dp/B0FRLXNTB2/?tag=victoria0cdb-20' },
+  { id: '70', title: "L'Oreal Revitalift Triple Power Eye Bag Eraser", image: 'https://images-na.ssl-images-amazon.com/images/I/81RcZcfyRQL._AC_UL600_SR600,400_.jpg', asin: 'B0FXJ4KJZQ', affiliate: 'https://www.amazon.com/dp/B0FXJ4KJZQ/?tag=victoria0cdb-20' },
+  { id: '71', title: "L'Oreal Elvive Glycolic + Gloss Hair Serum", image: 'https://images-na.ssl-images-amazon.com/images/I/61l15UtTN1L._AC_UL600_SR600,400_.jpg', asin: 'B0FWKX1QMC', affiliate: 'https://www.amazon.com/dp/B0FWKX1QMC/?tag=victoria0cdb-20' },
+  { id: '72', title: 'Wavytalk Steam Hair Straightener', image: 'https://images-na.ssl-images-amazon.com/images/I/61-HItePnWL._AC_UL600_SR600,400_.jpg', asin: 'B0FVXPLCKX', affiliate: 'https://www.amazon.com/dp/B0FVXPLCKX/?tag=victoria0cdb-20' },
+  { id: '73', title: 'Prequel Skin Retinaldehyde 0.1%', image: 'https://images-na.ssl-images-amazon.com/images/I/614XaVcFu8L._AC_UL600_SR600,400_.jpg', asin: 'B0FY36QKW8', affiliate: 'https://www.amazon.com/dp/B0FY36QKW8/?tag=victoria0cdb-20' },
+  { id: '74', title: 'Callus Remover for Feet Electric Foot File', image: 'https://images-na.ssl-images-amazon.com/images/I/71foQ8cpEeL._AC_UL600_SR600,400_.jpg', asin: 'B0FVSVVTQK', affiliate: 'https://www.amazon.com/dp/B0FVSVVTQK/?tag=victoria0cdb-20' },
+  { id: '75', title: 'COSRX Advanced Pure Vitamin C 23% Serum', image: 'https://images-na.ssl-images-amazon.com/images/I/71LzZAsVE+L._AC_UL600_SR600,400_.jpg', asin: 'B0FWQGLTQV', affiliate: 'https://www.amazon.com/dp/B0FWQGLTQV/?tag=victoria0cdb-20' },
+  { id: '76', title: 'Kitsch Strengthening Rice Water Protein Shampoo', image: 'https://images-na.ssl-images-amazon.com/images/I/71Ng-h0FaTL._AC_UL600_SR600,400_.jpg', asin: 'B0FWDDN77G', affiliate: 'https://www.amazon.com/dp/B0FWDDN77G/?tag=victoria0cdb-20' },
+  { id: '77', title: 'Jawline Shaper Chin Strap', image: 'https://images-na.ssl-images-amazon.com/images/I/61ADwFfmABL._AC_UL600_SR600,400_.jpg', asin: 'B0FNQSMFTN', affiliate: 'https://www.amazon.com/dp/B0FNQSMFTN/?tag=victoria0cdb-20' },
+  { id: '78', title: 'Lymphatic Contour Face Brush', image: 'https://images-na.ssl-images-amazon.com/images/I/61PoCKMjBSL._AC_UL600_SR600,400_.jpg', asin: 'B0FXTTV4NV', affiliate: 'https://www.amazon.com/dp/B0FXTTV4NV/?tag=victoria0cdb-20' },
+  { id: '79', title: 'e.l.f. Soft Glam Brightening Corrector', image: 'https://images-na.ssl-images-amazon.com/images/I/61je2LPc2qL._AC_UL600_SR600,400_.jpg', asin: 'B0G1H283LW', affiliate: 'https://www.amazon.com/dp/B0G1H283LW/?tag=victoria0cdb-20' },
+  { id: '80', title: 'Dove Holiday Treats Body Wash', image: 'https://images-na.ssl-images-amazon.com/images/I/61-fcISkgLL._AC_UL600_SR600,400_.jpg', asin: 'B0CNZ5YLVB', affiliate: 'https://www.amazon.com/dp/B0CNZ5YLVB/?tag=victoria0cdb-20' },
+];
+
 // AMAZON API DISABLED: Always use database products
 // import AmazonProductCard from '../components/AmazonProductCard';
 // import { AmazonProduct } from '../api/amazonApi';
@@ -41,138 +74,27 @@ const Home = () => {
     fetchData();
   }, []);
 
-  // Separate effect for skincare products - fetch immediately with multiple fallback strategies
+  // Use the same static skincare products data from Skincare page
   useEffect(() => {
-    const fetchSkincareProducts = async () => {
-      try {
-        console.log('[HOME] ========== FETCHING SKINCARE PRODUCTS ==========');
-        setSkincareLoading(true);
-        
-        // Strategy 1: Try to get the Skincare category ID first
-        let categoryId: string | undefined;
-        try {
-          const categoriesRes = await categoriesApi.getCategories();
-          console.log('[HOME] Categories fetched:', categoriesRes.length);
-          const skincareCategory = categoriesRes.find(
-            c => c.name.toLowerCase() === 'skincare' || 
-                 c.slug.toLowerCase() === 'skincare' ||
-                 c.name.toLowerCase().includes('skin')
-          );
-          if (skincareCategory) {
-            categoryId = skincareCategory.id;
-            console.log('[HOME] Found Skincare category ID:', categoryId, 'Name:', skincareCategory.name);
-          } else {
-            console.warn('[HOME] No Skincare category found in categories list');
-          }
-        } catch (err) {
-          console.warn('[HOME] Could not fetch categories for ID lookup:', err);
-        }
-        
-        // Strategy 2: Try fetching with category ID if we found it
-        let products: Product[] = [];
-        if (categoryId) {
-          try {
-            const response = await productsApi.getProducts({ 
-              categoryId: categoryId,
-              limit: 8, 
-              page: 1 
-            });
-            console.log('[HOME] API Response (with categoryId):', {
-              productsCount: response.products?.length || 0,
-              total: response.total || 0
-            });
-            if (response.products && response.products.length > 0) {
-              products = response.products;
-              console.log('[HOME] ✅ Got', products.length, 'products with categoryId');
-            }
-          } catch (err) {
-            console.warn('[HOME] Failed to fetch with categoryId, trying other methods:', err);
-          }
-        }
-        
-        // Strategy 3: If no products yet, try with category name
-        if (products.length === 0) {
-          try {
-            const response = await productsApi.getProducts({ 
-              category: 'Skincare',
-              limit: 8, 
-              page: 1 
-            });
-            console.log('[HOME] API Response (with category name):', {
-              productsCount: response.products?.length || 0,
-              total: response.total || 0
-            });
-            if (response.products && response.products.length > 0) {
-              products = response.products;
-              console.log('[HOME] ✅ Got', products.length, 'products with category name');
-            }
-          } catch (err) {
-            console.warn('[HOME] Failed to fetch with category name:', err);
-          }
-        }
-        
-        // Strategy 4: Fallback - fetch all products and filter client-side
-        if (products.length === 0) {
-          try {
-            console.log('[HOME] Trying fallback: fetch all products and filter...');
-            const allProductsResponse = await productsApi.getProducts({ limit: 100, page: 1 });
-            if (allProductsResponse.products && allProductsResponse.products.length > 0) {
-              // Filter for skincare-related products
-              const skincare = allProductsResponse.products.filter(p => {
-                const nameLower = p.name.toLowerCase();
-                const descLower = (p.description || '').toLowerCase();
-                return (
-                  (categoryId && p.categoryId === categoryId) ||
-                  nameLower.includes('skincare') ||
-                  nameLower.includes('serum') ||
-                  nameLower.includes('cream') ||
-                  nameLower.includes('moisturizer') ||
-                  nameLower.includes('cleanser') ||
-                  nameLower.includes('toner') ||
-                  nameLower.includes('mask') ||
-                  descLower.includes('skincare')
-                );
-              }).slice(0, 8);
-              products = skincare;
-              console.log('[HOME] ✅ Found', products.length, 'skincare products via fallback filtering');
-            }
-          } catch (err) {
-            console.error('[HOME] Fallback fetch also failed:', err);
-          }
-        }
-        
-        // Strategy 5: Last resort - just get any 8 products if we still have nothing
-        if (products.length === 0) {
-          try {
-            console.log('[HOME] Last resort: fetching any products...');
-            const anyProductsResponse = await productsApi.getProducts({ limit: 8, page: 1 });
-            if (anyProductsResponse.products && anyProductsResponse.products.length > 0) {
-              products = anyProductsResponse.products;
-              console.log('[HOME] ✅ Using', products.length, 'general products as fallback');
-            }
-          } catch (err) {
-            console.error('[HOME] Last resort fetch failed:', err);
-          }
-        }
-        
-        setSkincareProducts(products);
-        console.log('[HOME] ✅ Final skincare products count:', products.length);
-        
-      } catch (error: any) {
-        console.error('[HOME] ❌ Failed to fetch skincare products:', error);
-        console.error('[HOME] Error details:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-        });
-        setSkincareProducts([]);
-      } finally {
-        setSkincareLoading(false);
-        console.log('[HOME] ✅ Skincare products loading complete');
-      }
-    };
-
-    fetchSkincareProducts();
+    console.log('[HOME] ========== LOADING SKINCARE PRODUCTS FROM STATIC DATA ==========');
+    setSkincareLoading(true);
+    
+    // Convert static skincare products to Product format for ProductCard
+    const convertedProducts: Product[] = ALL_SKINCARE_PRODUCTS.slice(0, 8).map((item) => ({
+      id: item.id,
+      name: item.title,
+      slug: item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      description: `${item.title} - Premium skincare product.`,
+      price: 29.99, // Default price - can be customized
+      stock: 100,
+      featured: true,
+      images: [item.image],
+      categoryId: 'skincare', // Placeholder category ID
+    }));
+    
+    setSkincareProducts(convertedProducts);
+    setSkincareLoading(false);
+    console.log('[HOME] ✅ Loaded', convertedProducts.length, 'skincare products from static data');
   }, []);
 
   // Log rendering state for debugging
