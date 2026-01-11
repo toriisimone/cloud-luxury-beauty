@@ -306,7 +306,7 @@
 /* Top Rotating Banner - Pink with animated clouds - Fixed at top */
 .topBanner {
   position: fixed !important; /* Fixed, not sticky - never moves */
-  top: 0 !important;
+  top: 36px !important; /* Below new top announcement banner */
   left: 0;
   right: 0;
   width: 100% !important;

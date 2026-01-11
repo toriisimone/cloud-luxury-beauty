@@ -1,0 +1,104 @@
+.banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: #b33639;
+  color: #ffffff;
+  z-index: 1003; /* Above all other elements including existing top banner */
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.bannerContent {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  position: relative;
+  height: 100%;
+}
+
+.arrowButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.arrowButton:hover {
+  opacity: 0.7;
+}
+
+.arrowButton:active {
+  opacity: 0.5;
+}
+
+.messageContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.message {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  text-align: center;
+  color: #ffffff;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+.closeButton:active {
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .message {
+    font-size: 0.7rem;
+  }
+
+  .arrowButton,
+  .closeButton {
+    padding: 0.2rem 0.4rem;
+  }
+
+  .bannerContent {
+    gap: 0.5rem;
+    padding: 0 0.75rem;
+  }
+}
