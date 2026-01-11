@@ -75,9 +75,9 @@ const Home = () => {
   }, []);
 
   // Use the same static skincare products data from Skincare page
+  // Load immediately on mount - no async needed
   useEffect(() => {
     console.log('[HOME] ========== LOADING SKINCARE PRODUCTS FROM STATIC DATA ==========');
-    setSkincareLoading(true);
     
     // Convert static skincare products to Product format for ProductCard
     const convertedProducts: Product[] = ALL_SKINCARE_PRODUCTS.slice(0, 8).map((item) => ({
@@ -92,6 +92,7 @@ const Home = () => {
       categoryId: 'skincare', // Placeholder category ID
     }));
     
+    // Set products and loading state together
     setSkincareProducts(convertedProducts);
     setSkincareLoading(false);
     console.log('[HOME] ✅ Loaded', convertedProducts.length, 'skincare products from static data');
@@ -104,8 +105,9 @@ const Home = () => {
   console.log('[HOME RENDER] Skincare Products:', skincareProducts.length);
   console.log('[HOME RENDER] Skincare Loading:', skincareLoading);
 
-  // Show loader ONLY when loading is true
-  if (loading) {
+  // Don't block entire page render for categories - show content even if categories are loading
+  // Only show loader if BOTH categories AND skincare are loading (shouldn't happen with static data)
+  if (loading && skincareLoading && skincareProducts.length === 0) {
     console.log('[HOME RENDER] Showing loader...');
     return <Loader />;
   }
@@ -142,7 +144,7 @@ const Home = () => {
       <section className={styles.featuredSection}>
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>featured skincare</h2>
-          {skincareLoading ? (
+          {skincareLoading && skincareProducts.length === 0 ? (
             <div className={styles.productsGrid}>
               <p className={styles.loadingMessage}>Loading skincare products...</p>
             </div>
