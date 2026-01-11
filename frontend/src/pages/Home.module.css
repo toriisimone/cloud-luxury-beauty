@@ -262,130 +262,6 @@
   background: #FFFFFF;
 }
 
-/* Featured Skincare Section - Kylie-style with pink background */
-.featuredSection {
-  background: #FDF2F4;
-  padding: 4rem 0;
-  width: 100%;
-  position: relative;
-  z-index: 1;
-}
-
-/* Featured Container - Centered content */
-.featuredContainer {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-/* Featured Title - Centered heading */
-.featuredTitle {
-  font-family: 'Inter', sans-serif;
-  font-size: 2.5rem;
-  font-weight: 500;
-  color: #000;
-  margin-bottom: 3rem;
-  text-align: center;
-  text-transform: lowercase;
-  letter-spacing: 0.5px;
-}
-
-/* Products Grid - Kylie-style: 4 columns desktop, 2 tablet, 1 mobile */
-.productsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  width: 100%;
-}
-
-/* Product Card - Kylie-style white card on pink background */
-.productCard {
-  display: flex;
-  flex-direction: column;
-  background: #FFFFFF;
-  width: 100%;
-  border-radius: 0;
-  overflow: hidden;
-}
-
-.productImageWrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: #FFFFFF;
-  overflow: hidden;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.productImage {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #FFFFFF;
-}
-
-.productBadge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: #000;
-  color: #FFFFFF;
-  font-size: 0.7rem;
-  font-weight: 500;
-  padding: 0.35rem 0.65rem;
-  text-transform: lowercase;
-  letter-spacing: 0.3px;
-  font-family: 'Inter', sans-serif;
-  z-index: 2;
-}
-
-.productTitle {
-  font-size: 0.95rem;
-  font-weight: 400;
-  color: #000;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
-  font-family: 'Inter', sans-serif;
-  min-height: 2.8em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.productPrice {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #000;
-  margin-bottom: 1rem;
-  font-family: 'Inter', sans-serif;
-}
-
-.addToCartButton {
-  width: 100%;
-  padding: 0.875rem;
-  background: #000;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 0;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  text-transform: lowercase;
-  letter-spacing: 0.5px;
-  transition: opacity 0.2s;
-  margin-top: auto;
-}
-
-.addToCartButton:hover {
-  opacity: 0.8;
-}
-
 .sectionTitle {
   font-family: 'Inter', sans-serif;
   font-size: 2.5rem;
@@ -524,14 +400,6 @@
     letter-spacing: 4px;
   }
   
-  .productsGrid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns tablet */
-    gap: 1.5rem;
-  }
-
-  .featuredContainer {
-    padding: 0 1.5rem;
-  }
 }
 
 @media (max-width: 768px) {
@@ -571,19 +439,6 @@
   .categoriesGrid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
-  }
-
-  .productsGrid {
-    grid-template-columns: 1fr; /* 1 column mobile */
-    gap: 1.5rem;
-  }
-
-  .featuredTitle {
-    font-size: 2rem;
-  }
-
-  .featuredContainer {
-    padding: 0 1rem;
   }
 
   .categoryHeader {
@@ -629,16 +484,4 @@
     letter-spacing: 1.5px;
   }
 
-  .productsGrid {
-    grid-template-columns: 1fr; /* 1 column on very small screens */
-    gap: 1.5rem;
-  }
-
-  .featuredTitle {
-    font-size: 1.75rem;
-  }
-
-  .featuredContainer {
-    padding: 0 1rem;
-  }
 }
