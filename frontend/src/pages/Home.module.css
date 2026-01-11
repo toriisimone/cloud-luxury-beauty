@@ -526,7 +526,7 @@
   }
 
   .productsGrid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns mobile */
+    grid-template-columns: 1fr; /* 1 column mobile */
     gap: 1rem;
   }
   
