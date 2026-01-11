@@ -23,7 +23,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
     e.preventDefault();
     e.stopPropagation();
     // Add to cart functionality
-    addItem(product.id, selectedSize ? sizeVariants.find(v => v.value === selectedSize)?.id : undefined);
+    const selectedVariant = selectedSize ? sizeVariants.find(v => v.value === selectedSize) : undefined;
+    addItem(product, selectedVariant);
   };
 
   // Generate random rating for demo (4.0 to 5.0) - consistent per product
