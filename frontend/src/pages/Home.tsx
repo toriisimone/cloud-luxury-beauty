@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
+import ProductCard from '../components/ProductCard';
 import Loader from '../components/Loader';
-import { Product, Category } from '../types/global';
-import * as productsApi from '../api/productsApi';
+import { Category, Product } from '../types/global';
 import * as categoriesApi from '../api/categoriesApi';
+import * as productsApi from '../api/productsApi';
 import styles from './Home.module.css';
 
 // AMAZON API DISABLED: Always use database products
@@ -14,71 +13,26 @@ import styles from './Home.module.css';
 // import * as amazonApi from '../api/amazonApi';
 
 const Home = () => {
-  const [skincareProducts, setSkincareProducts] = useState<Product[]>([]);
-  // AMAZON API DISABLED: Always use database products
-  // const [amazonSkincareProducts, setAmazonSkincareProducts] = useState<AmazonProduct[]>([]);
-  // const [useAmazonProducts, setUseAmazonProducts] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('[HOME] Fetching products and categories for homepage...');
+        console.log('[HOME] Fetching categories and featured products for homepage...');
         setLoading(true);
         
-        // Fetch categories first
-        const categoriesRes = await categoriesApi.getCategories();
+        // Fetch categories and featured products in parallel
+        const [categoriesRes, productsRes] = await Promise.all([
+          categoriesApi.getCategories(),
+          productsApi.getProducts({ featured: true, limit: 8, page: 1 })
+        ]);
+        
         setCategories(categoriesRes);
+        setFeaturedProducts(productsRes.products || []);
         console.log('[HOME] Categories fetched:', categoriesRes.length);
-
-        // AMAZON API DISABLED: Always fetch from database for Skincare
-        const skincareCategory = categoriesRes.find(cat => 
-          cat.name === 'Skincare' || 
-          cat.name === 'skincare' || 
-          cat.name.toLowerCase() === 'skincare'
-        );
-
-        if (skincareCategory) {
-          console.log('[HOME] Fetching skincare products from database (category:', skincareCategory.id, ')');
-          const skincareProductsRes = await productsApi.getProducts({ 
-            category: 'Skincare', // Use category name
-            limit: 20 
-          });
-          // Filter out removed products
-          const excludedTitles = [
-            'Lymphatic Contour Face Brush',
-            'e.l.f. SKIN Bright + Brew-tiful Eye Cream',
-            'Lattafa Asad Elixir EDP',
-            'The Ordinary Volufiline 92% Serum',
-            'CeraVe Invisible Mineral Sunscreen SPF 50'
-          ];
-          const filteredProducts = skincareProductsRes.products.filter(
-            product => !excludedTitles.some(excluded => 
-              product.name.toLowerCase().includes(excluded.toLowerCase())
-            )
-          );
-          setSkincareProducts(filteredProducts.slice(0, 12));
-          console.log('[HOME] ✅ Skincare products fetched:', filteredProducts.length);
-        } else {
-          console.warn('[HOME] Skincare category not found. Displaying all products instead.');
-          const allProductsRes = await productsApi.getProducts({ limit: 20 });
-          // Filter out removed products
-          const excludedTitles = [
-            'Lymphatic Contour Face Brush',
-            'e.l.f. SKIN Bright + Brew-tiful Eye Cream',
-            'Lattafa Asad Elixir EDP',
-            'The Ordinary Volufiline 92% Serum',
-            'CeraVe Invisible Mineral Sunscreen SPF 50'
-          ];
-          const filteredProducts = allProductsRes.products.filter(
-            product => !excludedTitles.some(excluded => 
-              product.name.toLowerCase().includes(excluded.toLowerCase())
-            )
-          );
-          setSkincareProducts(filteredProducts.slice(0, 12));
-          console.log('[HOME] ✅ All products fetched:', filteredProducts.length);
-        }
+        console.log('[HOME] Featured products fetched:', productsRes.products?.length || 0);
         
       } catch (error: any) {
         console.error('[HOME] ❌ Failed to fetch data:', error);
@@ -91,8 +45,8 @@ const Home = () => {
           fullURL: `${error.config?.baseURL}${error.config?.url}`,
         });
         // Set empty arrays but don't block the page
-        setSkincareProducts([]);
         setCategories([]);
+        setFeaturedProducts([]);
       } finally {
         // ALWAYS set loading to false
         setLoading(false);
@@ -106,7 +60,6 @@ const Home = () => {
   // Log rendering state for debugging
   console.log('[HOME RENDER] ========== RENDERING HOME PAGE ==========');
   console.log('[HOME RENDER] Loading:', loading);
-  console.log('[HOME RENDER] Skincare products:', skincareProducts.length);
   console.log('[HOME RENDER] Categories:', categories.length);
 
   // Show loader ONLY when loading is true
@@ -114,10 +67,6 @@ const Home = () => {
     console.log('[HOME RENDER] Showing loader...');
     return <Loader />;
   }
-
-  const hasSkincareProducts = skincareProducts.length > 0;
-
-  console.log('[HOME RENDER] Has skincare products:', hasSkincareProducts);
 
   return (
     <div className={styles.home}>
@@ -147,27 +96,25 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Shop Skincare Section - Only render if we have products */}
-      {hasSkincareProducts && (
-        <section className={styles.skincareSection}>
+      {/* Cloud Divider - Only show if we have categories */}
+      {categories.length > 0 && <div className={styles.cloudDivider}></div>}
+
+      {/* Featured Items Section - Kylie Cosmetics Style */}
+      {featuredProducts.length > 0 && (
+        <section className={styles.featuredSection}>
           <div className={styles.container}>
-            <h2 className={styles.sectionTitle}>Shop Skincare</h2>
+            <h2 className={styles.sectionTitle}>featured items</h2>
             <div className={styles.productsGrid}>
-              {skincareProducts.map((product) => (
+              {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-            </div>
-            <div className={styles.viewMoreContainer}>
-              <Link to="/products/skincare" className={styles.viewMoreButton}>
-                View All Skincare
-              </Link>
             </div>
           </div>
         </section>
       )}
 
-      {/* Cloud Divider - Only show if we have categories */}
-      {categories.length > 0 && <div className={styles.cloudDivider}></div>}
+      {/* Cloud Divider - Between sections */}
+      {(categories.length > 0 || featuredProducts.length > 0) && <div className={styles.cloudDivider}></div>}
 
       {/* Shop by Category Section */}
       {categories.length > 0 && (
@@ -184,7 +131,7 @@ const Home = () => {
       )}
 
       {/* Cloud Divider - Only show at bottom if we have content */}
-      {(hasSkincareProducts || categories.length > 0) && <div className={styles.cloudDivider}></div>}
+      {categories.length > 0 && <div className={styles.cloudDivider}></div>}
     </div>
   );
 };

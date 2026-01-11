@@ -13,6 +13,7 @@
   height: 100%;
   max-width: 100%;
   min-width: 0; /* Allow flex shrinking */
+  flex: 1 1 auto; /* Grow to fill available space */
 }
 
 .card:hover {

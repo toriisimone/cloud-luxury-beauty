@@ -255,6 +255,12 @@
   padding: 0 2rem;
 }
 
+/* Featured Section - Wider container for proper card width */
+.featuredSection .container {
+  max-width: 1400px;
+  padding: 0 3rem; /* More generous horizontal padding */
+}
+
 /* Section Styles */
 .categorySection,
 .featuredSection,
@@ -269,7 +275,8 @@
 .featuredSection,
 .skincareSection {
   background: #FFFFFF;
-  padding: 4rem 2rem; /* Generous padding like reference */
+  padding: 4rem 0; /* Vertical padding only, horizontal handled by container */
+  width: 100%;
 }
 
 .sectionTitle {
@@ -328,7 +335,7 @@
 .productsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 columns like Kylie */
-  gap: 1.25rem; /* Consistent spacing matching reference */
+  gap: 1.5rem; /* Slightly larger gap for better spacing */
   margin-top: 2rem;
   min-height: 200px; /* Prevent grid collapse */
   width: 100%;
@@ -340,6 +347,7 @@
 .productsGrid > * {
   display: flex;
   min-height: 100%;
+  width: 100%; /* Ensure cards fill their grid column */
 }
 
 /* Skincare Section */
@@ -450,7 +458,11 @@
   
   .productsGrid {
     grid-template-columns: repeat(2, 1fr); /* 2 columns tablet like Kylie */
-    gap: 1.25rem;
+    gap: 1.5rem;
+  }
+  
+  .featuredSection .container {
+    padding: 0 2rem; /* Slightly less padding on tablet */
   }
 }
 
@@ -496,12 +508,15 @@
   .productsGrid {
     grid-template-columns: repeat(2, 1fr); /* 2 columns mobile */
     gap: 1rem;
-    padding: 0 0.75rem; /* Add padding on mobile */
+  }
+  
+  .featuredSection .container {
+    padding: 0 1rem; /* Mobile padding */
   }
   
   .featuredSection,
   .skincareSection {
-    padding: 2.5rem 1rem;
+    padding: 2.5rem 0;
   }
 
   .categoryHeader {
@@ -552,11 +567,14 @@
   .productsGrid {
     grid-template-columns: 1fr; /* 1 column on very small screens */
     gap: 1rem;
-    padding: 0 1rem;
+  }
+  
+  .featuredSection .container {
+    padding: 0 1rem; /* Mobile padding */
   }
   
   .featuredSection,
   .skincareSection {
-    padding: 2rem 0.75rem;
+    padding: 2rem 0;
   }
 }
