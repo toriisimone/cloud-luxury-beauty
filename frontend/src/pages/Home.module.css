@@ -5,6 +5,9 @@
   /* Remove padding-top - hero is absolute, featured section will flow after it */
   margin: 0 !important;
   padding: 0 !important;
+  /* Ensure home container has proper height to accommodate hero + content */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Hero Banner Section - Positioned directly behind menu, top touches bottom of menu */
@@ -279,6 +282,8 @@
   margin-bottom: 0;
   position: relative; /* Ensure it flows after absolute hero */
   z-index: 1; /* Above hero section */
+  /* Ensure section is visible and not hidden behind hero */
+  min-height: 400px; /* Minimum height to ensure visibility */
 }
 
 /* Skincare Section - Same styling as featured */

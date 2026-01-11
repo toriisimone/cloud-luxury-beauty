@@ -41,62 +41,122 @@ const Home = () => {
     fetchData();
   }, []);
 
-  // Separate effect for skincare products - fetch immediately and retry if needed
+  // Separate effect for skincare products - fetch immediately with multiple fallback strategies
   useEffect(() => {
     const fetchSkincareProducts = async () => {
       try {
         console.log('[HOME] ========== FETCHING SKINCARE PRODUCTS ==========');
         setSkincareLoading(true);
         
-        // First, try to get the Skincare category ID
+        // Strategy 1: Try to get the Skincare category ID first
         let categoryId: string | undefined;
         try {
           const categoriesRes = await categoriesApi.getCategories();
+          console.log('[HOME] Categories fetched:', categoriesRes.length);
           const skincareCategory = categoriesRes.find(
-            c => c.name.toLowerCase() === 'skincare' || c.slug.toLowerCase() === 'skincare'
+            c => c.name.toLowerCase() === 'skincare' || 
+                 c.slug.toLowerCase() === 'skincare' ||
+                 c.name.toLowerCase().includes('skin')
           );
           if (skincareCategory) {
             categoryId = skincareCategory.id;
-            console.log('[HOME] Found Skincare category ID:', categoryId);
+            console.log('[HOME] Found Skincare category ID:', categoryId, 'Name:', skincareCategory.name);
+          } else {
+            console.warn('[HOME] No Skincare category found in categories list');
           }
         } catch (err) {
-          console.warn('[HOME] Could not fetch categories for ID lookup');
+          console.warn('[HOME] Could not fetch categories for ID lookup:', err);
         }
         
-        // Fetch skincare products - try both category name and ID
-        const response = await productsApi.getProducts({ 
-          category: 'Skincare',
-          categoryId: categoryId,
-          limit: 8, 
-          page: 1 
-        });
-        
-        console.log('[HOME] API Response:', {
-          productsCount: response.products?.length || 0,
-          total: response.total || 0,
-          hasProducts: !!(response.products && response.products.length > 0)
-        });
-        
-        if (response.products && response.products.length > 0) {
-          setSkincareProducts(response.products);
-          console.log('[HOME] ✅ Skincare products set:', response.products.length);
-        } else {
-          console.warn('[HOME] ⚠️ No products in response, trying without category filter...');
-          // Fallback: try fetching all products and filter client-side
-          const allProducts = await productsApi.getProducts({ limit: 50, page: 1 });
-          if (allProducts.products) {
-            const skincare = allProducts.products.filter(p => 
-              p.categoryId === categoryId || 
-              p.name.toLowerCase().includes('skincare') ||
-              p.name.toLowerCase().includes('serum') ||
-              p.name.toLowerCase().includes('cream')
-            ).slice(0, 8);
-            setSkincareProducts(skincare);
-            console.log('[HOME] ✅ Found', skincare.length, 'skincare products via fallback');
-          } else {
-            setSkincareProducts([]);
+        // Strategy 2: Try fetching with category ID if we found it
+        let products: Product[] = [];
+        if (categoryId) {
+          try {
+            const response = await productsApi.getProducts({ 
+              categoryId: categoryId,
+              limit: 8, 
+              page: 1 
+            });
+            console.log('[HOME] API Response (with categoryId):', {
+              productsCount: response.products?.length || 0,
+              total: response.total || 0
+            });
+            if (response.products && response.products.length > 0) {
+              products = response.products;
+              console.log('[HOME] ✅ Got', products.length, 'products with categoryId');
+            }
+          } catch (err) {
+            console.warn('[HOME] Failed to fetch with categoryId, trying other methods:', err);
           }
         }
+        
+        // Strategy 3: If no products yet, try with category name
+        if (products.length === 0) {
+          try {
+            const response = await productsApi.getProducts({ 
+              category: 'Skincare',
+              limit: 8, 
+              page: 1 
+            });
+            console.log('[HOME] API Response (with category name):', {
+              productsCount: response.products?.length || 0,
+              total: response.total || 0
+            });
+            if (response.products && response.products.length > 0) {
+              products = response.products;
+              console.log('[HOME] ✅ Got', products.length, 'products with category name');
+            }
+          } catch (err) {
+            console.warn('[HOME] Failed to fetch with category name:', err);
+          }
+        }
+        
+        // Strategy 4: Fallback - fetch all products and filter client-side
+        if (products.length === 0) {
+          try {
+            console.log('[HOME] Trying fallback: fetch all products and filter...');
+            const allProductsResponse = await productsApi.getProducts({ limit: 100, page: 1 });
+            if (allProductsResponse.products && allProductsResponse.products.length > 0) {
+              // Filter for skincare-related products
+              const skincare = allProductsResponse.products.filter(p => {
+                const nameLower = p.name.toLowerCase();
+                const descLower = (p.description || '').toLowerCase();
+                return (
+                  (categoryId && p.categoryId === categoryId) ||
+                  nameLower.includes('skincare') ||
+                  nameLower.includes('serum') ||
+                  nameLower.includes('cream') ||
+                  nameLower.includes('moisturizer') ||
+                  nameLower.includes('cleanser') ||
+                  nameLower.includes('toner') ||
+                  nameLower.includes('mask') ||
+                  descLower.includes('skincare')
+                );
+              }).slice(0, 8);
+              products = skincare;
+              console.log('[HOME] ✅ Found', products.length, 'skincare products via fallback filtering');
+            }
+          } catch (err) {
+            console.error('[HOME] Fallback fetch also failed:', err);
+          }
+        }
+        
+        // Strategy 5: Last resort - just get any 8 products if we still have nothing
+        if (products.length === 0) {
+          try {
+            console.log('[HOME] Last resort: fetching any products...');
+            const anyProductsResponse = await productsApi.getProducts({ limit: 8, page: 1 });
+            if (anyProductsResponse.products && anyProductsResponse.products.length > 0) {
+              products = anyProductsResponse.products;
+              console.log('[HOME] ✅ Using', products.length, 'general products as fallback');
+            }
+          } catch (err) {
+            console.error('[HOME] Last resort fetch failed:', err);
+          }
+        }
+        
+        setSkincareProducts(products);
+        console.log('[HOME] ✅ Final skincare products count:', products.length);
         
       } catch (error: any) {
         console.error('[HOME] ❌ Failed to fetch skincare products:', error);
@@ -104,7 +164,6 @@ const Home = () => {
           message: error.message,
           response: error.response?.data,
           status: error.response?.status,
-          url: error.config?.url,
         });
         setSkincareProducts([]);
       } finally {
