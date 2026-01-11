@@ -262,6 +262,14 @@
 .allProductsSection {
   padding: 4rem 0;
   position: relative;
+  background: #FFFFFF; /* White background for Featured Items section */
+}
+
+/* Featured Section & Skincare Section - Special styling */
+.featuredSection,
+.skincareSection {
+  background: #FFFFFF;
+  padding: 4rem 2rem; /* Generous padding like reference */
 }
 
 .sectionTitle {
@@ -319,11 +327,18 @@
 .productsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 columns like Kylie */
-  gap: 1.5rem; /* Tighter spacing like Kylie */
+  gap: 1.25rem; /* Consistent spacing matching reference */
   margin-top: 2rem;
   min-height: 200px; /* Prevent grid collapse */
   width: 100%;
   max-width: 100%;
+  align-items: start; /* Align cards to top */
+}
+
+/* Ensure cards have consistent height */
+.productsGrid > * {
+  display: flex;
+  min-height: 100%;
 }
 
 /* Skincare Section */
@@ -480,6 +495,12 @@
   .productsGrid {
     grid-template-columns: repeat(2, 1fr); /* 2 columns mobile */
     gap: 1rem;
+    padding: 0 0.75rem; /* Add padding on mobile */
+  }
+  
+  .featuredSection,
+  .skincareSection {
+    padding: 2.5rem 1rem;
   }
 
   .categoryHeader {
@@ -529,5 +550,12 @@
 
   .productsGrid {
     grid-template-columns: 1fr; /* 1 column on very small screens */
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .featuredSection,
+  .skincareSection {
+    padding: 2rem 0.75rem;
   }
 }

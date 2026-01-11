@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types/global';
+import { useCart } from '../hooks/useCart';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
@@ -8,6 +9,8 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const { addItem } = useCart();
+  
   // Get size options from variants if available
   const sizeVariants = product.variants?.filter(v => v.name.toLowerCase() === 'size') || [];
   const hasSizeOptions = sizeVariants.length > 0;
@@ -16,22 +19,33 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const defaultSize = hasSizeOptions && sizeVariants.length > 0 ? sizeVariants[0].value : null;
   const [selectedSize, setSelectedSize] = useState<string | null>(defaultSize);
 
-  const handleBuyOnAmazon = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Placeholder for Amazon affiliate link integration
-    // In production, this would navigate to an Amazon affiliate link
-    const amazonUrl = `https://www.amazon.com/s?k=${encodeURIComponent(product.name)}`;
-    window.open(amazonUrl, '_blank', 'noopener,noreferrer');
+    // Add to cart functionality
+    addItem(product.id, selectedSize ? sizeVariants.find(v => v.value === selectedSize)?.id : undefined);
   };
 
-  // Generate random rating for demo (4.0 to 5.0)
-  const rating = (4.0 + Math.random() * 1.0).toFixed(1);
-  const reviewCount = Math.floor(Math.random() * 500) + 50;
+  // Generate random rating for demo (4.0 to 5.0) - consistent per product
+  const [rating] = useState(() => (4.0 + Math.random() * 1.0).toFixed(1));
+  const [reviewCount] = useState(() => Math.floor(Math.random() * 500) + 50);
   
-  // Random labels for featured products
-  const labels = ['Best-seller', 'Award Winner', 'New'];
-  const randomLabel = product.featured ? labels[Math.floor(Math.random() * labels.length)] : null;
+  // Determine badges - award badge top-left, other badges top-right
+  const hasAwardBadge = product.featured || Math.random() > 0.7;
+  const otherBadges: string[] = [];
+  
+  if (product.featured) {
+    if (Math.random() > 0.5) {
+      otherBadges.push("tori's favorite");
+    } else {
+      otherBadges.push("best seller");
+    }
+  }
+  
+  // Extract short description/tagline from product description
+  const description = product.description ? 
+    product.description.split(/[.!?]/).filter(s => s.trim().length > 0)[0]?.trim().substring(0, 45) + '...' : 
+    null;
 
   return (
     <div className={styles.card}>
@@ -39,32 +53,57 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className={styles.imageContainer}>
           {product.images && product.images.length > 0 && product.images[0] ? (
             <img src={product.images[0]} alt={product.name} className={styles.image} onError={(e) => {
-              // If image fails to load, hide the broken image element
               e.currentTarget.style.display = 'none';
             }} />
           ) : (
             <div className={styles.placeholder}>Product Image</div>
           )}
-          {randomLabel && (
-            <span className={styles.label}>{randomLabel}</span>
+          
+          {/* Award badge - top left (circular style like reference) */}
+          {hasAwardBadge && (
+            <span className={styles.awardBadge}>award winner</span>
           )}
+          
+          {/* Other badges - top right (rectangular style) */}
+          {otherBadges.map((badge, index) => (
+            <span key={index} className={styles.badge}>{badge}</span>
+          ))}
         </div>
+        
         <div className={styles.content}>
-          <h3 className={styles.name}>{product.name}</h3>
-          {product.category && (
-            <p className={styles.category}>{product.category.name}</p>
+          <h3 className={styles.name}>{product.name.toLowerCase()}</h3>
+          
+          {/* Description/Tagline */}
+          {description && (
+            <p className={styles.description}>{description}</p>
           )}
+          
+          {/* Rating Row */}
           <div className={styles.rating}>
             <span className={styles.stars}>
-              {'★'.repeat(Math.floor(parseFloat(rating)))}
-              {parseFloat(rating) % 1 >= 0.5 && '☆'}
+              {Array.from({ length: 5 }, (_, i) => (
+                <span key={i} className={i < Math.floor(parseFloat(rating)) ? styles.starFilled : styles.starEmpty}>
+                  ★
+                </span>
+              ))}
             </span>
             <span className={styles.ratingText}>
-              {rating} ({reviewCount})
+              ({reviewCount})
             </span>
           </div>
-          <p className={styles.price}>${product.price.toFixed(2)}</p>
-          {hasSizeOptions && (
+          
+          {/* Price - with optional original price for bundles */}
+          <div className={styles.priceContainer}>
+            <span className={styles.price}>${product.price.toFixed(2)}</span>
+            {product.price < (product.price * 1.15) && Math.random() > 0.7 && (
+              <span className={styles.originalPrice}>
+                ${(product.price * 1.15).toFixed(0)}
+              </span>
+            )}
+          </div>
+          
+          {/* Size selector - hidden for now to match Kylie style */}
+          {false && hasSizeOptions && (
             <div className={styles.sizeSelector}>
               {sizeVariants.map((variant, index) => (
                 <button
@@ -83,8 +122,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </div>
       </Link>
-      <button onClick={handleBuyOnAmazon} className={styles.buyOnAmazon}>
-        Buy on Amazon
+      
+      {/* CTA Button - Full width, outside link */}
+      <button onClick={handleAddToCart} className={styles.addToCart}>
+        add to cart - ${product.price.toFixed(2)}
       </button>
     </div>
   );

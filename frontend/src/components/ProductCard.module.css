@@ -1,13 +1,13 @@
-/* Kylie Cosmetics-style product card */
+/* Kylie Cosmetics-style product card - Pixel-perfect match */
 .card {
   display: flex;
   flex-direction: column;
-  background: var(--color-white);
-  border-radius: 0;
+  background: #FFFFFF;
+  border-radius: 6px; /* Minimal rounded corners */
   overflow: hidden;
   transition: all 0.2s ease;
   box-shadow: none;
-  border: none; /* No border for cleaner look */
+  border: 1px solid #E5E5E5; /* Subtle light gray border */
   position: relative;
   width: 100%;
   height: 100%;
@@ -16,7 +16,8 @@
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-color: #D0D0D0;
 }
 
 .link {
@@ -28,27 +29,33 @@
   height: 100%;
 }
 
-/* Image Container - Portrait orientation like Kylie cards */
+/* Image Container - Proper dimensions matching reference */
 .imageContainer {
   position: relative;
   width: 100%;
-  padding-top: 120%; /* Taller aspect ratio for portrait cards */
+  padding-top: 115%; /* Portrait orientation - taller than wide */
   overflow: hidden;
-  background: #ffffff; /* White background as requested */
+  background: #FFFFFF; /* Pure white background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .image {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 85%; /* Center product with white space around */
+  max-height: 85%;
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Show full product without cropping */
   transition: transform 0.3s ease;
 }
 
 .card:hover .image {
-  transform: scale(1.05); /* Slight zoom on hover */
+  transform: translate(-50%, -50%) scale(1.02); /* Subtle zoom on hover */
 }
 
 .placeholder {
@@ -60,106 +67,157 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-light-gray);
-  color: var(--color-text-light);
-  font-size: 0.9rem;
+  background: #FFFFFF;
+  color: #999;
+  font-size: 0.85rem;
 }
 
-/* Label (Best-seller, Award Winner, New) - Top right like Kylie */
-.label {
+/* Award Badge - Top left, circular style */
+.awardBadge {
   position: absolute;
   top: 12px;
-  right: 12px; /* Top right positioning */
-  background: rgba(245, 240, 235, 0.95); /* Light beige like Kylie */
-  color: var(--color-text);
+  left: 12px;
+  background: #D32F2F; /* Red like reference */
+  color: #FFFFFF;
+  padding: 0.4rem 0.7rem;
+  border-radius: 20px; /* Pill shape */
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: 0.2px;
+  z-index: 2;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Regular Badge - Top right, rectangular style */
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(245, 240, 235, 0.95); /* Light beige like reference */
+  color: #000;
   padding: 0.35rem 0.7rem;
-  border-radius: 0;
+  border-radius: 0; /* Sharp corners */
   font-size: 0.65rem;
   font-weight: 400;
   text-transform: lowercase;
   letter-spacing: 0.3px;
   z-index: 2;
-  border: none;
+  white-space: nowrap;
 }
 
-/* Content - Compact like Kylie cards */
+/* Content Area - Proper padding and spacing */
 .content {
-  padding: 1rem 1rem 0.75rem;
+  padding: 1rem 1.25rem 0.75rem; /* Generous padding like reference */
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--color-white);
-  min-height: 0; /* Prevent overflow */
+  background: #FFFFFF;
+  min-height: 0;
+  gap: 0.5rem;
 }
 
+/* Product Name */
 .name {
   font-size: 0.9rem;
-  font-weight: 400;
-  margin-bottom: 0.4rem;
-  color: var(--color-text);
-  line-height: 1.3;
+  font-weight: 500; /* Slightly bolder than rest */
+  margin: 0;
+  color: #000;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-transform: lowercase;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
 }
 
-.category {
-  display: none; /* Hide category to match Kylie style */
+/* Description/Tagline - Subtle, benefit-driven */
+.description {
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin: 0;
+  color: #666;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
+/* Rating Row - Stars + review count */
 .rating {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
+  gap: 0.3rem;
+  margin: 0.25rem 0;
   flex-shrink: 0;
 }
 
 .stars {
-  color: #000; /* Black stars like Kylie */
+  display: flex;
+  align-items: center;
+  gap: 0.05rem;
   font-size: 0.75rem;
-  letter-spacing: 0;
+  line-height: 1;
+}
+
+.starFilled {
+  color: #000; /* Black filled stars */
+}
+
+.starEmpty {
+  color: #CCC; /* Light gray for empty stars */
+  opacity: 0.5;
 }
 
 .ratingText {
   font-size: 0.75rem;
-  color: var(--color-text);
+  color: #000;
   font-weight: 400;
+}
+
+/* Price Container */
+.priceContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+  flex-shrink: 0;
 }
 
 .price {
   font-size: 0.95rem;
-  font-weight: 400;
-  color: var(--color-text);
-  margin-bottom: 0.75rem;
-  flex-shrink: 0;
+  font-weight: 500;
+  color: #000;
 }
 
-/* Size Selector - Keep compact */
+.originalPrice {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* Size Selector - Hidden by default */
 .sizeSelector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 0.75rem;
-  flex-shrink: 0;
+  display: none; /* Hidden to match Kylie style */
 }
 
 .sizeOption {
   padding: 0.35rem 0.7rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 0;
-  background: var(--color-white);
+  background: #FFFFFF;
   font-size: 0.7rem;
-  color: var(--color-text);
+  color: #000;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .sizeOption:hover {
-  border-color: var(--color-text);
+  border-color: #000;
 }
 
 .sizeOption.active {
@@ -168,65 +226,91 @@
   border-color: #000;
 }
 
-/* Buy on Amazon Button - Dark grey like Kylie cards */
-.buyOnAmazon {
-  margin: 0 1rem 1rem;
-  padding: 0.85rem;
-  background: #2a2a2a !important; /* Dark grey like Kylie */
-  color: white !important;
+/* CTA Button - Full width, dark grey */
+.addToCart {
+  margin: 0 1.25rem 1rem;
+  padding: 0.9rem;
+  background: #2a2a2a; /* Dark grey like reference */
+  color: #FFFFFF;
   border: none;
   border-radius: 0;
-  font-weight: 400 !important;
-  font-style: normal !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
-  font-size: 0.85rem !important;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-transform: lowercase !important;
-  letter-spacing: 0.2px !important;
-  width: calc(100% - 2rem);
+  text-transform: lowercase;
+  letter-spacing: 0.2px;
+  width: calc(100% - 2.5rem);
   flex-shrink: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.buyOnAmazon:hover {
+.addToCart:hover {
   background: #1a1a1a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.buyOnAmazon:active {
+.addToCart:active {
   transform: translateY(0);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .imageContainer {
-    padding-top: 115%; /* Slightly adjust for mobile */
-  }
-
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
   .content {
-    padding: 0.85rem 0.85rem 0.7rem;
+    padding: 0.9rem 1rem 0.7rem;
   }
 
   .name {
     font-size: 0.85rem;
-    margin-bottom: 0.35rem;
   }
 
-  .price {
-    font-size: 0.9rem;
-    margin-bottom: 0.65rem;
+  .description {
+    font-size: 0.75rem;
   }
 
-  .buyOnAmazon {
-    margin: 0 0.85rem 0.85rem;
-    padding: 0.75rem;
+  .addToCart {
+    margin: 0 1rem 0.9rem;
+    padding: 0.85rem;
+    width: calc(100% - 2rem);
     font-size: 0.8rem;
-    width: calc(100% - 1.7rem);
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .imageContainer {
+    padding-top: 110%;
+  }
+
+  .content {
+    padding: 0.85rem 1rem 0.65rem;
+    gap: 0.4rem;
+  }
+
+  .name {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+  }
+
+  .description {
+    font-size: 0.7rem;
   }
 
   .rating {
-    margin-bottom: 0.4rem;
+    margin: 0.2rem 0;
+  }
+
+  .priceContainer {
+    margin: 0.2rem 0;
+  }
+
+  .addToCart {
+    margin: 0 1rem 0.85rem;
+    padding: 0.8rem;
+    font-size: 0.75rem;
+    width: calc(100% - 2rem);
   }
 }
