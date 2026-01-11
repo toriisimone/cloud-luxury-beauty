@@ -2,9 +2,9 @@
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  padding-top: calc(36px + 36px + 80px + 100vh) !important; /* New announcement banner (36px) + top banner (36px) + navbar (80px) + hero height to push brand banner below */
+  /* Remove padding-top - hero is absolute, featured section will flow after it */
   margin: 0 !important;
-  padding-bottom: 0 !important; /* No bottom padding that creates white space */
+  padding: 0 !important;
 }
 
 /* Hero Banner Section - Positioned directly behind menu, top touches bottom of menu */
@@ -275,7 +275,8 @@
   background: #FFFFFF;
   padding: 2.5rem 0 3rem 0; /* Minimal top padding (40px = 2.5rem), normal bottom padding */
   width: 100%;
-  margin-top: 0; /* No top margin - directly under banner */
+  margin-top: 100vh; /* Start right after the 100vh hero banner */
+  margin-bottom: 0;
   position: relative; /* Ensure it flows after absolute hero */
   z-index: 1; /* Above hero section */
 }
@@ -488,13 +489,17 @@
 
 @media (max-width: 768px) {
   .home {
-    padding-top: calc(36px + 36px + 80px + 100vh) !important; /* Account for all elements - new announcement banner + top banner + navbar */
+    padding: 0 !important; /* No padding - hero is absolute */
   }
   
   .heroSection {
     height: 100vh !important; /* Full viewport */
     min-height: 100vh !important;
     max-height: 100vh !important;
+  }
+  
+  .featuredSection {
+    margin-top: 100vh; /* Start after hero on mobile too */
   }
   
   .heroBanner {
@@ -559,13 +564,17 @@
 
 @media (max-width: 480px) {
   .home {
-    padding-top: calc(36px + 36px + 80px + 100vh) !important; /* Account for all elements - new announcement banner + top banner + navbar */
+    padding: 0 !important; /* No padding - hero is absolute */
   }
   
   .heroSection {
     height: 100vh !important; /* Full viewport */
     min-height: 100vh !important;
     max-height: 100vh !important;
+  }
+  
+  .featuredSection {
+    margin-top: 100vh; /* Start after hero on small screens too */
   }
   
   .heroBanner {

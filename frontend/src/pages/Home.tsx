@@ -41,22 +41,62 @@ const Home = () => {
     fetchData();
   }, []);
 
-  // Separate effect for skincare products - fetch immediately
+  // Separate effect for skincare products - fetch immediately and retry if needed
   useEffect(() => {
     const fetchSkincareProducts = async () => {
       try {
-        console.log('[HOME] Fetching skincare products for Featured Skincare section...');
+        console.log('[HOME] ========== FETCHING SKINCARE PRODUCTS ==========');
         setSkincareLoading(true);
         
-        // Fetch skincare products by category name (same way Products.tsx does it)
+        // First, try to get the Skincare category ID
+        let categoryId: string | undefined;
+        try {
+          const categoriesRes = await categoriesApi.getCategories();
+          const skincareCategory = categoriesRes.find(
+            c => c.name.toLowerCase() === 'skincare' || c.slug.toLowerCase() === 'skincare'
+          );
+          if (skincareCategory) {
+            categoryId = skincareCategory.id;
+            console.log('[HOME] Found Skincare category ID:', categoryId);
+          }
+        } catch (err) {
+          console.warn('[HOME] Could not fetch categories for ID lookup');
+        }
+        
+        // Fetch skincare products - try both category name and ID
         const response = await productsApi.getProducts({ 
-          category: 'Skincare', 
+          category: 'Skincare',
+          categoryId: categoryId,
           limit: 8, 
           page: 1 
         });
         
-        setSkincareProducts(response.products || []);
-        console.log('[HOME] Skincare products fetched:', response.products?.length || 0);
+        console.log('[HOME] API Response:', {
+          productsCount: response.products?.length || 0,
+          total: response.total || 0,
+          hasProducts: !!(response.products && response.products.length > 0)
+        });
+        
+        if (response.products && response.products.length > 0) {
+          setSkincareProducts(response.products);
+          console.log('[HOME] ✅ Skincare products set:', response.products.length);
+        } else {
+          console.warn('[HOME] ⚠️ No products in response, trying without category filter...');
+          // Fallback: try fetching all products and filter client-side
+          const allProducts = await productsApi.getProducts({ limit: 50, page: 1 });
+          if (allProducts.products) {
+            const skincare = allProducts.products.filter(p => 
+              p.categoryId === categoryId || 
+              p.name.toLowerCase().includes('skincare') ||
+              p.name.toLowerCase().includes('serum') ||
+              p.name.toLowerCase().includes('cream')
+            ).slice(0, 8);
+            setSkincareProducts(skincare);
+            console.log('[HOME] ✅ Found', skincare.length, 'skincare products via fallback');
+          } else {
+            setSkincareProducts([]);
+          }
+        }
         
       } catch (error: any) {
         console.error('[HOME] ❌ Failed to fetch skincare products:', error);
@@ -64,6 +104,7 @@ const Home = () => {
           message: error.message,
           response: error.response?.data,
           status: error.response?.status,
+          url: error.config?.url,
         });
         setSkincareProducts([]);
       } finally {
