@@ -152,18 +152,22 @@ const Home = () => {
       <BrandBanner />
 
       {/* Featured Skincare Section - Kylie Cosmetics Style Grid */}
-      {hasSkincareProducts && (
-        <section className={styles.featuredSection}>
-          <div className={styles.container}>
-            <h2 className={styles.sectionTitle}>featured skincare</h2>
+      <section className={styles.featuredSection}>
+        <div className={styles.container}>
+          <h2 className={styles.sectionTitle}>featured skincare</h2>
+          {hasSkincareProducts ? (
             <div className={styles.productsGrid}>
               {skincareProducts.slice(0, 8).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <div className={styles.productsGrid}>
+              <p>Loading featured products...</p>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Shop Skincare Section - Only render if we have products */}
       {hasSkincareProducts && (
