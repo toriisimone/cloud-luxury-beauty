@@ -129,120 +129,36 @@ const Home = () => {
       {/* Cloud Divider - Between sections */}
       <div className={styles.cloudDivider}></div>
 
-      {/* Featured Skincare Section - Directly under banner */}
+      {/* Featured Skincare Section - Kylie-style layout */}
       <section className={styles.featuredSection}>
         <div className={styles.featuredContainer}>
-          {/* Section Title */}
           <h2 className={styles.featuredTitle}>Featured Skincare</h2>
-
-          {/* Top Bar - Breadcrumb and Controls */}
-          <div className={styles.topBar}>
-            <div className={styles.breadcrumb}>
-              <span>Home</span>
-              <span className={styles.breadcrumbSeparator}>/</span>
-              <span>Featured Skincare</span>
-            </div>
-            <div className={styles.topControls}>
-              <div className={styles.sortControl}>
-                <span className={styles.controlLabel}>SORT BY</span>
-                <select className={styles.sortSelect}>
-                  <option>FEATURED</option>
-                  <option>PRICE: LOW TO HIGH</option>
-                  <option>PRICE: HIGH TO LOW</option>
-                  <option>NEWEST</option>
-                </select>
+          <div className={styles.productsGrid}>
+            {FEATURED_SKINCARE_PRODUCTS.map((product, index) => (
+              <div key={product.id} className={styles.productCard}>
+                <div className={styles.productImageWrapper}>
+                  <img 
+                    src={product.image} 
+                    alt={product.title}
+                    className={styles.productImage}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  {index === 0 && <span className={styles.productBadge}>tori's favorite</span>}
+                  {index === 1 && <span className={styles.productBadge}>tori's favorite</span>}
+                  {index === 2 && <span className={styles.productBadge}>best seller</span>}
+                </div>
+                <h3 className={styles.productTitle}>{product.title}</h3>
+                <div className={styles.productPrice}>$24.99</div>
+                <button 
+                  className={styles.addToCartButton}
+                  onClick={() => window.open(product.affiliate, '_blank', 'noopener,noreferrer')}
+                >
+                  add to cart
+                </button>
               </div>
-              <div className={styles.showControl}>
-                <span className={styles.controlLabel}>SHOW</span>
-                <button className={styles.showButton}>60</button>
-                <button className={styles.showButton}>120</button>
-              </div>
-            </div>
-          </div>
-
-          {/* Featured Content - Sidebar, Grid, Promo Banner */}
-          <div className={styles.featuredContent}>
-            {/* Left Sidebar */}
-            <aside className={styles.sidebar}>
-              <h3 className={styles.sidebarTitle}>Category</h3>
-              <ul className={styles.categoryList}>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="cleansers" />
-                  <label htmlFor="cleansers">Cleansers</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="toners" />
-                  <label htmlFor="toners">Toners</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="serums" />
-                  <label htmlFor="serums">Serums</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="moisturizers" />
-                  <label htmlFor="moisturizers">Moisturizers</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="masks" />
-                  <label htmlFor="masks">Masks</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="spf" />
-                  <label htmlFor="spf">SPF</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="eyecare" />
-                  <label htmlFor="eyecare">Eye Care</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="tools" />
-                  <label htmlFor="tools">Tools</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <input type="checkbox" id="sets" />
-                  <label htmlFor="sets">Sets</label>
-                </li>
-                <li className={styles.categoryItem}>
-                  <a href="#" className={styles.viewMoreLink}>View More</a>
-                </li>
-              </ul>
-            </aside>
-
-            {/* Main Product Grid */}
-            <div className={styles.gridArea}>
-              <div className={styles.productsGrid}>
-                {FEATURED_SKINCARE_PRODUCTS.map((product) => (
-                  <div key={product.id} className={styles.productCard}>
-                    <div className={styles.productImageWrapper}>
-                      <img 
-                        src={product.image} 
-                        alt={product.title}
-                        className={styles.productImage}
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                      <span className={styles.productBadge}>NEW!</span>
-                    </div>
-                    <h3 className={styles.productTitle}>{product.title}</h3>
-                    <button 
-                      className={styles.buyButton}
-                      onClick={() => window.open(product.affiliate, '_blank', 'noopener,noreferrer')}
-                    >
-                      Shop Now
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right Promo Banner */}
-            <div className={styles.promoBanner}>
-              <div className={styles.promoContent}>
-                <div className={styles.promoText}>GET 30% OFF!</div>
-                <div className={styles.promoArrow}>↓</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
