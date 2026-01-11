@@ -32,18 +32,18 @@
   top: 0 !important; /* Start from top of hero section */
   left: 0;
   width: 100%;
-  height: 100% !important; /* Fill hero section completely - show entire image */
+  height: 100% !important; /* Fill hero section completely */
   min-height: 100% !important;
-  background-size: contain !important; /* Show full image - no cropping */
-  background-position: center center !important; /* Center the image */
+  background-size: cover !important; /* Fill the entire area - wide image */
+  background-position: center 40% !important; /* Position to show face, shirt, and hands/object */
   background-repeat: no-repeat !important;
-  background-color: #fafafa; /* Subtle background color in case of letterboxing */
+  background-color: #fafafa; /* Subtle background color */
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   outline: none;
-  object-fit: contain;
+  object-fit: cover;
   z-index: 0; /* Behind navbar - image shows through transparent navbar */
   margin: 0 !important;
   padding: 0 !important;
