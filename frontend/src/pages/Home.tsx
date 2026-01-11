@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
-import BrandBanner from '../components/BrandBanner';
 import Loader from '../components/Loader';
 import { Product, Category } from '../types/global';
 import * as productsApi from '../api/productsApi';
@@ -145,27 +144,6 @@ const Home = () => {
             <h1 className={styles.brandTitle}>AURAPOP</h1>
             <p className={styles.brandSubline}>Tori Edition</p>
           </div>
-        </div>
-      </section>
-
-      {/* Brand Banner - Moving brands between hero and featured */}
-      <BrandBanner />
-
-      {/* Featured Skincare Section - Kylie Cosmetics Style Grid */}
-      <section className={styles.featuredSection}>
-        <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>featured skincare</h2>
-          {hasSkincareProducts ? (
-            <div className={styles.productsGrid}>
-              {skincareProducts.slice(0, 8).map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <div className={styles.productsGrid}>
-              <p>Loading featured products...</p>
-            </div>
-          )}
         </div>
       </section>
 
