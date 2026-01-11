@@ -129,6 +129,9 @@ const Home = () => {
           className={styles.heroBanner}
           style={{ backgroundImage: `url(/images/pink-banner.png)` }}
         >
+          {/* CRT TV Overlay */}
+          <div className={styles.crtOverlay}></div>
+          
           {/* Cloud Overlay */}
           <div className={styles.cloudOverlay}></div>
           

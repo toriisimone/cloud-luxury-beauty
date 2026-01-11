@@ -48,6 +48,84 @@
   padding: 0 !important;
 }
 
+/* CRT TV Overlay - Retro television effect */
+.crtOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  /* Subtle screen curvature/distortion */
+  filter: contrast(1.03) brightness(0.99);
+  /* Vignette effect - subtle darkening at edges */
+  box-shadow: inset 0 0 250px rgba(0, 0, 0, 0.12);
+}
+
+/* Scanlines - soft horizontal lines */
+.crtOverlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.08) 0px,
+    transparent 1px,
+    transparent 1.5px,
+    rgba(0, 0, 0, 0.04) 2px
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* Static noise and subtle flicker */
+.crtOverlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 0, 0, 0.04) 1px,
+      rgba(0, 0, 0, 0.04) 2px,
+      transparent 2px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.03) 1px,
+      rgba(255, 255, 255, 0.03) 2px,
+      transparent 2px,
+      transparent 3px
+    );
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 3;
+  animation: crtFlicker 6s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Subtle flicker animation */
+@keyframes crtFlicker {
+  0%, 100% {
+    opacity: 0.15;
+  }
+  25% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 0.18;
+  }
+  75% {
+    opacity: 0.2;
+  }
+}
+
 /* Cloud Overlay */
 .cloudOverlay {
   position: absolute;
