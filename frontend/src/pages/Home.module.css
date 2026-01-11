@@ -2,7 +2,7 @@
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  padding-top: calc(36px + 80px + 100vh) !important; /* Top banner + navbar + hero height to push brand banner below */
+  padding-top: calc(36px + 36px + 80px + 100vh) !important; /* New announcement banner (36px) + top banner (36px) + navbar (80px) + hero height to push brand banner below */
   margin: 0 !important;
   padding-bottom: 0 !important; /* No bottom padding that creates white space */
 }
