@@ -237,6 +237,7 @@ const Home = () => {
       </section>
 
       {/* Featured Skincare Section - DIRECTLY UNDER BANNER - MATCHING REFERENCE IMAGE LAYOUT */}
+      {/* Updated: 2024 - New layout with top bar, sidebar, grid, and promo banner */}
       <section className={styles.featuredSection}>
         <div className={styles.featuredContainer}>
           {/* Section Title */}
