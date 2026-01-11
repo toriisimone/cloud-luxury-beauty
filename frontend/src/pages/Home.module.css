@@ -275,8 +275,9 @@
 .featuredSection,
 .skincareSection {
   background: #FFFFFF;
-  padding: 4rem 0; /* Vertical padding only, horizontal handled by container */
+  padding: 3rem 0; /* Reduced vertical padding to appear closer to banner */
   width: 100%;
+  margin-top: 0; /* No top margin - directly under banner */
 }
 
 .sectionTitle {

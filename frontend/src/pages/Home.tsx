@@ -14,54 +14,73 @@ import styles from './Home.module.css';
 
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [skincareProducts, setSkincareProducts] = useState<Product[]>([]);
+  const [skincareLoading, setSkincareLoading] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('[HOME] Fetching categories and featured products for homepage...');
+        console.log('[HOME] Fetching categories for homepage...');
         setLoading(true);
         
-        // Fetch categories and featured products in parallel
-        const [categoriesRes, productsRes] = await Promise.all([
-          categoriesApi.getCategories(),
-          productsApi.getProducts({ featured: true, limit: 8, page: 1 })
-        ]);
-        
+        // Fetch categories
+        const categoriesRes = await categoriesApi.getCategories();
         setCategories(categoriesRes);
-        setFeaturedProducts(productsRes.products || []);
         console.log('[HOME] Categories fetched:', categoriesRes.length);
-        console.log('[HOME] Featured products fetched:', productsRes.products?.length || 0);
         
       } catch (error: any) {
-        console.error('[HOME] ❌ Failed to fetch data:', error);
-        console.error('[HOME] Error details:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          url: error.config?.url,
-          baseURL: error.config?.baseURL,
-          fullURL: `${error.config?.baseURL}${error.config?.url}`,
-        });
-        // Set empty arrays but don't block the page
+        console.error('[HOME] ❌ Failed to fetch categories:', error);
         setCategories([]);
-        setFeaturedProducts([]);
       } finally {
-        // ALWAYS set loading to false
         setLoading(false);
-        console.log('[HOME] ✅ Loading complete');
+        console.log('[HOME] ✅ Categories loading complete');
       }
     };
 
     fetchData();
   }, []);
 
+  // Separate effect for skincare products - fetch immediately
+  useEffect(() => {
+    const fetchSkincareProducts = async () => {
+      try {
+        console.log('[HOME] Fetching skincare products for Featured Skincare section...');
+        setSkincareLoading(true);
+        
+        // Fetch skincare products by category name (same way Products.tsx does it)
+        const response = await productsApi.getProducts({ 
+          category: 'Skincare', 
+          limit: 8, 
+          page: 1 
+        });
+        
+        setSkincareProducts(response.products || []);
+        console.log('[HOME] Skincare products fetched:', response.products?.length || 0);
+        
+      } catch (error: any) {
+        console.error('[HOME] ❌ Failed to fetch skincare products:', error);
+        console.error('[HOME] Error details:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+        });
+        setSkincareProducts([]);
+      } finally {
+        setSkincareLoading(false);
+        console.log('[HOME] ✅ Skincare products loading complete');
+      }
+    };
+
+    fetchSkincareProducts();
+  }, []);
+
   // Log rendering state for debugging
   console.log('[HOME RENDER] ========== RENDERING HOME PAGE ==========');
   console.log('[HOME RENDER] Loading:', loading);
   console.log('[HOME RENDER] Categories:', categories.length);
-  console.log('[HOME RENDER] Featured Products:', featuredProducts.length);
+  console.log('[HOME RENDER] Skincare Products:', skincareProducts.length);
+  console.log('[HOME RENDER] Skincare Loading:', skincareLoading);
 
   // Show loader ONLY when loading is true
   if (loading) {
@@ -97,22 +116,23 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Cloud Divider - After hero banner */}
-      <div className={styles.cloudDivider}></div>
-
-      {/* Featured Items Section - Kylie Cosmetics Style - ALWAYS RENDER */}
+      {/* Featured Skincare Section - DIRECTLY UNDER BANNER - ALWAYS RENDER */}
       <section className={styles.featuredSection}>
         <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>featured items</h2>
-          {featuredProducts.length > 0 ? (
+          <h2 className={styles.sectionTitle}>featured skincare</h2>
+          {skincareLoading ? (
             <div className={styles.productsGrid}>
-              {featuredProducts.map((product) => (
+              <p className={styles.loadingMessage}>Loading skincare products...</p>
+            </div>
+          ) : skincareProducts.length > 0 ? (
+            <div className={styles.productsGrid}>
+              {skincareProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
             <div className={styles.productsGrid}>
-              <p className={styles.loadingMessage}>Loading featured products...</p>
+              <p className={styles.loadingMessage}>No skincare products found.</p>
             </div>
           )}
         </div>
