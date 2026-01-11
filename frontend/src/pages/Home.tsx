@@ -116,7 +116,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Skincare Section - DIRECTLY UNDER BANNER - ALWAYS RENDER */}
+      {/* Featured Skincare Section - DIRECTLY UNDER BANNER - NO GAPS */}
       <section className={styles.featuredSection}>
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>featured skincare</h2>
@@ -138,7 +138,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Cloud Divider - Between sections */}
+      {/* Cloud Divider - Between sections (after Featured Skincare) */}
       <div className={styles.cloudDivider}></div>
 
       {/* Shop by Category Section */}

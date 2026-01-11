@@ -263,21 +263,31 @@
 
 /* Section Styles */
 .categorySection,
-.featuredSection,
 .categoryProductsSection,
 .allProductsSection {
   padding: 4rem 0;
   position: relative;
-  background: #FFFFFF; /* White background for Featured Items section */
+  background: #FFFFFF;
 }
 
-/* Featured Section & Skincare Section - Special styling */
-.featuredSection,
-.skincareSection {
+/* Featured Section - Directly under banner with minimal spacing */
+.featuredSection {
   background: #FFFFFF;
-  padding: 3rem 0; /* Reduced vertical padding to appear closer to banner */
+  padding: 2.5rem 0 3rem 0; /* Minimal top padding (40px = 2.5rem), normal bottom padding */
   width: 100%;
   margin-top: 0; /* No top margin - directly under banner */
+  position: relative; /* Ensure it flows after absolute hero */
+  z-index: 1; /* Above hero section */
+}
+
+/* Skincare Section - Same styling as featured */
+.skincareSection {
+  background: #FFFFFF;
+  padding: 2.5rem 0 3rem 0;
+  width: 100%;
+  margin-top: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .sectionTitle {
