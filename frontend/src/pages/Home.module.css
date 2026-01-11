@@ -275,12 +275,13 @@
 .sectionTitle {
   font-family: 'Inter', sans-serif;
   font-size: 2.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   text-align: center;
   color: #000;
   position: relative;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: lowercase; /* Match Kylie style */
 }
 
 .sectionTitle::after {
