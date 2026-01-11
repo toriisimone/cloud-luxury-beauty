@@ -350,6 +350,15 @@
   width: 100%; /* Ensure cards fill their grid column */
 }
 
+/* Loading message for featured products */
+.loadingMessage {
+  grid-column: 1 / -1; /* Span all columns */
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1rem;
+}
+
 /* Skincare Section */
 .skincareSection {
   padding: 4rem 0;

@@ -61,6 +61,7 @@ const Home = () => {
   console.log('[HOME RENDER] ========== RENDERING HOME PAGE ==========');
   console.log('[HOME RENDER] Loading:', loading);
   console.log('[HOME RENDER] Categories:', categories.length);
+  console.log('[HOME RENDER] Featured Products:', featuredProducts.length);
 
   // Show loader ONLY when loading is true
   if (loading) {
@@ -96,25 +97,29 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Cloud Divider - Only show if we have categories */}
-      {categories.length > 0 && <div className={styles.cloudDivider}></div>}
+      {/* Cloud Divider - After hero banner */}
+      <div className={styles.cloudDivider}></div>
 
-      {/* Featured Items Section - Kylie Cosmetics Style */}
-      {featuredProducts.length > 0 && (
-        <section className={styles.featuredSection}>
-          <div className={styles.container}>
-            <h2 className={styles.sectionTitle}>featured items</h2>
+      {/* Featured Items Section - Kylie Cosmetics Style - ALWAYS RENDER */}
+      <section className={styles.featuredSection}>
+        <div className={styles.container}>
+          <h2 className={styles.sectionTitle}>featured items</h2>
+          {featuredProducts.length > 0 ? (
             <div className={styles.productsGrid}>
               {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <div className={styles.productsGrid}>
+              <p className={styles.loadingMessage}>Loading featured products...</p>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Cloud Divider - Between sections */}
-      {(categories.length > 0 || featuredProducts.length > 0) && <div className={styles.cloudDivider}></div>}
+      <div className={styles.cloudDivider}></div>
 
       {/* Shop by Category Section */}
       {categories.length > 0 && (
