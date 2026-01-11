@@ -216,6 +216,231 @@
 }
 
 
+/* Featured Skincare Section - Kylie Style */
+.featuredSection {
+  width: 100%;
+  background: #FDF2F4;
+  padding: 3rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.featuredContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Top Navigation Bar - Dots + Arrows */
+.carouselNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.carouselDots {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.dotActive {
+  background: rgba(0, 0, 0, 0.6);
+  width: 10px;
+  height: 10px;
+}
+
+.carouselArrows {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.arrowButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #000;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.arrowButton:hover:not(:disabled) {
+  opacity: 0.6;
+}
+
+.arrowButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Featured Title */
+.featuredTitle {
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #000;
+  text-transform: lowercase;
+  margin-bottom: 2rem;
+  letter-spacing: 0.5px;
+}
+
+/* Product Grid */
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Product Card */
+.productCard {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Product Image Area */
+.productImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.productImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #FFFFFF;
+}
+
+/* Badge Label */
+.productBadge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #F88CA7;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: lowercase;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  z-index: 2;
+}
+
+/* Product Content Area */
+.productContent {
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* Product Title */
+.productTitle {
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 2.8em;
+}
+
+/* Product Rating */
+.productRating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  font-size: 0.875rem;
+  color: #FFD700;
+  line-height: 1;
+}
+
+.star {
+  display: inline-block;
+}
+
+.reviewCount {
+  font-size: 0.75rem;
+  color: #666;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+}
+
+/* Price Block */
+.productPrice {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.priceMain {
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+}
+
+/* Add to Cart Button */
+.addToCartButton {
+  width: 100%;
+  height: 40px;
+  background: #000;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: auto;
+  letter-spacing: 0.5px;
+}
+
+.addToCartButton:hover {
+  background: #333;
+  opacity: 0.95;
+}
+
 /* Cloud Divider - Reduced opacity to prevent visual artifacts */
 .cloudDivider {
   width: 100%;
@@ -456,6 +681,23 @@
   .allProductsSection {
     padding: 2.5rem 0;
   }
+
+  .featuredSection {
+    padding: 2.5rem 0;
+  }
+
+  .featuredTitle {
+    font-size: 1.75rem;
+  }
+
+  .productsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .productImageWrapper {
+    height: 200px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -482,6 +724,27 @@
   .brandSubline {
     font-size: 0.75rem;
     letter-spacing: 1.5px;
+  }
+
+  .featuredSection {
+    padding: 2rem 0;
+  }
+
+  .featuredTitle {
+    font-size: 1.5rem;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .productImageWrapper {
+    height: 180px;
+  }
+
+  .featuredContainer {
+    padding: 0 1rem;
   }
 
 }
