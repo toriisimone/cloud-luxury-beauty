@@ -286,6 +286,213 @@
   min-height: 400px; /* Minimum height to ensure visibility */
 }
 
+/* Featured Container - Main wrapper for the new layout */
+.featuredContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Featured Title */
+.featuredTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Top Bar - Breadcrumb and Controls */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+  font-family: 'Inter', sans-serif;
+}
+
+.breadcrumbSeparator {
+  color: #999;
+  margin: 0 0.25rem;
+}
+
+.topControls {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.sortControl,
+.showControl {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.controlLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.sortSelect {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #E5E5E5;
+  background: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+
+.showButton {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #E5E5E5;
+  background: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s, color 0.2s;
+}
+
+.showButton:hover,
+.showButton:focus {
+  background: #000;
+  color: #FFFFFF;
+  border-color: #000;
+}
+
+/* Featured Content - Sidebar, Grid, Promo Banner Layout */
+.featuredContent {
+  display: grid;
+  grid-template-columns: 220px 1fr 80px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Left Sidebar */
+.sidebar {
+  background: #FFFFFF;
+  padding: 0;
+}
+
+.sidebarTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.categoryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.categoryItem {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.categoryItem input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.categoryItem label {
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  transition: color 0.2s;
+}
+
+.categoryItem label:hover {
+  color: #000;
+}
+
+.viewMoreLink {
+  font-size: 0.85rem;
+  color: #666;
+  text-decoration: underline;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.2s;
+}
+
+.viewMoreLink:hover {
+  color: #000;
+}
+
+/* Grid Area - Main product grid */
+.gridArea {
+  width: 100%;
+}
+
+/* Right Promo Banner */
+.promoBanner {
+  background: #000;
+  width: 80px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 120px;
+  align-self: start;
+}
+
+.promoContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem 0.5rem;
+}
+
+.promoText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+
+.promoArrow {
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
 /* Skincare Section - Same styling as featured */
 .skincareSection {
   background: #FFFFFF;
@@ -353,7 +560,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 columns like Kylie */
   gap: 1.5rem; /* Slightly larger gap for better spacing */
-  margin-top: 2rem;
+  margin-top: 0;
   min-height: 200px; /* Prevent grid collapse */
   width: 100%;
   max-width: 100%;
@@ -482,13 +689,26 @@
     letter-spacing: 4px;
   }
   
+  .featuredContent {
+    grid-template-columns: 200px 1fr 60px;
+    gap: 1.5rem;
+  }
+  
   .productsGrid {
     grid-template-columns: repeat(2, 1fr); /* 2 columns tablet like Kylie */
     gap: 1.5rem;
   }
   
-  .featuredSection .container {
-    padding: 0 2rem; /* Slightly less padding on tablet */
+  .featuredContainer {
+    padding: 0 1.5rem;
+  }
+  
+  .promoBanner {
+    width: 60px;
+  }
+  
+  .promoText {
+    font-size: 0.9rem;
   }
 }
 
@@ -522,6 +742,10 @@
     letter-spacing: 3px;
   }
 
+  .featuredTitle {
+    font-size: 2rem;
+  }
+
   .sectionTitle {
     font-size: 2rem;
   }
@@ -535,13 +759,56 @@
     gap: 1.5rem;
   }
 
+  /* Mobile: Stack sidebar, grid, and banner vertically */
+  .featuredContent {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .sidebar {
+    order: 2;
+  }
+
+  .gridArea {
+    order: 1;
+  }
+
+  .promoBanner {
+    order: 3;
+    width: 100%;
+    min-height: 80px;
+    position: relative;
+    top: 0;
+  }
+
+  .promoContent {
+    flex-direction: row;
+    padding: 1rem;
+  }
+
+  .promoText {
+    writing-mode: horizontal-tb;
+    margin-right: 1rem;
+  }
+
+  .topBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .topControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .productsGrid {
     grid-template-columns: 1fr; /* 1 column mobile */
     gap: 1rem;
   }
   
-  .featuredSection .container {
-    padding: 0 1rem; /* Mobile padding */
+  .featuredContainer {
+    padding: 0 1rem;
   }
   
   .featuredSection,
@@ -597,14 +864,29 @@
     letter-spacing: 1.5px;
   }
 
+  .featuredTitle {
+    font-size: 1.75rem;
+  }
+
+  .topControls {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .sortControl,
+  .showControl {
+    width: 100%;
+    justify-content: space-between;
+  }
 
   .productsGrid {
     grid-template-columns: 1fr; /* 1 column on very small screens */
     gap: 1rem;
   }
   
-  .featuredSection .container {
-    padding: 0 1rem; /* Mobile padding */
+  .featuredContainer {
+    padding: 0 1rem;
   }
   
   .featuredSection,

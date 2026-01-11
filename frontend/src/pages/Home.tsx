@@ -236,25 +236,112 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Skincare Section - DIRECTLY UNDER BANNER - NO GAPS */}
+      {/* Featured Skincare Section - DIRECTLY UNDER BANNER - MATCHING REFERENCE IMAGE LAYOUT */}
       <section className={styles.featuredSection}>
-        <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>featured skincare</h2>
-          {skincareLoading && skincareProducts.length === 0 ? (
-            <div className={styles.productsGrid}>
-              <p className={styles.loadingMessage}>Loading skincare products...</p>
+        <div className={styles.featuredContainer}>
+          {/* Section Title */}
+          <h2 className={styles.featuredTitle}>featured skincare</h2>
+          
+          {/* Top Bar - Breadcrumb and Sort/Show Controls */}
+          <div className={styles.topBar}>
+            <div className={styles.breadcrumb}>
+              <span>Home</span>
+              <span className={styles.breadcrumbSeparator}>›</span>
+              <span>Featured Skincare</span>
             </div>
-          ) : skincareProducts.length > 0 ? (
-            <div className={styles.productsGrid}>
-              {skincareProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+            <div className={styles.topControls}>
+              <div className={styles.sortControl}>
+                <span className={styles.controlLabel}>SORT BY</span>
+                <select className={styles.sortSelect} defaultValue="featured">
+                  <option value="featured">FEATURED</option>
+                  <option value="price-low">PRICE: LOW TO HIGH</option>
+                  <option value="price-high">PRICE: HIGH TO LOW</option>
+                  <option value="newest">NEWEST</option>
+                </select>
+              </div>
+              <div className={styles.showControl}>
+                <span className={styles.controlLabel}>SHOW</span>
+                <button className={styles.showButton}>60</button>
+                <button className={styles.showButton}>120</button>
+              </div>
             </div>
-          ) : (
-            <div className={styles.productsGrid}>
-              <p className={styles.loadingMessage}>No skincare products found.</p>
+          </div>
+
+          {/* Main Content Area - Sidebar, Grid, and Promo Banner */}
+          <div className={styles.featuredContent}>
+            {/* Left Sidebar - Category Navigation */}
+            <aside className={styles.sidebar}>
+              <h3 className={styles.sidebarTitle}>Category</h3>
+              <ul className={styles.categoryList}>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-cleansers" />
+                  <label htmlFor="cat-cleansers">Cleansers</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-toners" />
+                  <label htmlFor="cat-toners">Toners</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-serums" />
+                  <label htmlFor="cat-serums">Serums</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-moisturizers" />
+                  <label htmlFor="cat-moisturizers">Moisturizers</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-masks" />
+                  <label htmlFor="cat-masks">Masks</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-spf" />
+                  <label htmlFor="cat-spf">SPF</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-eye-care" />
+                  <label htmlFor="cat-eye-care">Eye Care</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-tools" />
+                  <label htmlFor="cat-tools">Tools</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <input type="checkbox" id="cat-sets" />
+                  <label htmlFor="cat-sets">Sets</label>
+                </li>
+                <li className={styles.categoryItem}>
+                  <a href="#" className={styles.viewMoreLink}>VIEW MORE</a>
+                </li>
+              </ul>
+            </aside>
+
+            {/* Main Product Grid Area */}
+            <div className={styles.gridArea}>
+              {skincareLoading && skincareProducts.length === 0 ? (
+                <div className={styles.productsGrid}>
+                  <p className={styles.loadingMessage}>Loading skincare products...</p>
+                </div>
+              ) : skincareProducts.length > 0 ? (
+                <div className={styles.productsGrid}>
+                  {skincareProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.productsGrid}>
+                  <p className={styles.loadingMessage}>No skincare products found.</p>
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Right Vertical Promo Banner */}
+            <aside className={styles.promoBanner}>
+              <div className={styles.promoContent}>
+                <div className={styles.promoText}>GET 30% OFF!</div>
+                <div className={styles.promoArrow}>▲</div>
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
 
