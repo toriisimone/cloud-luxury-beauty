@@ -423,7 +423,7 @@
 
 @media (max-width: 768px) {
   .home {
-    padding-top: calc(36px + 80px + 100vh) !important; /* Account for all elements */
+    padding-top: calc(36px + 36px + 80px + 100vh) !important; /* Account for all elements - new announcement banner + top banner + navbar */
   }
   
   .heroSection {
@@ -485,7 +485,7 @@
 
 @media (max-width: 480px) {
   .home {
-    padding-top: calc(36px + 80px + 100vh) !important; /* Account for all elements */
+    padding-top: calc(36px + 36px + 80px + 100vh) !important; /* Account for all elements - new announcement banner + top banner + navbar */
   }
   
   .heroSection {
