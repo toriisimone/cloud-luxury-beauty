@@ -127,7 +127,7 @@ const Home = () => {
       <section className={styles.heroSection}>
         <div 
           className={styles.heroBanner}
-          style={{ backgroundImage: `url(/images/aurahome-banner.png)` }}
+          style={{ backgroundImage: `url(/images/edition-banner.png)` }}
         >
           {/* CRT TV Overlay */}
           <div className={styles.crtOverlay}></div>
