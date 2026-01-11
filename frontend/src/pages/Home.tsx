@@ -138,6 +138,9 @@ const Home = () => {
           {/* Cloud Overlay */}
           <div className={styles.cloudOverlay}></div>
           
+          {/* Grain Overlay - Subtle film grain texture */}
+          <div className={styles.grainOverlay}></div>
+          
           {/* Brand Name Overlay */}
           <div className={styles.brandName}>
             <h1 className={styles.brandTitle}>AURAPOP</h1>
