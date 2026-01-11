@@ -132,6 +132,9 @@ const Home = () => {
           {/* CRT TV Overlay */}
           <div className={styles.crtOverlay}></div>
           
+          {/* Finger Smoothing Overlay */}
+          <div className={styles.fingerSmoothOverlay}></div>
+          
           {/* Cloud Overlay */}
           <div className={styles.cloudOverlay}></div>
           

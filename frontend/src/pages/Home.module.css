@@ -34,18 +34,21 @@
   width: 100%;
   height: 100% !important; /* Fill hero section completely - show entire image */
   min-height: 100% !important;
-  background-size: cover !important; /* Cover entire area - show full image */
+  background-size: contain !important; /* Show full image - no cropping */
   background-position: center center !important; /* Center the image */
   background-repeat: no-repeat !important;
+  background-color: #fafafa; /* Subtle background color in case of letterboxing */
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   outline: none;
-  object-fit: cover;
+  object-fit: contain;
   z-index: 0; /* Behind navbar - image shows through transparent navbar */
   margin: 0 !important;
   padding: 0 !important;
+  /* Subtle smoothing effect for overall image quality */
+  filter: contrast(1.02) saturate(1.05);
 }
 
 /* CRT TV Overlay - Retro television effect */
@@ -124,6 +127,28 @@
   75% {
     opacity: 0.2;
   }
+}
+
+/* Finger smoothing overlay - subtle blur effect for lower portion */
+.fingerSmoothOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35%; /* Cover lower portion where hands typically are */
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 30%,
+    transparent 60%,
+    transparent 100%
+  );
+  backdrop-filter: blur(1.5px); /* Very subtle blur to smooth imperfections */
+  -webkit-backdrop-filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 4;
+  mix-blend-mode: soft-light;
+  opacity: 0.7;
 }
 
 /* Cloud Overlay */
