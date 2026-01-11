@@ -9,28 +9,10 @@ const Navbar = () => {
   const { getItemCount } = useCart();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [bannerIndex, setBannerIndex] = useState(0);
-  const [isBannerPaused, setIsBannerPaused] = useState(false);
   const [isNavbarHovered, setIsNavbarHovered] = useState(false);
 
-  // Rotating banner messages for black banner
-  const bannerMessages = [
-    'Check out only the best Amazon products',
-    'Buy on Aurapop today',
-    'Free standard shipping on orders $40+',
-    'New arrivals: Cloud Glow Collection',
-    'Subscribe & save 15% on your first order',
-    'Limited edition: Rose Gold Essentials',
-  ];
-
-  // Rotate black banner messages every 15 seconds (slower, more luxury feel)
-  useEffect(() => {
-    if (isBannerPaused) return;
-    const interval = setInterval(() => {
-      setBannerIndex((prev) => (prev + 1) % bannerMessages.length);
-    }, 15000); // Slower - 15 seconds like luxury beauty brands
-    return () => clearInterval(interval);
-  }, [bannerMessages.length, isBannerPaused]);
+  // Single static banner message - no rotation
+  const bannerMessage = 'New arrivals: Cloud Glow Collection • Subscribe & save 15% on your first order • Limited edition: Rose Gold Essentials';
 
   const handleLogout = async () => {
     await logout();
@@ -47,7 +29,7 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Rotating Top Banner - Pink with animated clouds */}
+      {/* Static Top Banner - Pink with centered text matching menu alignment */}
       <div className={styles.topBanner}>
         {/* Animated clouds/fog effect */}
         <div className={styles.bannerClouds}>
@@ -57,52 +39,11 @@ const Navbar = () => {
           <div className={styles.cloud}></div>
         </div>
         <div className={styles.bannerContent}>
-          {/* Crossfade technique - always show text, no blank moments */}
+          {/* Single static message - centered to match menu alignment */}
           <div className={styles.bannerTextContainer}>
-            {bannerMessages.map((message, index) => (
-              <span
-                key={index}
-                className={`${styles.bannerText} ${index === bannerIndex ? styles.bannerTextActive : ''}`}
-              >
-                {message}
-              </span>
-            ))}
-          </div>
-          <div className={styles.bannerControls}>
-            <button 
-              className={styles.bannerArrow}
-              onClick={() => setBannerIndex((prev) => (prev - 1 + bannerMessages.length) % bannerMessages.length)}
-              aria-label="Previous banner"
-            >
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button 
-              className={styles.bannerArrow}
-              onClick={() => setBannerIndex((prev) => (prev + 1) % bannerMessages.length)}
-              aria-label="Next banner"
-            >
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4.5 9L7.5 6L4.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button 
-              className={styles.bannerPause} 
-              onClick={() => setIsBannerPaused(!isBannerPaused)}
-              aria-label={isBannerPaused ? "Play banner" : "Pause banner"}
-            >
-              {isBannerPaused ? (
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 2 L4 10 L10 6 Z" fill="currentColor"/>
-                </svg>
-              ) : (
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3" y="2" width="2" height="8" fill="currentColor"/>
-                  <rect x="7" y="2" width="2" height="8" fill="currentColor"/>
-                </svg>
-              )}
-            </button>
+            <span className={styles.bannerText}>
+              {bannerMessage}
+            </span>
           </div>
         </div>
       </div>

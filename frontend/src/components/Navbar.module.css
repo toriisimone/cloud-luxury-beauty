@@ -426,64 +426,30 @@
   justify-content: center; /* Center everything */
   width: 100%;
   max-width: 1600px;
+  margin: 0 auto;
   padding: 0 2rem;
   position: relative;
   z-index: 1; /* Above clouds */
-  gap: 1rem; /* Space between text and controls */
 }
 
 .bannerTextContainer {
   position: relative;
-  flex: 1;
+  width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center text horizontally */
+  justify-content: center; /* Center text horizontally to match menu */
   text-align: center;
 }
 
 .bannerText {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%); /* Center text perfectly */
   font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.3px;
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 2s ease-in-out; /* Slower, smoother crossfade transition */
-  pointer-events: none;
-}
-
-.bannerTextActive {
+  color: #000;
   opacity: 1;
   pointer-events: auto;
-}
-
-.bannerControls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0; /* Don't shrink controls */
-  margin-left: 1rem; /* Space from centered text */
-}
-
-.bannerArrow,
-.bannerPause {
-  background: none;
-  border: none;
-  color: #000; /* Black for pink background */
-  cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s ease;
-}
-
-.bannerArrow:hover,
-.bannerPause:hover {
-  opacity: 0.7;
 }
 
 /* Main Navbar - Fixed position - NEVER MOVES - White background */
