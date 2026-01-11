@@ -54,10 +54,36 @@ const FEATURED_SKINCARE_PRODUCTS = ALL_SKINCARE_PRODUCTS.filter(product =>
   FEATURED_SKINCARE_ASINS.includes(product.asin)
 );
 
+// Generate varied review data for each product
+const generateReviewData = (index: number) => {
+  const reviewCounts = [1247, 892, 2156, 634, 1834, 1023, 756, 2945, 567, 1892, 1124, 834, 1456, 987];
+  const starRatings = [
+    '★★★★★',
+    '★★★★★',
+    '★★★★☆',
+    '★★★★★',
+    '★★★★★',
+    '★★★★☆',
+    '★★★★★',
+    '★★★★★',
+    '★★★★☆',
+    '★★★★★',
+    '★★★★★',
+    '★★★★☆',
+    '★★★★★',
+    '★★★★★',
+  ];
+  return {
+    stars: starRatings[index % starRatings.length],
+    count: reviewCounts[index % reviewCounts.length],
+  };
+};
+
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,24 +217,21 @@ const Home = () => {
                   {/* Rating and Reviews */}
                   <div className={styles.productRating}>
                     <div className={styles.stars}>
-                      {'★★★★★'.split('').map((star, i) => (
+                      {generateReviewData(parseInt(product.id)).stars.split('').map((star, i) => (
                         <span key={i} className={styles.star}>{star}</span>
                       ))}
                     </div>
-                    <span className={styles.reviewCount}>1000 reviews</span>
-                  </div>
-
-                  {/* Price Block */}
-                  <div className={styles.productPrice}>
-                    <span className={styles.priceMain}>$24.99</span>
+                    <span className={styles.reviewCount}>{generateReviewData(parseInt(product.id)).count} reviews</span>
                   </div>
 
                   {/* CTA Button */}
                   <button
-                    className={styles.addToCartButton}
+                    className={`${styles.addToCartButton} ${hoveredButton === product.id ? styles.buttonHovered : ''}`}
                     onClick={() => window.open(product.affiliate, '_blank', 'noopener,noreferrer')}
+                    onMouseEnter={() => setHoveredButton(product.id)}
+                    onMouseLeave={() => setHoveredButton(null)}
                   >
-                    add to cart - $24.99
+                    {hoveredButton === product.id ? 'View on Amazon' : 'Buy on Amazon'}
                   </button>
                 </div>
               </div>

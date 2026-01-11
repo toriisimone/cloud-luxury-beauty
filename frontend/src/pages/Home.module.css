@@ -229,6 +229,8 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Top Navigation Bar - Dots + Arrows */
@@ -290,15 +292,17 @@
   cursor: not-allowed;
 }
 
-/* Featured Title */
+/* Featured Title - Logo Font Style */
 .featuredTitle {
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 700;
+  font-style: italic;
   color: #000;
   text-transform: lowercase;
   margin-bottom: 2rem;
   letter-spacing: 0.5px;
+  text-align: center;
 }
 
 /* Product Grid */
@@ -339,13 +343,13 @@
   background: #FFFFFF;
 }
 
-/* Badge Label */
+/* Badge Label - Pink matching section background */
 .productBadge {
   position: absolute;
   top: 8px;
   left: 8px;
-  background: #F88CA7;
-  color: #FFFFFF;
+  background: #F5C2D1;
+  color: #000;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 8px;
@@ -353,6 +357,7 @@
   text-transform: lowercase;
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
   z-index: 2;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Product Content Area */
@@ -405,20 +410,9 @@
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
 }
 
-/* Price Block */
-.productPrice {
-  margin-bottom: 1rem;
-  text-align: center;
-}
+/* Price Block - Removed (prices hidden unless real Amazon prices available) */
 
-.priceMain {
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #000;
-}
-
-/* Add to Cart Button */
+/* Buy on Amazon Button */
 .addToCartButton {
   width: 100%;
   height: 40px;
@@ -436,9 +430,15 @@
   letter-spacing: 0.5px;
 }
 
-.addToCartButton:hover {
-  background: #333;
-  opacity: 0.95;
+.addToCartButton:hover,
+.addToCartButton.buttonHovered {
+  background: #b33639;
+  color: #FFFFFF;
+}
+
+.addToCartButton:active {
+  background: #b33639;
+  color: #FFFFFF;
 }
 
 /* Cloud Divider - Reduced opacity to prevent visual artifacts */
@@ -688,6 +688,8 @@
 
   .featuredTitle {
     font-size: 1.75rem;
+    font-weight: 700;
+    font-style: italic;
   }
 
   .productsGrid {
@@ -732,6 +734,8 @@
 
   .featuredTitle {
     font-size: 1.5rem;
+    font-weight: 700;
+    font-style: italic;
   }
 
   .productsGrid {
