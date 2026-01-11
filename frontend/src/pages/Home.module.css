@@ -315,13 +315,15 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Products Grid - Glossier style (3-4 columns desktop, 2 tablet, 1 mobile) */
+/* Products Grid - Kylie Cosmetics style (4 columns desktop, 2 tablet, 1 mobile) */
 .productsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 3-4 columns desktop */
-  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns like Kylie */
+  gap: 1.5rem; /* Tighter spacing like Kylie */
   margin-top: 2rem;
   min-height: 200px; /* Prevent grid collapse */
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Skincare Section */

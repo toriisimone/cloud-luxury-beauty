@@ -1,20 +1,22 @@
-/* Glossier-style minimalist product card */
+/* Kylie Cosmetics-style product card */
 .card {
   display: flex;
   flex-direction: column;
   background: var(--color-white);
-  border-radius: 0; /* No border-radius for sharp edges like Glossier */
+  border-radius: 0;
   overflow: hidden;
   transition: all 0.2s ease;
-  box-shadow: none; /* No box-shadow for minimalist look */
-  border: 1px solid rgba(0, 0, 0, 0.08); /* Subtle border */
+  box-shadow: none;
+  border: none; /* No border for cleaner look */
   position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
 }
 
 .card:hover {
-  transform: translateY(-2px); /* Subtle lift on hover */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Light shadow on hover */
-  border-color: rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .link {
@@ -23,15 +25,16 @@
   flex-direction: column;
   text-decoration: none;
   color: inherit;
+  height: 100%;
 }
 
-/* Image Container */
+/* Image Container - Portrait orientation like Kylie cards */
 .imageContainer {
   position: relative;
   width: 100%;
-  padding-top: 100%; /* Square aspect ratio */
+  padding-top: 120%; /* Taller aspect ratio for portrait cards */
   overflow: hidden;
-  background: var(--color-light-gray); /* Light gray background for image area */
+  background: #ffffff; /* White background as requested */
 }
 
 .image {
@@ -62,77 +65,77 @@
   font-size: 0.9rem;
 }
 
-/* Label (Best-seller, Award Winner, New) */
+/* Label (Best-seller, Award Winner, New) - Top right like Kylie */
 .label {
   position: absolute;
   top: 12px;
-  left: 12px;
-  background: rgba(255, 255, 255, 0.8);
+  right: 12px; /* Top right positioning */
+  background: rgba(245, 240, 235, 0.95); /* Light beige like Kylie */
   color: var(--color-text);
-  padding: 0.3rem 0.7rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0;
+  font-size: 0.65rem;
+  font-weight: 400;
+  text-transform: lowercase;
+  letter-spacing: 0.3px;
   z-index: 2;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: none;
 }
 
-/* Content */
+/* Content - Compact like Kylie cards */
 .content {
-  padding: 1rem;
+  padding: 1rem 1rem 0.75rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   background: var(--color-white);
+  min-height: 0; /* Prevent overflow */
 }
 
 .name {
-  font-size: 0.95rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 0.4rem;
   color: var(--color-text);
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-transform: capitalize;
+  text-transform: lowercase;
+  letter-spacing: 0.2px;
 }
 
 .category {
-  font-size: 0.8rem;
-  color: var(--color-text-light);
-  margin-bottom: 0.5rem;
-  text-transform: lowercase;
-  letter-spacing: 0.3px;
+  display: none; /* Hide category to match Kylie style */
 }
 
 .rating {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.25rem;
   margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .stars {
-  color: #ffc107; /* Gold stars */
-  font-size: 0.8rem;
-  letter-spacing: 1px;
+  color: #000; /* Black stars like Kylie */
+  font-size: 0.75rem;
+  letter-spacing: 0;
 }
 
 .ratingText {
   font-size: 0.75rem;
-  color: var(--color-text-light);
+  color: var(--color-text);
+  font-weight: 400;
 }
 
 .price {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 400;
   color: var(--color-text);
-  margin-top: auto;
   margin-bottom: 0.75rem;
+  flex-shrink: 0;
 }
 
 /* Size Selector */
@@ -165,49 +168,95 @@
   border-color: #000;
 }
 
-/* Buy on Amazon Button - Matching logo font style (slanted, bold, uppercase) */
+/* Buy on Amazon Button - Dark grey like Kylie cards */
 .buyOnAmazon {
   margin: 0 1rem 1rem;
-  padding: 0.8rem;
-  background: #000 !important;
+  padding: 0.85rem;
+  background: #2a2a2a !important; /* Dark grey like Kylie */
   color: white !important;
   border: none;
-  border-radius: 0; /* Sharp edges */
-  font-weight: 700 !important; /* Bold - matching logo */
-  font-style: italic !important; /* Slanted - matching logo font */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important; /* Matching logo font */
-  font-size: 0.9rem !important;
+  border-radius: 0;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  font-size: 0.85rem !important;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-transform: uppercase !important; /* Uppercase - matching logo */
-  letter-spacing: 0.5px !important;
+  text-transform: lowercase !important;
+  letter-spacing: 0.2px !important;
+  width: calc(100% - 2rem);
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .buyOnAmazon:hover {
-  background: #333;
+  background: #1a1a1a;
 }
 
 .buyOnAmazon:active {
   transform: translateY(0);
 }
 
+/* Size Selector - Keep compact */
+.sizeSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+  flex-shrink: 0;
+}
+
+.sizeOption {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  background: var(--color-white);
+  font-size: 0.7rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sizeOption:hover {
+  border-color: var(--color-text);
+}
+
+.sizeOption.active {
+  background: #000;
+  color: white;
+  border-color: #000;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+  .imageContainer {
+    padding-top: 115%; /* Slightly adjust for mobile */
+  }
+
   .content {
-    padding: 0.8rem;
+    padding: 0.85rem 0.85rem 0.7rem;
   }
 
   .name {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
   }
 
   .price {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.65rem;
   }
 
   .buyOnAmazon {
-    margin: 0 0.8rem 0.8rem;
-    padding: 0.7rem;
+    margin: 0 0.85rem 0.85rem;
+    padding: 0.75rem;
     font-size: 0.8rem;
+    width: calc(100% - 1.7rem);
+  }
+
+  .rating {
+    margin-bottom: 0.4rem;
   }
 }
