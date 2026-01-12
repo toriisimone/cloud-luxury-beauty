@@ -8,33 +8,14 @@ interface SkincareProduct {
   brand: string;
   title: string;
   price: number;
+  priceRange?: { min: number; max: number };
   image: string;
   badge?: string;
   rating?: number;
   reviewCount?: number;
+  colors?: string;
+  sponsored?: boolean;
 }
-
-// Category interface
-interface Category {
-  name: string;
-  count: number;
-}
-
-// Skincare categories (left sidebar)
-const SKINCARE_CATEGORIES: Category[] = [
-  { name: 'Cleansers', count: 145 },
-  { name: 'Moisturizers', count: 282 },
-  { name: 'Serums', count: 198 },
-  { name: 'Eye Care', count: 156 },
-  { name: 'Face Masks', count: 134 },
-  { name: 'Sunscreen', count: 89 },
-  { name: 'Toners', count: 112 },
-  { name: 'Exfoliants', count: 76 },
-  { name: 'Face Oils', count: 98 },
-  { name: 'Acne Treatment', count: 124 },
-  { name: 'Anti-Aging', count: 201 },
-  { name: 'Brightening', count: 167 },
-];
 
 const SKINCARE_PRODUCTS: SkincareProduct[] = [
   {
@@ -110,113 +91,137 @@ const SKINCARE_PRODUCTS: SkincareProduct[] = [
 ];
 
 const Skincare = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const products = SKINCARE_PRODUCTS; // Will be populated with your product array
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
+  const toggleFavorite = (e: React.MouseEvent, productId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setFavorites((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(productId)) {
+        newSet.delete(productId);
+      } else {
+        newSet.add(productId);
+      }
+      return newSet;
+    });
+  };
+
+  const formatReviewCount = (count?: number) => {
+    if (!count) return '';
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K`;
+    }
+    return count.toString();
+  };
+
+  const renderStars = (rating?: number) => {
+    if (!rating) return null;
+    const fullStars = Math.floor(rating);
+    const decimal = rating % 1;
+    const hasHalfStar = decimal >= 0.25 && decimal < 0.75;
+    const hasFullStar = decimal >= 0.75;
+    const displayedFullStars = hasFullStar ? fullStars + 1 : fullStars;
+    const emptyStars = 5 - displayedFullStars - (hasHalfStar ? 1 : 0);
+
+    return (
+      <div className={styles.stars}>
+        {'★'.repeat(displayedFullStars)}
+        {hasHalfStar && '☆'}
+        {'☆'.repeat(Math.max(0, emptyStars))}
+      </div>
+    );
+  };
 
   return (
     <div className={styles.skincarePage}>
+      {/* Back to Top Button */}
+      <button className={styles.backToTop}>Back to Top</button>
+
       <div className={styles.container}>
         {/* Page Header */}
         <div className={styles.header}>
           <h1 className={styles.pageTitle}>Skincare</h1>
-          {products.length > 0 && (
-            <p className={styles.productCount}>{products.length} products</p>
-          )}
         </div>
 
-        {/* Main Content Layout */}
-        <div className={styles.mainLayout}>
-          {/* Left Sidebar - Categories */}
-          <aside className={styles.sidebar}>
-            <div className={styles.sidebarContent}>
-              <h2 className={styles.sidebarTitle}>Filters</h2>
-              <nav className={styles.categoryNav}>
-                {SKINCARE_CATEGORIES.map((category) => (
-                  <button
-                    key={category.name}
-                    className={`${styles.categoryItem} ${
-                      selectedCategory === category.name ? styles.categoryItemActive : ''
-                    }`}
-                    onClick={() => setSelectedCategory(category.name)}
+        {/* Products Grid */}
+        <div className={styles.productsGrid}>
+          {SKINCARE_PRODUCTS.map((product) => {
+            const isFavorite = favorites.has(product.id);
+            return (
+              <Link
+                key={product.id}
+                to={`/products/${product.id}`}
+                className={styles.productCard}
+              >
+                {/* Favorite Heart Button */}
+                <button
+                  className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
+                  onClick={(e) => toggleFavorite(e, product.id)}
+                  aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill={isFavorite ? '#000' : 'none'}
+                    stroke="#000"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    <span className={styles.categoryName}>{category.name}</span>
-                    <span className={styles.categoryCount}>({category.count})</span>
-                  </button>
-                ))}
-              </nav>
-            </div>
-          </aside>
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
 
-          {/* Right Content Area */}
-          <div className={styles.contentArea}>
-            {/* Promotional Banner */}
-            <div className={styles.promotionalBanner}>
-              <div className={styles.bannerContent}>
-                <h2 className={styles.bannerTitle}>Glow Starts Here.</h2>
-                <p className={styles.bannerSubtitle}>
-                  Hydrate, treat, and transform with these skincare picks.
-                </p>
-                <button className={styles.bannerCta}>SHOP NOW ▶</button>
-              </div>
-              <div className={styles.bannerBadge}>
-                <span>ONLY AT CLOUD LUXURY BEAUTY</span>
-              </div>
-              {/* Banner images placeholder - add your skincare product images here */}
-              <div className={styles.bannerImages}>
-                <div className={styles.bannerImagePlaceholder}></div>
-                <div className={styles.bannerImagePlaceholder}></div>
-                <div className={styles.bannerImagePlaceholder}></div>
-              </div>
-        </div>
-
-            {/* Products Grid */}
-            <div className={styles.productsSection}>
-              {products.length === 0 ? (
-                <div className={styles.emptyState}>
-                  <p>No products available yet. Product data will be added soon.</p>
-                </div>
-              ) : (
-                <div className={styles.productsGrid}>
-                  {products.map((product) => (
-                    <Link
-                      key={product.id}
-                      to={`/products/${product.id}`}
-                      className={styles.productCard}
-                    >
-                      <div className={styles.productImageWrapper}>
-                  <img 
-                    src={product.image} 
+                {/* Product Image */}
+                <div className={styles.productImageWrapper}>
+                  <img
+                    src={product.image}
                     alt={product.title}
-                          className={styles.productImage}
-                        />
-                        {product.badge && (
-                          <span className={styles.productBadge}>{product.badge}</span>
-                        )}
-                      </div>
-                      <div className={styles.productInfo}>
-                        <p className={styles.productBrand}>{product.brand}</p>
-                        <h3 className={styles.productTitle}>{product.title}</h3>
-                        <div className={styles.productPrice}>${product.price.toFixed(2)}</div>
-                        {product.rating !== undefined && (
-                          <div className={styles.productRating}>
-                            <div className={styles.stars}>
-                              {'★'.repeat(Math.floor(product.rating))}
-                              {'☆'.repeat(5 - Math.floor(product.rating))}
-                            </div>
-                            {product.reviewCount !== undefined && (
-                              <span className={styles.reviewCount}>
-                                {product.reviewCount.toLocaleString()}
-                              </span>
-                            )}
-                          </div>
-                        )}
+                    className={styles.productImage}
+                  />
+                  {/* Badge Overlay */}
+                  {product.badge && (
+                    <div className={styles.badgeContainer}>
+                      <span className={styles.productBadge}>{product.badge}</span>
+                    </div>
+                  )}
+                  {product.sponsored && (
+                    <div className={styles.badgeContainer}>
+                      <span className={styles.sponsoredBadge}>Sponsored</span>
+                    </div>
+                  )}
                 </div>
-                    </Link>
-                  ))}
+
+                {/* Product Info */}
+                <div className={styles.productInfo}>
+                  <p className={styles.productBrand}>{product.brand}</p>
+                  <h3 className={styles.productTitle}>{product.title}</h3>
+                  {product.colors && (
+                    <p className={styles.productColors}>{product.colors} Colors</p>
+                  )}
+                  <div className={styles.productPrice}>
+                    {product.priceRange ? (
+                      <>${product.priceRange.min.toFixed(2)} - ${product.priceRange.max.toFixed(2)}</>
+                    ) : (
+                      <>${product.price.toFixed(2)}</>
+                    )}
+                  </div>
+                  {product.rating !== undefined && (
+                    <div className={styles.productRating}>
+                      {renderStars(product.rating)}
+                      {product.reviewCount && (
+                        <span className={styles.reviewCount}>
+                          {formatReviewCount(product.reviewCount)}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
-              )}
-              </div>
-        </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
