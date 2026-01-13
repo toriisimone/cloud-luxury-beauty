@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
@@ -14,6 +14,7 @@ const Navbar = () => {
   const [isNavbarHovered, setIsNavbarHovered] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Single static banner message - no rotation
   const bannerMessage = 'New arrivals: Cloud Glow Collection • Subscribe & save 15% on your first order • Limited edition: Rose Gold Essentials';
@@ -22,6 +23,15 @@ const Navbar = () => {
     await logout();
     navigate('/');
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Get menu items from category structure
   const categories = getCategoryStructure();
@@ -71,12 +81,18 @@ const Navbar = () => {
                 key={item.name}
                 className={styles.menuItemWrapper}
                 onMouseEnter={() => {
+                  if (closeTimeoutRef.current) {
+                    clearTimeout(closeTimeoutRef.current);
+                    closeTimeoutRef.current = null;
+                  }
                   setHoveredCategory(item.category);
                   setMegaMenuOpen(true);
                 }}
                 onMouseLeave={() => {
-                  setHoveredCategory(null);
-                  setMegaMenuOpen(false);
+                  closeTimeoutRef.current = setTimeout(() => {
+                    setHoveredCategory(null);
+                    setMegaMenuOpen(false);
+                  }, 200);
                 }}
               >
                 <Link
@@ -160,7 +176,26 @@ const Navbar = () => {
       )}
 
       {/* Mega Menu */}
-      <MegaMenu isOpen={megaMenuOpen} onClose={() => setMegaMenuOpen(false)} />
+      <MegaMenu 
+        isOpen={megaMenuOpen} 
+        onClose={() => {
+          if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+          }
+          setMegaMenuOpen(false);
+        }}
+        onMouseEnter={() => {
+          if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
+          }
+        }}
+        onMouseLeave={() => {
+          closeTimeoutRef.current = setTimeout(() => {
+            setMegaMenuOpen(false);
+          }, 200);
+        }}
+      />
     </>
   );
 };

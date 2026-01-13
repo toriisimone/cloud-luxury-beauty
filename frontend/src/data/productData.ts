@@ -226,9 +226,10 @@ const generateSlug = (title: string): string => {
 export const transformCSVRow = (row: string[]): Product | null => {
   if (row.length < 6) return null;
   
-  const [imageUrl, brand, title, reviewCountStr, priceStr, ...flags] = row;
+  // CSV structure: [css, imageUrl, brand, title, reviewCount, price, ...flags]
+  const [, imageUrl, brand, title, reviewCountStr, priceStr, ...flags] = row;
   
-  if (!brand || !title) return null;
+  if (!brand || !title || !imageUrl) return null;
   
   const flagsList = flags.filter(f => f && f.trim()).map(f => f.trim());
   const { topCategory, subCategory } = detectCategory(brand, title, flagsList);
@@ -304,23 +305,57 @@ export const SAMPLE_PRODUCTS: Product[] = [
   }
 ];
 
-// Get all categories structure
+// Get all categories structure - limit subcategories for menu display
 export const getCategoryStructure = (): CategoryStructure[] => {
-  return Object.entries(CATEGORY_MAPPINGS).map(([topCategory, subCategories]) => ({
-    topCategory: topCategory as TopCategory,
-    subCategories: subCategories.length > 0 ? subCategories : ['Uncategorized']
-  }));
+  return Object.entries(CATEGORY_MAPPINGS).map(([topCategory, subCategories]) => {
+    // Limit to 6-8 key subcategories for menu display
+    const limitedSubs = subCategories.length > 0 
+      ? subCategories.slice(0, 8)
+      : ['Uncategorized'];
+    
+    return {
+      topCategory: topCategory as TopCategory,
+      subCategories: limitedSubs
+    };
+  });
 };
 
 // Get products by category
 export const getProductsByCategory = (products: Product[], topCategory?: string, subCategory?: string): Product[] => {
   if (!topCategory) return products;
   
-  let filtered = products.filter(p => p.topCategory === topCategory);
+  // Normalize category name (handle slug format)
+  const normalizedTop = topCategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  let filtered = products.filter(p => p.topCategory === normalizedTop);
   
   if (subCategory) {
-    filtered = filtered.filter(p => p.subCategory === subCategory);
+    const normalizedSub = subCategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    filtered = filtered.filter(p => p.subCategory === normalizedSub);
   }
   
   return filtered;
+};
+
+// Global products cache - loaded from CSV
+let ALL_PRODUCTS: Product[] = [];
+let PRODUCTS_LOADED = false;
+
+// Load all products from CSV
+export const loadAllProducts = async (): Promise<Product[]> => {
+  if (PRODUCTS_LOADED) return ALL_PRODUCTS;
+  
+  try {
+    const { loadProductsFromFile } = await import('../utils/csvLoader');
+    ALL_PRODUCTS = await loadProductsFromFile();
+    PRODUCTS_LOADED = true;
+    return ALL_PRODUCTS;
+  } catch (error) {
+    console.error('[ProductData] Error loading products:', error);
+    return SAMPLE_PRODUCTS; // Fallback to sample
+  }
+};
+
+// Get all products (lazy loaded)
+export const getAllProducts = (): Product[] => {
+  return ALL_PRODUCTS.length > 0 ? ALL_PRODUCTS : SAMPLE_PRODUCTS;
 };

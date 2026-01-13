@@ -3,36 +3,41 @@ import { Product, transformCSVRow } from '../data/productData';
 
 /**
  * Load and parse CSV file
- * Note: In production, this should fetch from an API endpoint
- * For now, this provides the structure for CSV loading
  */
 export const loadProductsFromCSV = async (csvPath: string): Promise<Product[]> => {
   try {
-    // In production, fetch CSV from API or static file
-    // For now, return empty array - CSV loading should be implemented via API
     const response = await fetch(csvPath);
     if (!response.ok) {
-      console.warn('[CSV Loader] Could not load CSV file, using sample data');
+      console.warn('[CSV Loader] Could not load CSV file');
       return [];
     }
     
     const text = await response.text();
     const lines = text.split('\n').filter(line => line.trim());
     
-    // Skip header row
-    const dataLines = lines.slice(1);
+    // Skip first two rows (header and ad row)
+    const dataLines = lines.slice(2);
     
     const products: Product[] = [];
     
     for (const line of dataLines) {
+      if (!line.trim()) continue;
+      
       // Parse CSV line (handle quoted fields)
       const row = parseCSVLine(line);
+      
+      // CSV structure: [css, imageUrl, brand, title, reviewCount, price, ...flags]
+      // Skip rows that don't have enough columns or are ads
+      if (row.length < 6) continue;
+      if (row[1] && row[1].includes('contentimages')) continue; // Skip ad rows
+      
       const product = transformCSVRow(row);
-      if (product) {
+      if (product && product.brand && product.title) {
         products.push(product);
       }
     }
     
+    console.log(`[CSV Loader] Loaded ${products.length} products`);
     return products;
   } catch (error) {
     console.error('[CSV Loader] Error loading CSV:', error);
@@ -66,16 +71,8 @@ const parseCSVLine = (line: string): string[] => {
 };
 
 /**
- * Load products from CSV file path
- * Placeholder for actual CSV file location
+ * Load products from CSV file in public folder
  */
 export const loadProductsFromFile = async (): Promise<Product[]> => {
-  // CSV file location: c:\Users\victo\Downloads\simplescraper-www-sephora-com-2026-01-12T19-34-01.csv
-  // In production, this should be served via API or placed in public folder
-  // For now, return empty array - implement via backend API endpoint
-  
-  // Example: const csvPath = '/data/products.csv';
-  // return loadProductsFromCSV(csvPath);
-  
-  return [];
+  return loadProductsFromCSV('/products.csv');
 };

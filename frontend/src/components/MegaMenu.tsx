@@ -6,9 +6,11 @@ import styles from './MegaMenu.module.css';
 interface MegaMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
-const MegaMenu = ({ isOpen, onClose }: MegaMenuProps) => {
+const MegaMenu = ({ isOpen, onClose, onMouseEnter, onMouseLeave }: MegaMenuProps) => {
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
   const categories = getCategoryStructure();
 
@@ -50,7 +52,11 @@ const MegaMenu = ({ isOpen, onClose }: MegaMenuProps) => {
   return (
     <>
       <div className={`${styles.overlay} ${isOpen ? styles.open : ''}`} onClick={onClose} />
-      <div className={`${styles.megaMenu} ${isOpen ? styles.open : ''}`}>
+      <div 
+        className={`${styles.megaMenu} ${isOpen ? styles.open : ''}`}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
         <div className={styles.megaMenuWrapper}>
           <div className={styles.megaMenuGrid}>
             <div className={styles.megaMenuMain}>
@@ -83,7 +89,7 @@ const MegaMenu = ({ isOpen, onClose }: MegaMenuProps) => {
                       </Link>
                       {category.subCategories.length > 0 && (
                         <ul className={styles.imageMenuBlockMenu}>
-                          {category.subCategories.slice(0, 10).map((subCategory) => (
+                          {category.subCategories.slice(0, 6).map((subCategory) => (
                             <li key={subCategory} className={styles.imageMenuBlockMenuItem}>
                               <Link
                                 to={getSubCategoryUrl(category.topCategory, subCategory)}

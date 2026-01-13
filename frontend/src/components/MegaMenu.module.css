@@ -40,9 +40,9 @@
 }
 
 .megaMenuWrapper {
-  max-width: 1400px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem 2rem;
 }
 
 .megaMenuGrid {
@@ -58,8 +58,8 @@
 
 .imageMenuBlocks {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
 }
 
 .imageMenuBlock {
@@ -90,11 +90,13 @@
 }
 
 .imageMenuBlockTitle {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: #000;
   margin: 0;
   text-transform: capitalize;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.3;
 }
 
 .imageMenuBlockMenu {
@@ -111,11 +113,16 @@
 }
 
 .imageMenuBlockMenuItemLink {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #666;
   text-decoration: none;
   transition: color 0.2s ease;
   text-transform: capitalize;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.4;
+  display: block;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 
 .imageMenuBlockMenuItemLink:hover {
@@ -159,11 +166,12 @@
   bottom: 1rem;
   left: 1rem;
   right: 1rem;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   text-transform: capitalize;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 /* Mobile Styles */

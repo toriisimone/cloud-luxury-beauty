@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
-import { Product, getProductsByCategory, SAMPLE_PRODUCTS } from '../data/productData';
+import { Product, getProductsByCategory, loadAllProducts, getAllProducts } from '../data/productData';
 import styles from './CategoryPage.module.css';
 
 const CategoryPage = () => {
@@ -10,15 +10,30 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In production, fetch from API
-    // For now, use sample data
-    const filtered = getProductsByCategory(
-      SAMPLE_PRODUCTS,
-      topCategory?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      subCategory?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-    );
-    setProducts(filtered);
-    setLoading(false);
+    const loadProducts = async () => {
+      setLoading(true);
+      try {
+        // Load all products from CSV
+        await loadAllProducts();
+        const allProducts = getAllProducts();
+        
+        // Filter by category
+        const filtered = getProductsByCategory(
+          allProducts,
+          topCategory,
+          subCategory
+        );
+        
+        setProducts(filtered);
+      } catch (error) {
+        console.error('[CategoryPage] Error loading products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
   }, [topCategory, subCategory]);
 
   const getPageTitle = (): string => {
