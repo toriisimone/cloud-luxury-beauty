@@ -36,13 +36,7 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     'Makeup': 'Makeup',
     'Hair': 'Hair',
     'Fragrance': 'Fragrance',
-    'Body': 'Body',
-    'Tools & Brushes': 'Tools & Brushes',
-    'Gifts & Sets': 'Gifts & Sets',
-    'Minis': 'Minis',
-    'Limited Edition': 'Limited Edition',
-    'Online Only': 'Online Only',
-    'Other': 'Other'
+    'Body': 'Body'
   };
 
   // Get image path for category tile with fallback

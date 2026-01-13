@@ -81,13 +81,7 @@ const Navbar = () => {
     'Makeup': 'Makeup',
     'Hair': 'Hair',
     'Fragrance': 'Fragrance',
-    'Body': 'Body',
-    'Tools & Brushes': 'Tools & Brushes',
-    'Gifts & Sets': 'Gifts & Sets',
-    'Minis': 'Minis',
-    'Limited Edition': 'Limited Edition',
-    'Online Only': 'Online Only',
-    'Other': 'Other'
+    'Body': 'Body'
   };
 
   return (
@@ -390,7 +384,7 @@ const Navbar = () => {
                                       </div>
                                     )}
                                     <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
-                                      {categoryData.subCategories.slice(0, 5).map((imageMenuBlock: string) => {
+                                      {(categoryData.imageMenuBlocks || categoryData.subCategories || []).slice(0, 5).map((imageMenuBlock: string) => {
                                         const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, imageMenuBlock, 4);
                                         const hasMenuItems = subCategoryProducts.length > 0 && !isFragrance; // Fragrance doesn't show nested product lists
                                         
@@ -529,13 +523,7 @@ const Navbar = () => {
                                               'Makeup': 'best sellers',
                                               'Hair': categoryNames['Hair'].toLowerCase(),
                                               'Fragrance': 'new <br>hair &amp; body mists',
-                                              'Body': categoryNames['Body'].toLowerCase(),
-                                              'Tools & Brushes': categoryNames['Tools & Brushes'].toLowerCase(),
-                                              'Gifts & Sets': categoryNames['Gifts & Sets'].toLowerCase(),
-                                              'Minis': categoryNames['Minis'].toLowerCase(),
-                                              'Limited Edition': categoryNames['Limited Edition'].toLowerCase(),
-                                              'Online Only': categoryNames['Online Only'].toLowerCase(),
-                                              'Other': categoryNames['Other'].toLowerCase()
+                                              'Body': categoryNames['Body'].toLowerCase()
                                             };
                                             
                                             const bannerTitle = bannerTitles[item.category as TopCategory];

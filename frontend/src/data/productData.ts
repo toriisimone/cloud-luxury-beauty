@@ -25,47 +25,79 @@ export type TopCategory =
   | 'Makeup' 
   | 'Hair' 
   | 'Fragrance' 
-  | 'Body' 
-  | 'Tools & Brushes' 
-  | 'Gifts & Sets' 
-  | 'Minis' 
-  | 'Limited Edition' 
-  | 'Online Only' 
-  | 'Other';
+  | 'Body';
 
 export interface CategoryStructure {
   topCategory: TopCategory;
   subCategories: string[];
+  imageMenuBlocks: string[];
 }
 
-// Category mapping structure
-const CATEGORY_MAPPINGS: Record<TopCategory, string[]> = {
-  'Skincare': [
-    'Cleansers', 'Toners & Essences', 'Serums & Treatments', 'Moisturizers', 
-    'Eye Creams', 'Sunscreen', 'Masks', 'Exfoliators', 'Face Oils', 
-    'Acne & Blemish', 'Anti-Aging', 'Hydration', 'Brightening', 'Pore Care', 
-    'Sensitive Skin', 'Tools'
-  ],
-  'Makeup': [
-    'Complexion/Face', 'Lips', 'Eyes', 'Palettes', 'Brushes', 'Sets'
-  ],
-  'Hair': [
-    'Shampoo', 'Conditioner', 'Treatments', 'Styling', 'Tools'
-  ],
-  'Fragrance': [
-    'Women', 'Men', 'Unisex', 'Rollerballs', 'Sets'
-  ],
-  'Body': [
-    'Lotions', 'Creams', 'Oils', 'Scrubs', 'Deodorant', 'Mists'
-  ],
-  'Tools & Brushes': [
-    'Makeup Brushes', 'Skincare Tools', 'Hair Tools'
-  ],
-  'Gifts & Sets': [],
-  'Minis': [],
-  'Limited Edition': [],
-  'Online Only': [],
-  'Other': ['Uncategorized']
+// Category mapping structure with subcategories and image menu blocks
+const CATEGORY_MAPPINGS: Record<TopCategory, { subCategories: string[]; imageMenuBlocks: string[] }> = {
+  'Skincare': {
+    subCategories: [
+      'Cleansers', 'Toners & Essences', 'Serums & Treatments', 'Moisturizers', 
+      'Eye Creams', 'Sunscreen', 'Masks', 'Exfoliators', 'Face Oils', 
+      'Acne & Blemish', 'Anti-Aging', 'Hydration', 'Brightening', 'Pore Care', 
+      'Sensitive Skin', 'Tools'
+    ],
+    imageMenuBlocks: [
+      'Cleansers',
+      'Serums & Treatments',
+      'Moisturizers',
+      'Sunscreen',
+      'Masks'
+    ]
+  },
+  'Makeup': {
+    subCategories: [
+      'Complexion/Face', 'Lips', 'Eyes', 'Palettes', 'Brushes', 'Sets'
+    ],
+    imageMenuBlocks: [
+      'Complexion/Face',
+      'Lips',
+      'Eyes',
+      'Palettes',
+      'Brushes'
+    ]
+  },
+  'Hair': {
+    subCategories: [
+      'Shampoo', 'Conditioner', 'Treatments', 'Styling', 'Tools'
+    ],
+    imageMenuBlocks: [
+      'Shampoo',
+      'Conditioner',
+      'Treatments',
+      'Styling',
+      'Tools'
+    ]
+  },
+  'Fragrance': {
+    subCategories: [
+      'Women', 'Men', 'Unisex', 'Rollerballs', 'Sets', 'Mists'
+    ],
+    imageMenuBlocks: [
+      'Women',
+      'Men',
+      'Unisex',
+      'Mists',
+      'Sets'
+    ]
+  },
+  'Body': {
+    subCategories: [
+      'Lotions', 'Creams', 'Oils', 'Scrubs', 'Deodorant', 'Mists'
+    ],
+    imageMenuBlocks: [
+      'Lotions',
+      'Creams',
+      'Scrubs',
+      'Mists',
+      'Oils'
+    ]
+  }
 };
 
 // Category detection patterns
@@ -74,13 +106,9 @@ const detectCategory = (brand: string, title: string, flags: string[]): { topCat
   const brandLower = brand.toLowerCase();
   const combined = `${titleLower} ${brandLower}`;
 
-  // Check flags first
-  if (flags.includes('Limited Edition')) {
-    return { topCategory: 'Limited Edition', subCategory: 'Uncategorized' };
-  }
-  if (flags.includes('Online Only')) {
-    return { topCategory: 'Online Only', subCategory: 'Uncategorized' };
-  }
+  // Check flags first - map to core categories
+  // Limited Edition and Online Only are now flags, not categories
+  // They'll be assigned to appropriate core category based on product type
 
   // Skincare patterns
   if (
@@ -170,29 +198,53 @@ const detectCategory = (brand: string, title: string, flags: string[]): { topCat
     return { topCategory: 'Body', subCategory };
   }
 
-  // Tools & Brushes
+  // Tools & Brushes - map to appropriate category
   if (
     combined.includes('brush') || combined.includes('sponge') || combined.includes('tool') ||
     combined.includes('curler') || combined.includes('applicator')
   ) {
-    let subCategory = 'Makeup Brushes';
-    if (combined.includes('skincare') || combined.includes('face tool')) subCategory = 'Skincare Tools';
-    else if (combined.includes('hair tool')) subCategory = 'Hair Tools';
-    
-    return { topCategory: 'Tools & Brushes', subCategory };
+    // Makeup brushes go to Makeup, skincare tools to Skincare, hair tools to Hair
+    if (combined.includes('makeup') || combined.includes('blush brush') || combined.includes('foundation brush') || combined.includes('eyeshadow brush')) {
+      return { topCategory: 'Makeup', subCategory: 'Brushes' };
+    } else if (combined.includes('skincare') || combined.includes('face tool') || combined.includes('cleansing tool')) {
+      return { topCategory: 'Skincare', subCategory: 'Tools' };
+    } else if (combined.includes('hair tool') || combined.includes('hair brush')) {
+      return { topCategory: 'Hair', subCategory: 'Tools' };
+    }
+    // Default to Makeup for brushes
+    return { topCategory: 'Makeup', subCategory: 'Brushes' };
   }
 
-  // Gifts & Sets
+  // Gifts & Sets - map based on product type
   if (combined.includes('set') || combined.includes('bundle') || combined.includes('gift')) {
-    return { topCategory: 'Gifts & Sets', subCategory: 'Uncategorized' };
+    // Try to determine category from set contents
+    if (combined.includes('makeup') || combined.includes('lip') || combined.includes('eye')) {
+      return { topCategory: 'Makeup', subCategory: 'Sets' };
+    } else if (combined.includes('skincare') || combined.includes('serum') || combined.includes('moisturizer')) {
+      return { topCategory: 'Skincare', subCategory: 'Serums & Treatments' };
+    } else if (combined.includes('fragrance') || combined.includes('perfume')) {
+      return { topCategory: 'Fragrance', subCategory: 'Sets' };
+    } else if (combined.includes('hair') || combined.includes('shampoo') || combined.includes('conditioner')) {
+      return { topCategory: 'Hair', subCategory: 'Treatments' };
+    } else if (combined.includes('body') || combined.includes('lotion') || combined.includes('scrub')) {
+      return { topCategory: 'Body', subCategory: 'Lotions' };
+    }
+    // Default to Makeup for sets
+    return { topCategory: 'Makeup', subCategory: 'Sets' };
   }
 
-  // Minis
+  // Minis - map based on product type (same logic as full-size)
   if (combined.includes('mini') || combined.includes('travel size') || combined.includes('travel-size')) {
-    return { topCategory: 'Minis', subCategory: 'Uncategorized' };
+    // Use the same detection logic but keep the mini flag
+    // The category will be determined by the product type
   }
 
-  return { topCategory: 'Other', subCategory: 'Uncategorized' };
+  // Default fallback - try to categorize based on common words
+  if (combined.includes('beauty') || combined.includes('cosmetic')) {
+    return { topCategory: 'Makeup', subCategory: 'Complexion/Face' };
+  }
+
+  return { topCategory: 'Skincare', subCategory: 'Serums & Treatments' };
 };
 
 // Parse price string to number
@@ -305,17 +357,13 @@ export const SAMPLE_PRODUCTS: Product[] = [
   }
 ];
 
-// Get all categories structure - limit subcategories for menu display
+// Get all categories structure - returns only the 5 core categories with imageMenuBlocks
 export const getCategoryStructure = (): CategoryStructure[] => {
-  return Object.entries(CATEGORY_MAPPINGS).map(([topCategory, subCategories]) => {
-    // Limit to 6-8 key subcategories for menu display
-    const limitedSubs = subCategories.length > 0 
-      ? subCategories.slice(0, 8)
-      : ['Uncategorized'];
-    
+  return Object.entries(CATEGORY_MAPPINGS).map(([topCategory, data]) => {
     return {
       topCategory: topCategory as TopCategory,
-      subCategories: limitedSubs
+      subCategories: data.subCategories,
+      imageMenuBlocks: data.imageMenuBlocks
     };
   });
 };
