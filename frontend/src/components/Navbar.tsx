@@ -390,7 +390,7 @@ const Navbar = () => {
                                       </div>
                                     )}
                                     <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
-                                      {categoryData.subCategories.slice(0, 8).map((subCategory) => {
+                                      {categoryData.subCategories.slice(0, 5).map((subCategory) => {
                                         const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, subCategory, 4);
                                         const hasMenuItems = subCategoryProducts.length > 0 && !isFragrance; // Fragrance doesn't show nested product lists
                                         
@@ -455,8 +455,8 @@ const Navbar = () => {
                                                 className={megaMenuStyles.imageMenuBlockTitle}
                                                 dangerouslySetInnerHTML={{ __html: formattedTitle }}
                                               />
-                                            </Link>
-                                            
+            </Link>
+            
                                             {hasMenuItems && (
                                               <ul className={megaMenuStyles.imageMenuBlockMenu}>
                                                 {subCategoryProducts.map((product) => (
@@ -521,27 +521,50 @@ const Navbar = () => {
                                           />
                                         </div>
                                         <div className={megaMenuStyles.bannerBlockTitle}>
-                                          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                                          {isFragrance ? (
-                                            <span style={{ color: '#B3848F' }} dangerouslySetInnerHTML={{ __html: 'new <br>hair &amp; body mists' }} />
-                                          ) : (
-                                            <span style={{ color: '#B3848F' }}>
-                                              {categoryNames[item.category as TopCategory].toLowerCase()}
-                                            </span>
-                                          )}
+                                          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                                          {(() => {
+                                            // Category-specific banner titles
+                                            const bannerTitles: Record<TopCategory, string> = {
+                                              'Skincare': categoryNames['Skincare'].toLowerCase(),
+                                              'Makeup': 'best sellers',
+                                              'Hair': categoryNames['Hair'].toLowerCase(),
+                                              'Fragrance': 'new <br>hair &amp; body mists',
+                                              'Body': categoryNames['Body'].toLowerCase(),
+                                              'Tools & Brushes': categoryNames['Tools & Brushes'].toLowerCase(),
+                                              'Gifts & Sets': categoryNames['Gifts & Sets'].toLowerCase(),
+                                              'Minis': categoryNames['Minis'].toLowerCase(),
+                                              'Limited Edition': categoryNames['Limited Edition'].toLowerCase(),
+                                              'Online Only': categoryNames['Online Only'].toLowerCase(),
+                                              'Other': categoryNames['Other'].toLowerCase()
+                                            };
+                                            
+                                            const bannerTitle = bannerTitles[item.category as TopCategory];
+                                            
+                                            if (isFragrance || bannerTitle.includes('<br>')) {
+                                              return (
+                                                <span style={{ color: '#B3848F' }} dangerouslySetInnerHTML={{ __html: bannerTitle }} />
+                                              );
+                                            } else {
+                                              return (
+                                                <span style={{ color: '#B3848F' }}>
+                                                  {bannerTitle}
+                                                </span>
+                                              );
+                                            }
+                                          })()}
                                         </div>
                                       </Link>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
+          </div>
+        </div>
                           )}
                         </li>
                       );
                     })}
                   </ul>
-                </nav>
+      </nav>
                 {/* Schema.org JSON-LD for Navigation */}
                 <script type="application/ld+json" dangerouslySetInnerHTML={{
                   __html: JSON.stringify(menuItems.map(item => ({

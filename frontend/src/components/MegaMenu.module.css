@@ -18,23 +18,23 @@
 }
 
 .megaMenu.open {
-  max-height: 80vh;
+  max-height: 600px;
   opacity: 1;
   pointer-events: auto;
   overflow-y: auto;
 }
 
 .megaMenuWrapper {
-  max-width: 1600px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 2.5rem;
   width: 100%;
 }
 
 .megaMenuGrid {
   display: grid;
   grid-template-columns: 1fr 300px;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 .megaMenuMain {
@@ -65,13 +65,18 @@
 
 .megaMenuImageMenuBlocks {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  max-width: 100%;
+  justify-items: center;
+  align-items: start;
 }
 
 .imageMenuBlock {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 200px;
 }
 
 .imageMenuBlockTitleLink {
@@ -86,10 +91,12 @@
 .responsiveImage {
   position: relative;
   width: 100%;
+  max-width: 200px;
   aspect-ratio: 1;
   overflow: hidden;
   background: #f5f5f5;
   border-radius: 2px;
+  margin: 0 auto;
 }
 
 .responsiveImageImage {
@@ -162,11 +169,13 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  align-self: start;
 }
 
 .bannerBlock {
   position: relative;
   width: 100%;
+  max-width: 300px;
 }
 
 .bannerBlockLink {
@@ -179,6 +188,7 @@
 .bannerResponsiveImage {
   position: relative;
   width: 100%;
+  max-width: 300px;
   aspect-ratio: 1.08;
   overflow: hidden;
   background: #f5f5f5;
@@ -214,17 +224,21 @@
 /* Mobile Styles */
 @media (max-width: 1024px) {
   .megaMenuWrapper {
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
   }
 
   .megaMenuGrid {
     grid-template-columns: 1fr 250px;
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
   .megaMenuImageMenuBlocks {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+  }
+
+  .imageMenuBlock {
+    max-width: 150px;
   }
 }
 
