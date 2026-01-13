@@ -302,9 +302,9 @@ const Navbar = () => {
                 >
                   <ul className={`${styles.linklistLinks} ${styles.linklistLinksLevel1}`}>
                     {menuItems.map((item) => {
-                      const hasChildren = categories.find(cat => cat.topCategory === item.category)?.subCategories.length > 0;
-                      const isFragrance = item.category === 'Fragrance';
                       const categoryData = categories.find(cat => cat.topCategory === item.category);
+                      const hasChildren = categoryData ? categoryData.subCategories.length > 0 : false;
+                      const isFragrance = item.category === 'Fragrance';
                       const isHovered = megaMenuOpen && hoveredCategory === item.category;
                       
                       return (
