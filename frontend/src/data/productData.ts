@@ -52,14 +52,15 @@ const CATEGORY_MAPPINGS: Record<TopCategory, { subCategories: string[]; imageMen
   },
   'Makeup': {
     subCategories: [
-      'Complexion/Face', 'Lips', 'Eyes', 'Palettes', 'Brushes', 'Sets'
+      'New', 'Best Sellers', 'Complexion/Face', 'Lips', 'Eyes & Brows', 'Eyes', 'Palettes', 'Brushes', 'Sets', 'Featured'
     ],
     imageMenuBlocks: [
-      'Complexion/Face',
+      'New',
+      'Best Sellers',
       'Lips',
-      'Eyes',
-      'Palettes',
-      'Brushes'
+      'Complexion/Face',
+      'Eyes & Brows',
+      'Featured'
     ]
   },
   'Hair': {

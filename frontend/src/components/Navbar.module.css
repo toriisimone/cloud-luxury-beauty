@@ -36,12 +36,6 @@
   position: relative;
 }
 
-@media (min-width: 769px) {
-  .siteHeaderWrapper {
-    grid-template-columns: auto 1fr auto;
-  }
-}
-
 /* Currency Selector - Left */
 .localizationForm {
   display: flex;
@@ -101,8 +95,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-column: 2;
-  width: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  z-index: 10;
+  grid-column: 1 / -1;
 }
 
 .siteLogo {
@@ -448,10 +446,11 @@
   }
 
   .siteHeaderLogo {
-    grid-column: 1;
-    position: static;
-    transform: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     justify-content: center;
+    grid-column: 1 / -1;
   }
 
   .siteHeaderNavigation {

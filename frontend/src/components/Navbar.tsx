@@ -384,12 +384,26 @@ const Navbar = () => {
                                       </div>
                                     )}
                                     <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
-                                      {(categoryData.imageMenuBlocks || categoryData.subCategories || []).slice(0, 5).map((imageMenuBlock: string) => {
+                                      {(categoryData.imageMenuBlocks || categoryData.subCategories || []).map((imageMenuBlock: string) => {
                                         const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, imageMenuBlock, 4);
                                         const hasMenuItems = subCategoryProducts.length > 0 && !isFragrance; // Fragrance doesn't show nested product lists
                                         
                                         // Format title with line breaks if needed (for Fragrance items like "Cosmic <br>Kylie Jenner")
+                                        // Also handle Makeup title display to match Kylie's structure
                                         const formatTitle = (title: string): string => {
+                                          // Handle Makeup category title mapping to match Kylie
+                                          if (item.category === 'Makeup') {
+                                            if (title === 'Complexion/Face') {
+                                              return 'Face';
+                                            }
+                                            if (title === 'Eyes & Brows') {
+                                              return 'Eyes & Brows';
+                                            }
+                                            // Handle "Best Sellers" with trailing space like Kylie
+                                            if (title === 'Best Sellers') {
+                                              return 'Best Sellers ';
+                                            }
+                                          }
                                           if (isFragrance && title.includes(' ')) {
                                             // For Fragrance, split on first space and add <br>
                                             const parts = title.split(' ');
@@ -449,8 +463,8 @@ const Navbar = () => {
                                                 className={megaMenuStyles.imageMenuBlockTitle}
                                                 dangerouslySetInnerHTML={{ __html: formattedTitle }}
                                               />
-                                            </Link>
-                                            
+            </Link>
+            
                                             {hasMenuItems && (
                                               <ul className={megaMenuStyles.imageMenuBlockMenu}>
                                                 {subCategoryProducts.map((product) => (
