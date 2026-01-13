@@ -51,6 +51,7 @@ body {
   font-size: var(--font-size-sm); /* Smaller base font size for Glossier style */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-top: 132px; /* Account for fixed header: 36px (TopAnnouncementBanner) + 36px (topBanner) + 60px (header) */
 }
 
 h1, h2, h3, h4, h5, h6 {

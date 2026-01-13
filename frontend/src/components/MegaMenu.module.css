@@ -1,11 +1,11 @@
-/* Mega Menu Container - Matches Kylie's structure */
+/* Mega Menu - Kylie's Exact Structure */
 .megaMenu {
   position: fixed;
-  top: 132px; /* Below navbar: 72px (top banner) + 36px (pink banner) + ~24px (navbar height with padding) */
+  top: 132px; /* Below TopAnnouncementBanner (36px) + topBanner (36px) + header (60px) */
   left: 0;
   right: 0;
   background: #ffffff;
-  z-index: 1001;
+  z-index: 1000;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, opacity 0.3s ease;
@@ -20,6 +20,7 @@
   pointer-events: auto;
   overflow-y: auto;
 }
+
 
 .megaMenuWrapper {
   max-width: 1080px;

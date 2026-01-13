@@ -50,7 +50,12 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
   };
 
   // Get image path for category tile
-  const getCategoryImagePath = (category: TopCategory): string => {
+  const getCategoryImagePath = (category: TopCategory, subCategory?: string): string => {
+    if (subCategory) {
+      const topSlug = category.toLowerCase().replace(/\s+/g, '-');
+      const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
+      return `/assets/images/menu/${topSlug}/${subSlug}.jpg`;
+    }
     return `/assets/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/tile.jpg`;
   };
 
@@ -104,7 +109,6 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     const hasHalfStar = decimal >= 0.25 && decimal < 0.75;
     const hasFullStar = decimal >= 0.75;
     const displayedFullStars = hasFullStar ? fullStars + 1 : fullStars;
-    const emptyStars = 5 - displayedFullStars - (hasHalfStar ? 1 : 0);
 
     return (
       <div className={styles.categoryStarsContainer}>
@@ -122,247 +126,151 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     );
   };
 
-  // When activeCategory is set, show its subcategories as image blocks
-  // When no activeCategory, show all top-level categories
+  // Get active category data
   const activeCategoryData = activeCategory 
     ? categories.find(cat => cat.topCategory === activeCategory)
     : null;
-  
-  // If we have an active category, show its subcategories as image blocks
-  // Otherwise show all top-level categories
-  const showSubcategories = activeCategoryData && activeCategory;
+
+  if (!isOpen || !activeCategoryData) {
+    return null;
+  }
 
   return (
-    <>
-      <div 
-        className={`${styles.megaMenu} ${isOpen ? styles.open : ''}`}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      >
-        <div className={styles.megaMenuWrapper}>
-          <div className={styles.megaMenuGrid}>
-            <div className={styles.megaMenuMain}>
-              <div className={styles.megaMenuImageMenuBlocks}>
-                {showSubcategories && activeCategoryData ? (
-                  // Show subcategories as image blocks (Kylie's structure)
-                  activeCategoryData.subCategories.slice(0, 8).map((subCategory) => {
-                    // Get products for this subcategory
-                    const subCategoryProducts = getCategoryProducts(activeCategory, subCategory, 4);
-                    
-                    return (
-                      <div
-                        key={subCategory}
-                        className={styles.imageMenuBlock}
-                      >
-                        <Link
-                          to={getSubCategoryUrl(activeCategory, subCategory)}
-                          className={styles.imageMenuBlockTitleLink}
-                          onClick={onClose}
-                          rel="follow"
-                        >
-                          <div 
-                            className={styles.responsiveImage}
-                            style={{
-                              '--aspect-ratio': '100.0%',
-                              '--max-height': '200px',
-                              '--max-width': '200px',
-                              '--object-fit': 'cover',
-                              '--object-position': 'center'
-                            } as React.CSSProperties}
-                          >
-                            <img
-                              src={`/assets/images/menu/${activeCategory.toLowerCase().replace(/\s+/g, '-')}/${subCategory.toLowerCase().replace(/\s+/g, '-')}.jpg`}
-                              alt={subCategory}
-                              className={styles.imageMenuBlockImage}
-                              loading="lazy"
-                              width="200"
-                              height="200"
-                            />
-                          </div>
-                          <h2 className={styles.imageMenuBlockTitle}>
-                            {subCategory}
-                          </h2>
-                        </Link>
-                        
-                        {/* Product Grid for this subcategory */}
-                        {subCategoryProducts.length > 0 && (
-                          <div className={styles.categoryProductGrid}>
-                            {subCategoryProducts.map((product) => (
-                              <Link
-                                key={product.id}
-                                to={`/products/${product.slug}`}
-                                className={styles.categoryProductTile}
-                                onClick={onClose}
-                              >
-                                <div className={styles.categoryProductImageContainer}>
-                                  <img
-                                    src={product.image || product.imageUrl || ''}
-                                    alt={`${product.brand} - ${product.title}`}
-                                    className={styles.categoryProductImage}
-                                    loading="lazy"
-                                  />
-                                </div>
-                                <div className={styles.categoryProductContent}>
-                                  <span className={styles.categoryProductBrand}>{product.brand}</span>
-                                  <span className={styles.categoryProductTitle}>{product.title}</span>
-                                  <div className={styles.categoryProductRating}>
-                                    {renderStars(product.rating || 4.5)}
-                                    {product.reviewCount && (
-                                      <span className={styles.categoryReviewCount}>
-                                        {formatReviewCount(product.reviewCount)}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <b className={styles.categoryProductPrice}>{formatPrice(product)}</b>
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  // Fallback: show all top-level categories
-                  categories.map((category) => {
-                    const categoryProducts = getCategoryProducts(category.topCategory, undefined, 4);
-                    
-                    return (
-                      <div
-                        key={category.topCategory}
-                        className={styles.imageMenuBlock}
-                        onMouseEnter={() => setHoveredCategory(category.topCategory)}
-                        onMouseLeave={() => setHoveredCategory(null)}
-                      >
-                        <Link
-                          to={getCategoryUrl(category.topCategory)}
-                          className={styles.imageMenuBlockTitleLink}
-                          onClick={onClose}
-                          rel="follow"
-                        >
-                          <div 
-                            className={styles.responsiveImage}
-                            style={{
-                              '--aspect-ratio': '100.0%',
-                              '--max-height': '200px',
-                              '--max-width': '200px',
-                              '--object-fit': 'cover',
-                              '--object-position': 'center'
-                            } as React.CSSProperties}
-                          >
-                            <img
-                              src={getCategoryImagePath(category.topCategory)}
-                              alt={categoryNames[category.topCategory]}
-                              className={styles.imageMenuBlockImage}
-                              loading="lazy"
-                              width="200"
-                              height="200"
-                            />
-                          </div>
-                          <h2 className={styles.imageMenuBlockTitle}>
-                            {categoryNames[category.topCategory]}
-                          </h2>
-                        </Link>
-                        {category.subCategories.length > 0 && (
-                          <ul className={styles.imageMenuBlockMenu}>
-                            {category.subCategories.slice(0, 10).map((subCategory) => (
-                              <li key={subCategory} className={styles.imageMenuBlockMenuItem}>
-                                <Link
-                                  to={getSubCategoryUrl(category.topCategory, subCategory)}
-                                  className={styles.imageMenuBlockMenuItemLink}
-                                  onClick={onClose}
-                                  rel="follow"
-                                >
-                                  {subCategory}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                        
-                        {/* Product Grid for this category */}
-                        {categoryProducts.length > 0 && (
-                          <div className={styles.categoryProductGrid}>
-                            {categoryProducts.map((product) => (
-                              <Link
-                                key={product.id}
-                                to={`/products/${product.slug}`}
-                                className={styles.categoryProductTile}
-                                onClick={onClose}
-                              >
-                                <div className={styles.categoryProductImageContainer}>
-                                  <img
-                                    src={product.image || product.imageUrl || ''}
-                                    alt={`${product.brand} - ${product.title}`}
-                                    className={styles.categoryProductImage}
-                                    loading="lazy"
-                                  />
-                                </div>
-                                <div className={styles.categoryProductContent}>
-                                  <span className={styles.categoryProductBrand}>{product.brand}</span>
-                                  <span className={styles.categoryProductTitle}>{product.title}</span>
-                                  <div className={styles.categoryProductRating}>
-                                    {renderStars(product.rating || 4.5)}
-                                    {product.reviewCount && (
-                                      <span className={styles.categoryReviewCount}>
-                                        {formatReviewCount(product.reviewCount)}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <b className={styles.categoryProductPrice}>{formatPrice(product)}</b>
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-              <div className={styles.megaMenuButtons}></div>
-              <div className={styles.megaMenuSecondaryLinksBlocks}></div>
-            </div>
-            <div className={styles.megaMenuAside}>
-              {(hoveredCategory || activeCategory) && (
-                <div className={styles.bannerBlock}>
-                  <Link
-                    to={getCategoryUrl(hoveredCategory || activeCategory!)}
-                    className={styles.bannerBlockLink}
-                    onClick={onClose}
-                    rel="follow"
+    <div 
+      className={`${styles.megaMenu} ${isOpen ? styles.open : ''}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className={styles.megaMenuWrapper}>
+        <div className={styles.megaMenuGrid}>
+          <div className={styles.megaMenuMain}>
+            <div className={styles.megaMenuImageMenuBlocks}>
+              {activeCategoryData.subCategories.slice(0, 8).map((subCategory) => {
+                // Get products for this subcategory
+                const subCategoryProducts = getCategoryProducts(activeCategory, subCategory, 4);
+                
+                return (
+                  <div
+                    key={subCategory}
+                    className={styles.imageMenuBlock}
                   >
-                    <div 
-                      className={styles.bannerResponsiveImage}
-                      style={{
-                        '--aspect-ratio': '108.19672131147541%',
-                        '--max-height': '660px',
-                        '--max-width': '610px',
-                        '--object-fit': 'cover',
-                        '--object-position': 'center'
-                      } as React.CSSProperties}
+                    <Link
+                      to={getSubCategoryUrl(activeCategory, subCategory)}
+                      className={styles.imageMenuBlockTitleLink}
+                      onClick={onClose}
+                      rel="follow"
+                      data-level="2"
+                      data-track-title={subCategory}
+                      data-parent-title={subCategory}
+                      data-grand-title={activeCategory}
                     >
-                      <img
-                        src={getBannerImagePath(hoveredCategory || activeCategory!)}
-                        alt={categoryNames[hoveredCategory || activeCategory!]}
-                        className={styles.bannerBlockImage}
-                        loading="eager"
-                        fetchPriority="high"
-                        width="610"
-                        height="660"
-                      />
-                    </div>
-                    <div className={styles.bannerBlockTitle}>
-                      {categoryNames[hoveredCategory || activeCategory!]}
-                    </div>
-                  </Link>
+                      <div 
+                        className={styles.responsiveImage}
+                        style={{
+                          '--aspect-ratio': '100.0%',
+                          '--max-height': '200px',
+                          '--max-width': '200px',
+                          '--object-fit': 'cover',
+                          '--object-position': 'center'
+                        } as React.CSSProperties}
+                        tabIndex={0}
+                      >
+                        <img
+                          src={getCategoryImagePath(activeCategory, subCategory)}
+                          alt={subCategory}
+                          className={styles.imageMenuBlockImage}
+                          loading="lazy"
+                          width="200"
+                          height="200"
+                          tabIndex={-1}
+                        />
+                      </div>
+                      <h2 className={styles.imageMenuBlockTitle}>
+                        {subCategory}
+                      </h2>
+                    </Link>
+                    
+                    {/* Product Grid for this subcategory - Sephora Style */}
+                    {subCategoryProducts.length > 0 && (
+                      <div className={styles.categoryProductGrid}>
+                        {subCategoryProducts.map((product) => (
+                          <Link
+                            key={product.id}
+                            to={`/products/${product.slug}`}
+                            className={styles.categoryProductTile}
+                            onClick={onClose}
+                          >
+                            <div className={styles.categoryProductImageContainer}>
+                              <img
+                                src={product.image || product.imageUrl || ''}
+                                alt={`${product.brand} - ${product.title}`}
+                                className={styles.categoryProductImage}
+                                loading="lazy"
+                              />
+                            </div>
+                            <div className={styles.categoryProductContent}>
+                              <span className={styles.categoryProductBrand}>{product.brand}</span>
+                              <span className={styles.categoryProductTitle}>{product.title}</span>
+                              <div className={styles.categoryProductRating}>
+                                {renderStars(product.rating || 4.5)}
+                                {product.reviewCount && (
+                                  <span className={styles.categoryReviewCount}>
+                                    {formatReviewCount(product.reviewCount)}
+                                  </span>
+                                )}
+                              </div>
+                              <b className={styles.categoryProductPrice}>{formatPrice(product)}</b>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className={styles.megaMenuButtons}></div>
+            <div className={styles.megaMenuSecondaryLinksBlocks}></div>
+          </div>
+          <div className={styles.megaMenuAside}>
+            <div className={styles.bannerBlock}>
+              <Link
+                to={getCategoryUrl(activeCategory)}
+                className={styles.bannerBlockLink}
+                onClick={onClose}
+                rel="follow"
+              >
+                <div 
+                  className={styles.bannerResponsiveImage}
+                  style={{
+                    '--aspect-ratio': '108.19672131147541%',
+                    '--max-height': '660px',
+                    '--max-width': '610px',
+                    '--object-fit': 'cover',
+                    '--object-position': 'center'
+                  } as React.CSSProperties}
+                  tabIndex={0}
+                >
+                  <img
+                    src={getBannerImagePath(activeCategory)}
+                    alt={categoryNames[activeCategory]}
+                    className={styles.bannerBlockImage}
+                    loading="eager"
+                    fetchPriority="high"
+                    width="610"
+                    height="660"
+                    tabIndex={-1}
+                  />
                 </div>
-              )}
+                <div className={styles.bannerBlockTitle}>
+                  {categoryNames[activeCategory]}
+                </div>
+              </Link>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
