@@ -131,9 +131,12 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     ? categories.find(cat => cat.topCategory === activeCategory)
     : null;
 
-  if (!isOpen || !activeCategoryData) {
+  if (!isOpen || !activeCategoryData || !activeCategory) {
     return null;
   }
+
+  // TypeScript now knows activeCategory is not null
+  const currentCategory: TopCategory = activeCategory;
 
   return (
     <div 
@@ -147,7 +150,7 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
             <div className={styles.megaMenuImageMenuBlocks}>
               {activeCategoryData.subCategories.slice(0, 8).map((subCategory) => {
                 // Get products for this subcategory
-                const subCategoryProducts = getCategoryProducts(activeCategory, subCategory, 4);
+                const subCategoryProducts = getCategoryProducts(currentCategory, subCategory, 4);
                 
                 return (
                   <div
@@ -155,14 +158,14 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                     className={styles.imageMenuBlock}
                   >
                     <Link
-                      to={getSubCategoryUrl(activeCategory, subCategory)}
+                      to={getSubCategoryUrl(currentCategory, subCategory)}
                       className={styles.imageMenuBlockTitleLink}
                       onClick={onClose}
                       rel="follow"
                       data-level="2"
                       data-track-title={subCategory}
                       data-parent-title={subCategory}
-                      data-grand-title={activeCategory}
+                      data-grand-title={currentCategory}
                     >
                       <div 
                         className={styles.responsiveImage}
@@ -176,7 +179,7 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                         tabIndex={0}
                       >
                         <img
-                          src={getCategoryImagePath(activeCategory, subCategory)}
+                          src={getCategoryImagePath(currentCategory, subCategory)}
                           alt={subCategory}
                           className={styles.imageMenuBlockImage}
                           loading="lazy"
@@ -235,7 +238,7 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
           <div className={styles.megaMenuAside}>
             <div className={styles.bannerBlock}>
               <Link
-                to={getCategoryUrl(activeCategory)}
+                to={getCategoryUrl(currentCategory)}
                 className={styles.bannerBlockLink}
                 onClick={onClose}
                 rel="follow"
@@ -252,8 +255,8 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                   tabIndex={0}
                 >
                   <img
-                    src={getBannerImagePath(activeCategory)}
-                    alt={categoryNames[activeCategory]}
+                    src={getBannerImagePath(currentCategory)}
+                    alt={categoryNames[currentCategory]}
                     className={styles.bannerBlockImage}
                     loading="eager"
                     fetchPriority="high"
@@ -263,7 +266,7 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                   />
                 </div>
                 <div className={styles.bannerBlockTitle}>
-                  {categoryNames[activeCategory]}
+                  {categoryNames[currentCategory]}
                 </div>
               </Link>
             </div>
