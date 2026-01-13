@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
+import { getCategoryStructure, TopCategory } from '../data/productData';
+import MegaMenu from './MegaMenu';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -10,6 +12,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isNavbarHovered, setIsNavbarHovered] = useState(false);
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
 
   // Single static banner message - no rotation
   const bannerMessage = 'New arrivals: Cloud Glow Collection • Subscribe & save 15% on your first order • Limited edition: Rose Gold Essentials';
@@ -19,13 +23,13 @@ const Navbar = () => {
     navigate('/');
   };
 
-  // SIMPLIFIED MENU: Only Home and Skincare
-  const menuItems = [
-    {
-      name: 'SKINCARE',
-      href: '/products/skincare',
-    },
-  ];
+  // Get menu items from category structure
+  const categories = getCategoryStructure();
+  const menuItems = categories.map(cat => ({
+    name: cat.topCategory.toUpperCase(),
+    href: `/category/${cat.topCategory.toLowerCase().replace(/\s+/g, '-')}`,
+    category: cat.topCategory
+  }));
 
   return (
     <>
@@ -63,13 +67,25 @@ const Navbar = () => {
           {/* Center Navigation */}
           <div className={styles.centerNav}>
             {menuItems.map((item) => (
-              <Link
+              <div
                 key={item.name}
-                to={item.href}
-                className={styles.menuLink}
+                className={styles.menuItemWrapper}
+                onMouseEnter={() => {
+                  setHoveredCategory(item.category);
+                  setMegaMenuOpen(true);
+                }}
+                onMouseLeave={() => {
+                  setHoveredCategory(null);
+                  setMegaMenuOpen(false);
+                }}
               >
-                {item.name}
-              </Link>
+                <Link
+                  to={item.href}
+                  className={styles.menuLink}
+                >
+                  {item.name}
+                </Link>
+              </div>
             ))}
           </div>
           
@@ -142,6 +158,9 @@ const Navbar = () => {
           ))}
         </div>
       )}
+
+      {/* Mega Menu */}
+      <MegaMenu isOpen={megaMenuOpen} onClose={() => setMegaMenuOpen(false)} />
     </>
   );
 };

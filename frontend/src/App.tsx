@@ -9,6 +9,7 @@ import Products from './pages/Products';
 import Skincare from './pages/Skincare';
 import ProductDetails from './pages/ProductDetails';
 import Categories from './pages/Categories';
+import CategoryPage from './pages/CategoryPage';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Account from './pages/Account';
@@ -31,6 +32,8 @@ function App() {
                 <Route path="/products/skincare" element={<Skincare />} />
                 <Route path="/products/:id" element={<ProductDetails />} />
                 <Route path="/categories" element={<Categories />} />
+                <Route path="/category/:topCategory" element={<CategoryPage />} />
+                <Route path="/category/:topCategory/:subCategory" element={<CategoryPage />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/account" element={<Account />} />

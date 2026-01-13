@@ -532,6 +532,12 @@
   pointer-events: auto !important; /* Always clickable */
 }
 
+.menuItemWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .menuLink {
   color: #000;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;

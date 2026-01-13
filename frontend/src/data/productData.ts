@@ -1,0 +1,326 @@
+// Product data structure and category detection
+export interface Product {
+  id: string;
+  brand: string;
+  title: string;
+  price: number;
+  priceRange?: { min: number; max: number };
+  image: string;
+  imageUrl?: string; // Original Sephora URL
+  badge?: string;
+  rating?: number;
+  reviewCount?: number;
+  colors?: string;
+  sponsored?: boolean;
+  topCategory: string;
+  subCategory: string;
+  flags: string[];
+  basePrice: number;
+  displayPrice: number;
+  slug: string;
+}
+
+export type TopCategory = 
+  | 'Skincare' 
+  | 'Makeup' 
+  | 'Hair' 
+  | 'Fragrance' 
+  | 'Body' 
+  | 'Tools & Brushes' 
+  | 'Gifts & Sets' 
+  | 'Minis' 
+  | 'Limited Edition' 
+  | 'Online Only' 
+  | 'Other';
+
+export interface CategoryStructure {
+  topCategory: TopCategory;
+  subCategories: string[];
+}
+
+// Category mapping structure
+const CATEGORY_MAPPINGS: Record<TopCategory, string[]> = {
+  'Skincare': [
+    'Cleansers', 'Toners & Essences', 'Serums & Treatments', 'Moisturizers', 
+    'Eye Creams', 'Sunscreen', 'Masks', 'Exfoliators', 'Face Oils', 
+    'Acne & Blemish', 'Anti-Aging', 'Hydration', 'Brightening', 'Pore Care', 
+    'Sensitive Skin', 'Tools'
+  ],
+  'Makeup': [
+    'Complexion/Face', 'Lips', 'Eyes', 'Palettes', 'Brushes', 'Sets'
+  ],
+  'Hair': [
+    'Shampoo', 'Conditioner', 'Treatments', 'Styling', 'Tools'
+  ],
+  'Fragrance': [
+    'Women', 'Men', 'Unisex', 'Rollerballs', 'Sets'
+  ],
+  'Body': [
+    'Lotions', 'Creams', 'Oils', 'Scrubs', 'Deodorant', 'Mists'
+  ],
+  'Tools & Brushes': [
+    'Makeup Brushes', 'Skincare Tools', 'Hair Tools'
+  ],
+  'Gifts & Sets': [],
+  'Minis': [],
+  'Limited Edition': [],
+  'Online Only': [],
+  'Other': ['Uncategorized']
+};
+
+// Category detection patterns
+const detectCategory = (brand: string, title: string, flags: string[]): { topCategory: TopCategory; subCategory: string } => {
+  const titleLower = title.toLowerCase();
+  const brandLower = brand.toLowerCase();
+  const combined = `${titleLower} ${brandLower}`;
+
+  // Check flags first
+  if (flags.includes('Limited Edition')) {
+    return { topCategory: 'Limited Edition', subCategory: 'Uncategorized' };
+  }
+  if (flags.includes('Online Only')) {
+    return { topCategory: 'Online Only', subCategory: 'Uncategorized' };
+  }
+
+  // Skincare patterns
+  if (
+    combined.includes('serum') || combined.includes('toner') || combined.includes('cleanser') ||
+    combined.includes('moisturizer') || combined.includes('cream') && !combined.includes('foundation') ||
+    combined.includes('mask') || combined.includes('exfoliat') || combined.includes('sunscreen') ||
+    combined.includes('spf') || combined.includes('eye cream') || combined.includes('face oil') ||
+    combined.includes('hydrat') || combined.includes('anti-aging') || combined.includes('brighten') ||
+    combined.includes('acne') || combined.includes('blemish') || combined.includes('pore') ||
+    titleLower.includes('skincare') || titleLower.includes('skin care')
+  ) {
+    let subCategory = 'Serums & Treatments';
+    if (combined.includes('cleanser') || combined.includes('wash')) subCategory = 'Cleansers';
+    else if (combined.includes('toner') || combined.includes('essence')) subCategory = 'Toners & Essences';
+    else if (combined.includes('serum')) subCategory = 'Serums & Treatments';
+    else if (combined.includes('moisturizer') || (combined.includes('cream') && !combined.includes('foundation'))) subCategory = 'Moisturizers';
+    else if (combined.includes('eye')) subCategory = 'Eye Creams';
+    else if (combined.includes('sunscreen') || combined.includes('spf')) subCategory = 'Sunscreen';
+    else if (combined.includes('mask')) subCategory = 'Masks';
+    else if (combined.includes('exfoliat')) subCategory = 'Exfoliators';
+    else if (combined.includes('oil') && combined.includes('face')) subCategory = 'Face Oils';
+    else if (combined.includes('acne') || combined.includes('blemish')) subCategory = 'Acne & Blemish';
+    else if (combined.includes('anti-aging') || combined.includes('anti aging')) subCategory = 'Anti-Aging';
+    else if (combined.includes('brighten')) subCategory = 'Brightening';
+    else if (combined.includes('pore')) subCategory = 'Pore Care';
+    else if (combined.includes('hydrat')) subCategory = 'Hydration';
+    
+    return { topCategory: 'Skincare', subCategory };
+  }
+
+  // Makeup patterns
+  if (
+    combined.includes('foundation') || combined.includes('concealer') || combined.includes('powder') ||
+    combined.includes('blush') || combined.includes('bronzer') || combined.includes('highlighter') ||
+    combined.includes('lipstick') || combined.includes('lip gloss') || combined.includes('lip liner') ||
+    combined.includes('mascara') || combined.includes('eyeliner') || combined.includes('eyeshadow') ||
+    combined.includes('palette') || combined.includes('makeup') || combined.includes('make-up')
+  ) {
+    let subCategory = 'Complexion/Face';
+    if (combined.includes('lip')) subCategory = 'Lips';
+    else if (combined.includes('eye') || combined.includes('mascara') || combined.includes('eyeliner') || combined.includes('eyeshadow')) subCategory = 'Eyes';
+    else if (combined.includes('palette')) subCategory = 'Palettes';
+    else if (combined.includes('brush')) subCategory = 'Brushes';
+    
+    return { topCategory: 'Makeup', subCategory };
+  }
+
+  // Hair patterns
+  if (
+    combined.includes('shampoo') || combined.includes('conditioner') || combined.includes('hair') ||
+    combined.includes('scalp') || combined.includes('leave-in') || combined.includes('heat protectant')
+  ) {
+    let subCategory = 'Shampoo';
+    if (combined.includes('conditioner')) subCategory = 'Conditioner';
+    else if (combined.includes('treatment') || combined.includes('serum') || combined.includes('leave-in')) subCategory = 'Treatments';
+    else if (combined.includes('spray') || combined.includes('mousse') || combined.includes('gel')) subCategory = 'Styling';
+    
+    return { topCategory: 'Hair', subCategory };
+  }
+
+  // Fragrance patterns
+  if (
+    combined.includes('perfume') || combined.includes('fragrance') || combined.includes('eau de') ||
+    combined.includes('parfum') || combined.includes('cologne') || combined.includes('mist')
+  ) {
+    let subCategory = 'Women';
+    if (combined.includes('men') || combined.includes('cologne')) subCategory = 'Men';
+    else if (combined.includes('unisex')) subCategory = 'Unisex';
+    else if (combined.includes('rollerball') || combined.includes('mini')) subCategory = 'Rollerballs';
+    
+    return { topCategory: 'Fragrance', subCategory };
+  }
+
+  // Body patterns
+  if (
+    combined.includes('body') || combined.includes('lotion') || combined.includes('body cream') ||
+    combined.includes('body oil') || combined.includes('scrub') || combined.includes('deodorant') ||
+    combined.includes('body mist')
+  ) {
+    let subCategory = 'Lotions';
+    if (combined.includes('cream')) subCategory = 'Creams';
+    else if (combined.includes('oil')) subCategory = 'Oils';
+    else if (combined.includes('scrub')) subCategory = 'Scrubs';
+    else if (combined.includes('deodorant')) subCategory = 'Deodorant';
+    else if (combined.includes('mist')) subCategory = 'Mists';
+    
+    return { topCategory: 'Body', subCategory };
+  }
+
+  // Tools & Brushes
+  if (
+    combined.includes('brush') || combined.includes('sponge') || combined.includes('tool') ||
+    combined.includes('curler') || combined.includes('applicator')
+  ) {
+    let subCategory = 'Makeup Brushes';
+    if (combined.includes('skincare') || combined.includes('face tool')) subCategory = 'Skincare Tools';
+    else if (combined.includes('hair tool')) subCategory = 'Hair Tools';
+    
+    return { topCategory: 'Tools & Brushes', subCategory };
+  }
+
+  // Gifts & Sets
+  if (combined.includes('set') || combined.includes('bundle') || combined.includes('gift')) {
+    return { topCategory: 'Gifts & Sets', subCategory: 'Uncategorized' };
+  }
+
+  // Minis
+  if (combined.includes('mini') || combined.includes('travel size') || combined.includes('travel-size')) {
+    return { topCategory: 'Minis', subCategory: 'Uncategorized' };
+  }
+
+  return { topCategory: 'Other', subCategory: 'Uncategorized' };
+};
+
+// Parse price string to number
+const parsePrice = (priceStr: string): { basePrice: number; priceRange?: { min: number; max: number } } => {
+  if (!priceStr) return { basePrice: 0 };
+  
+  // Remove $ and commas
+  const clean = priceStr.replace(/[$,]/g, '').trim();
+  
+  // Check for price range
+  if (clean.includes(' - ')) {
+    const [minStr, maxStr] = clean.split(' - ');
+    const min = parseFloat(minStr) || 0;
+    const max = parseFloat(maxStr) || 0;
+    return { basePrice: min, priceRange: { min, max } };
+  }
+  
+  const price = parseFloat(clean) || 0;
+  return { basePrice: price };
+};
+
+// Generate slug from title
+const generateSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
+// Transform CSV row to Product
+export const transformCSVRow = (row: string[]): Product | null => {
+  if (row.length < 6) return null;
+  
+  const [imageUrl, brand, title, reviewCountStr, priceStr, ...flags] = row;
+  
+  if (!brand || !title) return null;
+  
+  const flagsList = flags.filter(f => f && f.trim()).map(f => f.trim());
+  const { topCategory, subCategory } = detectCategory(brand, title, flagsList);
+  const { basePrice, priceRange } = parsePrice(priceStr || '0');
+  const displayPrice = basePrice + 10;
+  const displayPriceRange = priceRange ? {
+    min: priceRange.min + 10,
+    max: priceRange.max + 10
+  } : undefined;
+  
+  // Parse review count
+  let reviewCount: number | undefined;
+  if (reviewCountStr) {
+    const clean = reviewCountStr.replace(/[Kk]/g, '').trim();
+    const num = parseFloat(clean);
+    if (!isNaN(num)) {
+      reviewCount = reviewCountStr.toLowerCase().includes('k') ? Math.round(num * 1000) : num;
+    }
+  }
+  
+  const slug = generateSlug(title);
+  
+  return {
+    id: slug,
+    brand: brand.trim(),
+    title: title.trim(),
+    price: displayPrice,
+    priceRange: displayPriceRange,
+    image: imageUrl || '',
+    imageUrl: imageUrl || undefined,
+    badge: flagsList.find(f => ['New', 'Limited Edition', 'Online Only', 'Clean'].includes(f)),
+    rating: undefined, // Will be inferred or placeholder
+    reviewCount,
+    sponsored: flagsList.includes('Sponsored'),
+    topCategory,
+    subCategory,
+    flags: flagsList,
+    basePrice,
+    displayPrice,
+    slug
+  };
+};
+
+// Sample product data from CSV (first few rows)
+export const SAMPLE_PRODUCTS: Product[] = [
+  {
+    id: 'power-mist-hydrating-hand-sanitizer',
+    brand: 'Touchland',
+    title: 'Power Mist Hydrating Hand Sanitizer',
+    price: 22.00,
+    image: 'https://www.sephora.com/productimages/sku/s2925006-main-zoom.jpg?imwidth=175',
+    topCategory: 'Body',
+    subCategory: 'Mists',
+    flags: ['New'],
+    basePrice: 12.00,
+    displayPrice: 22.00,
+    slug: 'power-mist-hydrating-hand-sanitizer',
+    reviewCount: 2600
+  },
+  {
+    id: 'mini-major-headlines-double-take-creme-powder-blush-duo',
+    brand: 'PATRICK TA',
+    title: 'Mini Major Headlines Double-Take Crème & Powder Blush Duo',
+    price: 35.00,
+    image: 'https://www.sephora.com/productimages/sku/s2926020-main-zoom.jpg?imwidth=175',
+    topCategory: 'Makeup',
+    subCategory: 'Complexion/Face',
+    flags: ['New'],
+    basePrice: 25.00,
+    displayPrice: 35.00,
+    slug: 'mini-major-headlines-double-take-creme-powder-blush-duo',
+    reviewCount: 47
+  }
+];
+
+// Get all categories structure
+export const getCategoryStructure = (): CategoryStructure[] => {
+  return Object.entries(CATEGORY_MAPPINGS).map(([topCategory, subCategories]) => ({
+    topCategory: topCategory as TopCategory,
+    subCategories: subCategories.length > 0 ? subCategories : ['Uncategorized']
+  }));
+};
+
+// Get products by category
+export const getProductsByCategory = (products: Product[], topCategory?: string, subCategory?: string): Product[] => {
+  if (!topCategory) return products;
+  
+  let filtered = products.filter(p => p.topCategory === topCategory);
+  
+  if (subCategory) {
+    filtered = filtered.filter(p => p.subCategory === subCategory);
+  }
+  
+  return filtered;
+};
