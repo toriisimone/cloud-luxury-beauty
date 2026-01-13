@@ -40,19 +40,29 @@ const Navbar = () => {
   return (
     <>
       {/* Main Header - Kylie's Exact Structure */}
-      <header className={styles.layoutHeader} data-vue="header">
+      <header data-vue="header" className={styles.layoutHeader}>
         <div className={styles.siteHeader}>
           <div className={styles.siteHeaderWrapper}>
+            {/* Currency Selector - Left */}
+            <form className={styles.localizationForm} method="post" action="/localization" id="localization_form">
+              <label htmlFor="LocalizationForm-Select" className={styles.localizationLabel}>Shipping to:</label>
+              <div className={styles.countryPicker} tabIndex={0}>
+                <span className={styles.countryPickerCurrent}>
+                  US <span className={styles.countryPickerSymbol}>$</span>
+                </span>
+              </div>
+            </form>
+
             {/* Logo - Center */}
             <div className={styles.siteHeaderLogo}>
               <h1 className={styles.siteLogo}>
                 <Link to="/" rel="follow" title="AURAPOP home page">
-                  AURAPOP.
+                  AURAPOP
                 </Link>
               </h1>
             </div>
 
-            {/* Navigation - Desktop Menu */}
+            {/* Navigation - Inside Header */}
             <div className={styles.siteHeaderNavigation}>
               <div className={styles.siteHeaderMenu}>
                 <nav 
@@ -96,7 +106,7 @@ const Navbar = () => {
                           aria-haspopup="true"
                           aria-expanded={megaMenuOpen && hoveredCategory === item.category}
                         >
-                          {item.name}
+                          {item.name.toLowerCase()}
                         </Link>
                       </li>
                     ))}
@@ -105,7 +115,7 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* Utilities - Icons */}
+            {/* Utilities - Icons Right */}
             <div className={styles.siteHeaderUtilities}>
               {/* Mobile Menu Toggle */}
               <div className={styles.siteHeaderUtilitiesMenu}>
@@ -213,7 +223,7 @@ const Navbar = () => {
                 className={styles.mobileMenuLink}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {item.name}
+                {item.name.toLowerCase()}
               </Link>
             </div>
           ))}
