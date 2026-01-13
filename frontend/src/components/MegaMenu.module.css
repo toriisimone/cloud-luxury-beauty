@@ -1,9 +1,9 @@
 /* Mega Menu - Kylie's Exact Structure */
 .megaMenu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  position: fixed;
+  top: 110px; /* Below header (60px) + nav (50px) */
+  left: 50%;
+  transform: translateX(-50%);
   background: #ffffff;
   z-index: 999;
   max-height: 0;
@@ -12,9 +12,8 @@
   opacity: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   pointer-events: none;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
+  width: 100%;
+  max-width: 1400px;
 }
 
 .megaMenu.open {
@@ -29,15 +28,15 @@
 .megaMenuWrapper {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: 0 40px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .megaMenuGrid {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 2rem;
+  grid-template-columns: 3fr 1fr;
+  gap: 40px;
   overflow: visible;
   width: 100%;
   box-sizing: border-box;

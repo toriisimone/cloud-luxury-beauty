@@ -384,10 +384,7 @@ const Navbar = () => {
                                       </div>
                                     )}
                                     <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
-                                      {(categoryData.imageMenuBlocks || categoryData.subCategories || []).map((imageMenuBlock: string) => {
-                                        const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, imageMenuBlock, 4);
-                                        const hasMenuItems = subCategoryProducts.length > 0 && !isFragrance; // Fragrance doesn't show nested product lists
-                                        
+                                      {(categoryData.imageMenuBlocks || []).map((imageMenuBlock: string) => {
                                         // Format title with line breaks if needed (for Fragrance items like "Cosmic <br>Kylie Jenner")
                                         // Also handle Makeup title display to match Kylie's structure
                                         const formatTitle = (title: string): string => {
@@ -463,29 +460,7 @@ const Navbar = () => {
                                                 className={megaMenuStyles.imageMenuBlockTitle}
                                                 dangerouslySetInnerHTML={{ __html: formattedTitle }}
                                               />
-            </Link>
-            
-                                            {hasMenuItems && (
-                                              <ul className={megaMenuStyles.imageMenuBlockMenu}>
-                                                {subCategoryProducts.map((product) => (
-                                                  <li key={product.id} className={megaMenuStyles.imageMenuBlockMenuItem}>
-                                                    <Link
-                                                      to={`/products/${product.slug}`}
-                                                      data-level="3"
-                                                      data-track-title={product.title.toLowerCase()}
-                                                      data-parent-title={imageMenuBlock}
-                                                      data-grand-title={item.category}
-                                                      data-track-url={product.title}
-                                                      rel="follow"
-                                                      className={megaMenuStyles.imageMenuBlockMenuItemLink}
-                                                      onClick={() => setMegaMenuOpen(false)}
-                                                    >
-                                                      {product.title.toLowerCase()}
-                                                    </Link>
-                                                  </li>
-                                                ))}
-                                              </ul>
-                                            )}
+                                            </Link>
                                           </div>
                                         );
                                       })}
