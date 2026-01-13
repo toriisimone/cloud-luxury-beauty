@@ -15,12 +15,20 @@
   background: #000000 !important;
 }
 
+.siteHeaderTransparent {
+  /* Reserved for transparent variant */
+}
+
+.siteHeaderMobileTransparent {
+  /* Reserved for mobile transparent variant */
+}
+
 .siteHeaderWrapper {
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 2rem;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 2rem;
   min-height: 60px;
@@ -66,6 +74,22 @@
   margin-left: 0.25rem;
 }
 
+.countryPickerSelect {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 1;
+  font-size: 0.65rem;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
 /* Logo - Center */
 .siteHeaderLogo {
   display: flex;
@@ -94,25 +118,55 @@
   opacity: 0.7;
 }
 
-/* Navigation - Inside Header (Kylie's Structure) */
+/* Navigation - First (Mobile/Scripts) - Inside Wrapper */
 .siteHeaderNavigation {
+  display: flex;
+  align-items: center;
+  grid-column: 3;
+}
+
+.siteHeaderMenuMobile {
+  width: 100%;
+}
+
+.shopifySection {
+  width: 100%;
+}
+
+/* Desktop Navigation - Outside Wrapper but Inside site-header */
+.siteHeaderNavigationDesktop {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: #000000;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-column: 2;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: fit-content;
+  min-height: 50px;
+  z-index: 1000;
+  grid-column: unset;
 }
 
-.siteHeaderMenu {
+.siteHeaderMenuDesktop {
   width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .linklist {
   width: 100%;
+}
+
+.linklistMainMenu {
+  /* Main menu variant */
+}
+
+.linklistDesktop {
+  /* Desktop variant */
 }
 
 .linklistLinks {
@@ -126,11 +180,35 @@
   height: 50px;
 }
 
+.linklistLinksLevel1 {
+  /* Level 1 links variant */
+}
+
 .link {
   position: relative;
   display: flex;
   align-items: center;
   height: 100%;
+}
+
+.linkHasMegaMenu {
+  /* When mega menu is nested, ensure proper positioning */
+}
+
+.linkHasChildren {
+  /* Has children variant */
+}
+
+.linkHasMegaMenu {
+  /* Has mega menu variant */
+}
+
+.linkLevel1 {
+  /* Level 1 variant */
+}
+
+.linkCollectionLink {
+  /* Collection link variant */
 }
 
 .linkAnchor {
@@ -147,10 +225,50 @@
   white-space: nowrap;
   display: block;
   line-height: 50px;
+  position: relative;
+}
+
+.linkAnchorLevel1 {
+  /* Level 1 anchor variant */
+}
+
+.linkAnchorSparkles {
+  /* Sparkles variant for Fragrance */
 }
 
 .linkAnchor:hover {
   opacity: 0.6;
+}
+
+.linkSparkles {
+  /* Sparkles variant for link item */
+}
+
+.linkSparkleTop,
+.linkSparkleBottom {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.linkSparkleTop {
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.linkSparkleBottom {
+  bottom: -8px;
+  left: 50%;
+    transform: translateX(-50%);
+}
+
+.linkSparkleTop svg,
+.linkSparkleBottom svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
 }
 
 /* Utilities - Icons Right */
@@ -159,14 +277,15 @@
   gap: 1rem;
   align-items: center;
   justify-content: flex-end;
-  grid-column: 3;
 }
 
 .siteHeaderUtilitiesMenu {
+  grid-column: 4;
   display: none;
 }
 
 .siteHeaderUtilitiesDesktop {
+  grid-column: 4;
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -202,6 +321,22 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.siteHeaderActionWishlist {
+  /* Base wishlist action */
+}
+
+.siteHeaderActionAccount {
+  /* Base account action */
+}
+
+.siteHeaderActionSearch {
+  /* Base search action */
+}
+
+.siteHeaderActionCart {
+  /* Base cart action */
 }
 
 .siteHeaderActionWishlistMobile {
@@ -281,7 +416,7 @@
     gap: 1.5rem;
     padding: 0 1.5rem;
   }
-
+  
   .linklistLinks {
     gap: 2rem;
   }
