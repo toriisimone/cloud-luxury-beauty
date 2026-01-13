@@ -178,11 +178,13 @@ const Navbar = () => {
       {/* Mega Menu */}
       <MegaMenu 
         isOpen={megaMenuOpen} 
+        activeCategory={hoveredCategory}
         onClose={() => {
           if (closeTimeoutRef.current) {
             clearTimeout(closeTimeoutRef.current);
           }
           setMegaMenuOpen(false);
+          setHoveredCategory(null);
         }}
         onMouseEnter={() => {
           if (closeTimeoutRef.current) {
@@ -193,6 +195,7 @@ const Navbar = () => {
         onMouseLeave={() => {
           closeTimeoutRef.current = setTimeout(() => {
             setMegaMenuOpen(false);
+            setHoveredCategory(null);
           }, 200);
         }}
       />
