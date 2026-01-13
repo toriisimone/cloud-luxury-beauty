@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { TopCategory, getCategoryStructure, Product, loadAllProducts, getProductsByCategory } from '../data/productData';
+import { TopCategory, getCategoryStructure } from '../data/productData';
 import styles from './MegaMenu.module.css';
 
 interface MegaMenuProps {
@@ -13,21 +13,7 @@ interface MegaMenuProps {
 
 const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave }: MegaMenuProps) => {
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(activeCategory);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [productsLoaded, setProductsLoaded] = useState(false);
   const categories = getCategoryStructure();
-
-  // Load products from CSV on mount
-  useEffect(() => {
-    const loadProducts = async () => {
-      if (!productsLoaded) {
-        const products = await loadAllProducts();
-        setAllProducts(products);
-        setProductsLoaded(true);
-      }
-    };
-    loadProducts();
-  }, [productsLoaded]);
 
   // Update hovered category when activeCategory changes
   useEffect(() => {
@@ -74,57 +60,6 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     return `/category/${topSlug}/${subSlug}`;
   };
 
-  // Get products for a specific category/subcategory
-  const getCategoryProducts = (topCategory: TopCategory, subCategory?: string, limit: number = 4): Product[] => {
-    const categoryProducts = getProductsByCategory(allProducts, topCategory, subCategory);
-    return categoryProducts.slice(0, limit);
-  };
-
-  // Format price
-  const formatPrice = (product: Product): string => {
-    if (product.priceRange) {
-      return `$${product.priceRange.min.toFixed(2)} - $${product.priceRange.max.toFixed(2)}`;
-    }
-    return `$${product.price.toFixed(2)}`;
-  };
-
-  // Format review count
-  const formatReviewCount = (count?: number): string => {
-    if (!count) return '';
-    if (count >= 1000) {
-      const k = count / 1000;
-      if (k >= 10) {
-        return `${Math.floor(k)}K`;
-      }
-      return `${k.toFixed(1)}K`;
-    }
-    return count.toString();
-  };
-
-  // Render stars
-  const renderStars = (rating?: number) => {
-    if (!rating) return null;
-    const fullStars = Math.floor(rating);
-    const decimal = rating % 1;
-    const hasHalfStar = decimal >= 0.25 && decimal < 0.75;
-    const hasFullStar = decimal >= 0.75;
-    const displayedFullStars = hasFullStar ? fullStars + 1 : fullStars;
-
-    return (
-      <div className={styles.categoryStarsContainer}>
-        <span className={styles.categoryStarsEmpty} aria-label={`${rating} stars`}>
-          {'☆'.repeat(5)}
-        </span>
-        <span 
-          className={styles.categoryStarsFilled} 
-          style={{ width: `${(displayedFullStars / 5) * 100}%` }}
-        >
-          {'★'.repeat(displayedFullStars)}
-          {hasHalfStar && '☆'}
-        </span>
-      </div>
-    );
-  };
 
   // Get active category data
   const activeCategoryData = activeCategory 
@@ -149,9 +84,6 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
           <div className={styles.megaMenuMain}>
             <div className={styles.megaMenuImageMenuBlocks}>
               {activeCategoryData.subCategories.slice(0, 8).map((subCategory) => {
-                // Get products for this subcategory
-                const subCategoryProducts = getCategoryProducts(currentCategory, subCategory, 4);
-                
                 return (
                   <div
                     key={subCategory}
@@ -192,42 +124,10 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                         {subCategory}
                       </h2>
                     </Link>
-                    
-                    {/* Product Grid for this subcategory - Sephora Style */}
-                    {subCategoryProducts.length > 0 && (
-                      <div className={styles.categoryProductGrid}>
-                        {subCategoryProducts.map((product) => (
-                          <Link
-                            key={product.id}
-                            to={`/products/${product.slug}`}
-                            className={styles.categoryProductTile}
-                            onClick={onClose}
-                          >
-                            <div className={styles.categoryProductImageContainer}>
-                              <img
-                                src={product.image || product.imageUrl || ''}
-                                alt={`${product.brand} - ${product.title}`}
-                                className={styles.categoryProductImage}
-                                loading="lazy"
-                              />
-                            </div>
-                            <div className={styles.categoryProductContent}>
-                              <span className={styles.categoryProductBrand}>{product.brand}</span>
-                              <span className={styles.categoryProductTitle}>{product.title}</span>
-                              <div className={styles.categoryProductRating}>
-                                {renderStars(product.rating || 4.5)}
-                                {product.reviewCount && (
-                                  <span className={styles.categoryReviewCount}>
-                                    {formatReviewCount(product.reviewCount)}
-                                  </span>
-                                )}
-                              </div>
-                              <b className={styles.categoryProductPrice}>{formatPrice(product)}</b>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                    {/* Menu items for subcategory - Kylie's structure */}
+                    <ul className={styles.imageMenuBlockMenu}>
+                      {/* Subcategory links can be added here if needed */}
+                    </ul>
                   </div>
                 );
               })}

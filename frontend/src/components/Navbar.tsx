@@ -15,9 +15,6 @@ const Navbar = () => {
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Single static banner message
-  const bannerMessage = 'New arrivals: Cloud Glow Collection • Subscribe & save 15% on your first order • Limited edition: Rose Gold Essentials';
-
   const handleLogout = async () => {
     await logout();
     navigate('/');
@@ -42,23 +39,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Static Top Banner - Pink with centered text */}
-      <div className={styles.topBanner}>
-        <div className={styles.bannerClouds}>
-          <div className={styles.cloud}></div>
-          <div className={styles.cloud}></div>
-          <div className={styles.cloud}></div>
-          <div className={styles.cloud}></div>
-        </div>
-        <div className={styles.bannerContent}>
-          <div className={styles.bannerTextContainer}>
-            <span className={styles.bannerText}>
-              {bannerMessage}
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* Main Header - Kylie's Exact Structure */}
       <header className={styles.layoutHeader} data-vue="header">
         <div className={styles.siteHeader}>
