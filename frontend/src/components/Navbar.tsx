@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isNavbarHovered, setIsNavbarHovered] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
-  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Single static banner message - no rotation
   const bannerMessage = 'New arrivals: Cloud Glow Collection • Subscribe & save 15% on your first order • Limited edition: Rose Gold Essentials';
