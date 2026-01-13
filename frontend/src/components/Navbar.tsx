@@ -390,7 +390,7 @@ const Navbar = () => {
                                       </div>
                                     )}
                                     <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
-                                      {(categoryData.imageMenuBlocks || categoryData.subCategories || []).slice(0, 5).map((imageMenuBlock: string) => {
+                                      {categoryData.subCategories.slice(0, 5).map((imageMenuBlock: string) => {
                                         const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, imageMenuBlock, 4);
                                         const hasMenuItems = subCategoryProducts.length > 0 && !isFragrance; // Fragrance doesn't show nested product lists
                                         
