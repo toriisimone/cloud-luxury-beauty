@@ -376,10 +376,37 @@ const Navbar = () => {
                               <div className={megaMenuStyles.megaMenuWrapper}>
                                 <div className={megaMenuStyles.megaMenuGrid}>
                                   <div className={megaMenuStyles.megaMenuMain}>
+                                    {/* Shop All Link - Only for non-Fragrance categories */}
+                                    {!isFragrance && (
+                                      <div className={megaMenuStyles.megaMenuShopAll}>
+                                        <Link
+                                          to={getCategoryUrl(item.category as TopCategory)}
+                                          className={megaMenuStyles.megaMenuShopAllLink}
+                                          onClick={() => setMegaMenuOpen(false)}
+                                          rel="follow"
+                                        >
+                                          Shop All {item.category}
+                                        </Link>
+                                      </div>
+                                    )}
                                     <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
                                       {categoryData.subCategories.slice(0, 8).map((subCategory) => {
                                         const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, subCategory, 4);
-                                        const hasMenuItems = subCategoryProducts.length > 0;
+                                        const hasMenuItems = subCategoryProducts.length > 0 && !isFragrance; // Fragrance doesn't show nested product lists
+                                        
+                                        // Format title with line breaks if needed (for Fragrance items like "Cosmic <br>Kylie Jenner")
+                                        const formatTitle = (title: string): string => {
+                                          if (isFragrance && title.includes(' ')) {
+                                            // For Fragrance, split on first space and add <br>
+                                            const parts = title.split(' ');
+                                            if (parts.length > 1) {
+                                              return `${parts[0]} <br>${parts.slice(1).join(' ')}`;
+                                            }
+                                          }
+                                          return title;
+                                        };
+                                        
+                                        const formattedTitle = formatTitle(subCategory);
                                         
                                         return (
                                           <div key={subCategory} className={megaMenuStyles.imageMenuBlock}>
@@ -389,7 +416,7 @@ const Navbar = () => {
                                               onClick={() => setMegaMenuOpen(false)}
                                               rel="follow"
                                               data-level="2"
-                                              data-track-title={subCategory}
+                                              data-track-title={formattedTitle.replace(/<br>/g, ' ')}
                                               data-parent-title={subCategory}
                                               data-grand-title={item.category}
                                             >
@@ -424,9 +451,10 @@ const Navbar = () => {
                                                   }}
                                                 />
                                               </div>
-                                              <h2 className={megaMenuStyles.imageMenuBlockTitle}>
-                                                {subCategory}
-                                              </h2>
+                                              <h2 
+                                                className={megaMenuStyles.imageMenuBlockTitle}
+                                                dangerouslySetInnerHTML={{ __html: formattedTitle }}
+                                              />
                                             </Link>
                                             
                                             {hasMenuItems && (
@@ -493,10 +521,14 @@ const Navbar = () => {
                                           />
                                         </div>
                                         <div className={megaMenuStyles.bannerBlockTitle}>
-                                          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                                          <span style={{ color: '#B3848F' }}>
-                                            {categoryNames[item.category as TopCategory].toLowerCase()}
-                                          </span>
+                                          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                                          {isFragrance ? (
+                                            <span style={{ color: '#B3848F' }} dangerouslySetInnerHTML={{ __html: 'new <br>hair &amp; body mists' }} />
+                                          ) : (
+                                            <span style={{ color: '#B3848F' }}>
+                                              {categoryNames[item.category as TopCategory].toLowerCase()}
+                                            </span>
+                                          )}
                                         </div>
                                       </Link>
                                     </div>
