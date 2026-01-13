@@ -390,8 +390,8 @@ const Navbar = () => {
                                       </div>
                                     )}
                                     <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
-                                      {categoryData.subCategories.slice(0, 5).map((subCategory) => {
-                                        const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, subCategory, 4);
+                                      {(categoryData.imageMenuBlocks || categoryData.subCategories || []).slice(0, 5).map((imageMenuBlock: string) => {
+                                        const subCategoryProducts = getSubCategoryProducts(item.category as TopCategory, imageMenuBlock, 4);
                                         const hasMenuItems = subCategoryProducts.length > 0 && !isFragrance; // Fragrance doesn't show nested product lists
                                         
                                         // Format title with line breaks if needed (for Fragrance items like "Cosmic <br>Kylie Jenner")
@@ -406,18 +406,18 @@ const Navbar = () => {
                                           return title;
                                         };
                                         
-                                        const formattedTitle = formatTitle(subCategory);
+                                        const formattedTitle = formatTitle(imageMenuBlock);
                                         
                                         return (
-                                          <div key={subCategory} className={megaMenuStyles.imageMenuBlock}>
+                                          <div key={imageMenuBlock} className={megaMenuStyles.imageMenuBlock}>
                                             <Link
-                                              to={getSubCategoryUrl(item.category as TopCategory, subCategory)}
+                                              to={getSubCategoryUrl(item.category as TopCategory, imageMenuBlock)}
                                               className={megaMenuStyles.imageMenuBlockTitleLink}
                                               onClick={() => setMegaMenuOpen(false)}
                                               rel="follow"
                                               data-level="2"
                                               data-track-title={formattedTitle.replace(/<br>/g, ' ')}
-                                              data-parent-title={subCategory}
+                                              data-parent-title={imageMenuBlock}
                                               data-grand-title={item.category}
                                             >
                                               <div 
@@ -432,11 +432,11 @@ const Navbar = () => {
                                                 tabIndex={0}
                                               >
                                                 <img
-                                                  src={getCategoryImagePath(item.category as TopCategory, subCategory)}
-                                                  alt={subCategory}
+                                                  src={getCategoryImagePath(item.category as TopCategory, imageMenuBlock)}
+                                                  alt={imageMenuBlock}
                                                   className={`${megaMenuStyles.responsiveImageImage} ${megaMenuStyles.imageMenuBlockImage} lazyautosizes lazyloaded`}
                                                   loading="lazy"
-                                                  data-src={getCategoryImagePath(item.category as TopCategory, subCategory)}
+                                                  data-src={getCategoryImagePath(item.category as TopCategory, imageMenuBlock)}
                                                   data-widths="[200,200]"
                                                   data-aspectratio="1.0"
                                                   data-sizes="auto"
@@ -455,8 +455,8 @@ const Navbar = () => {
                                                 className={megaMenuStyles.imageMenuBlockTitle}
                                                 dangerouslySetInnerHTML={{ __html: formattedTitle }}
                                               />
-            </Link>
-            
+                                            </Link>
+                                            
                                             {hasMenuItems && (
                                               <ul className={megaMenuStyles.imageMenuBlockMenu}>
                                                 {subCategoryProducts.map((product) => (
@@ -465,7 +465,7 @@ const Navbar = () => {
                                                       to={`/products/${product.slug}`}
                                                       data-level="3"
                                                       data-track-title={product.title.toLowerCase()}
-                                                      data-parent-title={subCategory}
+                                                      data-parent-title={imageMenuBlock}
                                                       data-grand-title={item.category}
                                                       data-track-url={product.title}
                                                       rel="follow"
