@@ -28,7 +28,7 @@
   margin: 0 auto;
   padding: 0 2rem;
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 2rem;
   min-height: 60px;
@@ -100,7 +100,7 @@
   transform: translateX(-50%);
   width: auto;
   z-index: 10;
-  grid-column: 1 / -1;
+  pointer-events: auto;
 }
 
 .siteLogo {
@@ -138,6 +138,10 @@
 
 .shopifySection {
   width: 100%;
+}
+
+.flyoutOverlay {
+  /* Flyout overlay for mini-cart */
 }
 
 /* Desktop Navigation - Outside Wrapper but Inside site-header */
@@ -281,14 +285,16 @@
 /* Utilities - Icons Right */
 .siteHeaderUtilities {
   display: flex;
-  gap: 1rem;
+  gap: 16px;
   align-items: center;
   justify-content: flex-end;
 }
 
 .siteHeaderUtilitiesMenu {
-  grid-column: 4;
+  position: absolute;
+  right: 2rem;
   display: none;
+  z-index: 11;
 }
 
 .siteHeaderUtilitiesDesktop {
@@ -297,12 +303,13 @@
   gap: 1rem;
   align-items: center;
   justify-self: end;
+  z-index: 11;
 }
 
 .siteHeaderAction {
   background: none;
   border: none;
-  padding: 0.5rem;
+  padding: 0;
   cursor: pointer;
   color: #ffffff;
   display: flex;
@@ -311,9 +318,9 @@
   transition: opacity 0.2s ease;
   position: relative;
   text-decoration: none;
+  flex-shrink: 0;
   width: 36px;
   height: 36px;
-  flex-shrink: 0;
 }
 
 .siteHeaderAction:hover {
@@ -323,6 +330,7 @@
 .siteHeaderAction svg {
   stroke: #ffffff;
   fill: none;
+  display: block;
 }
 
 .siteHeaderActionGroup {
@@ -345,6 +353,10 @@
 
 .siteHeaderActionCart {
   /* Base cart action */
+}
+
+.siteHeaderActionMenu {
+  /* Menu action modifier */
 }
 
 .siteHeaderActionWishlistMobile {
@@ -458,21 +470,17 @@
   }
 
   .siteHeaderUtilities {
-    grid-column: 2;
     justify-content: flex-end;
   }
 
   .siteHeaderUtilitiesMenu {
-    display: block;
+    display: flex;
+    position: static;
+    right: auto;
   }
 
   .siteHeaderUtilitiesDesktop {
     display: none;
-  }
-
-  .siteHeaderAction {
-    width: 36px;
-    height: 36px;
   }
 
   .mobileMenu {
@@ -493,12 +501,6 @@
 
   .siteHeaderUtilities {
     gap: 0.5rem;
-  }
-
-  .siteHeaderAction {
-    width: 32px;
-    height: 32px;
-    padding: 0.25rem;
   }
 
   .siteLogo a {

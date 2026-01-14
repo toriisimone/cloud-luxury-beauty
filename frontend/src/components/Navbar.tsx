@@ -189,7 +189,7 @@ const Navbar = () => {
             <div className={`${styles.siteHeaderUtilities} ${styles.siteHeaderUtilitiesMenu}`}>
               <Link
                 to="/collections"
-                className={styles.siteHeaderAction}
+                className={`${styles.siteHeaderAction} ${styles.siteHeaderActionMenu}`}
                 title="Main Menu"
                 role="button"
                 aria-haspopup="true"
@@ -215,7 +215,7 @@ const Navbar = () => {
                 title="Wishlist"
                 rel="nofollow"
               >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="21" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
               </Link>
@@ -227,7 +227,7 @@ const Navbar = () => {
                 title="Account"
                 rel="nofollow"
               >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="20" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 <path d="M6 20c0-3.33 2.67-6 6-6s6 2.67 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
@@ -240,7 +240,7 @@ const Navbar = () => {
                 rel="nofollow"
                 role="button"
               >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="20" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
@@ -254,7 +254,7 @@ const Navbar = () => {
                   aria-label="Product Added in Wishlist"
                   rel="nofollow"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="21" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                   </svg>
                 </Link>
@@ -267,7 +267,7 @@ const Navbar = () => {
                   data-cart-count={getItemCount()}
                   aria-label={`${getItemCount()} items in cart`}
                 >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="19" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 9L4 20H20L18 9H6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 <path d="M4 9H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M6 9C6 8 6.5 7 7.5 7C8.5 7 9 8 9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
@@ -555,6 +555,14 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+        
+        {/* Mini Cart Section */}
+        <div id="shopify-section-mini-cart" className={styles.shopifySection}>
+          <div className={styles.flyoutOverlay} style={{ display: 'none' }}></div>
+        </div>
+        
+        {/* Live Helper Component */}
+        <fw-live-helper className="needsclick"></fw-live-helper>
       </header>
       
       {/* Mobile Menu */}
