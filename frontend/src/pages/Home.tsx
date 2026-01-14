@@ -63,10 +63,53 @@ const Home = () => {
           {/* Grain Overlay - Subtle film grain texture */}
           <div className={styles.grainOverlay}></div>
           
-          {/* Brand Name Overlay */}
-          <div className={styles.brandName}>
-            <h1 className={styles.brandTitle}>AURAPOP</h1>
-            <p className={styles.brandSubline}>Tori Edition</p>
+          {/* Hero Content - Exact Kylie Structure with AURAPOP Content */}
+          <div className="hero__content hero__content--desktop hero__content--h-left hero__content--v-center hero__content--false hero__content--mobile-h-left hero__content--mobile-v-" style={{ backgroundColor: 'transparent' }}>
+            {/* Desktop Heading */}
+            <h2 className="hero__content__desktop_heading hero__heading hero__heading--h1" style={{ color: 'rgb(255, 255, 255)' }}>
+              <font size="3">ARRIVING THIS SPRING</font>
+              <br />AURAPOP LUMINOUS ESSENCE
+            </h2>
+            
+            {/* Mobile Heading */}
+            <h2 className="hero__content__mobile_heading hero__heading hero__heading--h1" style={{ color: 'rgb(57, 57, 57)' }}>
+              <font size="3">ARRIVING THIS SPRING</font>
+              <br />AURAPOP LUMINOUS ESSENCE
+            </h2>
+            
+            {/* Desktop Paragraph */}
+            <div className="hero__content__desktop_paragraph hero__paragraph hero__paragraph--20-17" style={{ color: 'rgb(255, 255, 255)' }}>
+              <p>
+                a modern reinvention of our signature,<br /> most‑loved beauty formula
+              </p>
+            </div>
+            
+            {/* Mobile Paragraph */}
+            <div className="hero__content__mobile_paragraph hero__paragraph hero__paragraph--20-17" style={{ color: 'rgb(0, 0, 0)' }}>
+              <p>
+                a modern reinvention of our signature,<br /> most‑loved beauty formula
+              </p>
+            </div>
+            
+            {/* Desktop Button */}
+            <div className="hero__buttons hero_button">
+              <button 
+                data-placement="button 1" 
+                className="hero__content__desktop_button action action--primary"
+              >
+                join waitlist
+              </button>
+            </div>
+            
+            {/* Mobile Button */}
+            <div className="hero__buttons hero_button">
+              <button 
+                data-placement="button 1" 
+                className="hero__content__mobile_button action action--primary"
+              >
+                join waitlist
+              </button>
+            </div>
           </div>
         </div>
       </section>

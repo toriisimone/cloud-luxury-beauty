@@ -39,10 +39,18 @@ const Navbar = () => {
     };
   }, []);
 
+  // Helper function to capitalize first letter of each word
+  const capitalizeWords = (str: string): string => {
+    return str.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
+
   // Get menu items from category structure
   const categories = getCategoryStructure();
   const menuItems = categories.map(cat => ({
     name: cat.topCategory,
+    displayName: capitalizeWords(cat.topCategory),
     href: `/category/${cat.topCategory.toLowerCase().replace(/\s+/g, '-')}`,
     category: cat.topCategory
   }));
@@ -101,7 +109,7 @@ const Navbar = () => {
               <div className={styles.countryPicker} tabIndex={0}>
                 <span className={styles.countryPickerCurrent}>
                   US <span className={styles.countryPickerSymbol}>$</span>
-                </span>
+            </span>
                 <select 
                   id="LocalizationForm-Select" 
                   name="country_code" 
@@ -141,7 +149,7 @@ const Navbar = () => {
                   <option value="SG">singapore  (SGD $)</option>
                   <option value="NZ">new zealand  (NZD $)</option>
                 </select>
-              </div>
+          </div>
             </form>
 
             {/* Logo - Center */}
@@ -151,7 +159,7 @@ const Navbar = () => {
                   AURAPOP
                 </Link>
               </h1>
-            </div>
+      </div>
 
             {/* Desktop Utilities - Icons Right */}
             <div className={`${styles.siteHeaderUtilities} ${styles.siteHeaderUtilitiesDesktop}`}>
@@ -167,7 +175,7 @@ const Navbar = () => {
                   <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                   <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 </svg>
-              </Link>
+          </Link>
               {/* Account */}
               <Link
                 to="/account"
@@ -177,10 +185,10 @@ const Navbar = () => {
                 rel="nofollow"
               >
                 <svg width="20" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <path d="M6 20c0-3.33 2.67-6 6-6s6 2.67 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </svg>
-              </Link>
+                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M6 20c0-3.33 2.67-6 6-6s6 2.67 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+            </Link>
               {/* Wishlist */}
               <Link
                 to="/wishlist"
@@ -191,7 +199,7 @@ const Navbar = () => {
               >
                 <svg width="21" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </svg>
+              </svg>
               </Link>
               {/* Cart */}
               <Link
@@ -204,18 +212,18 @@ const Navbar = () => {
                 aria-label={`${getItemCount()} items in cart`}
               >
                 <svg width="19" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 9L4 20H20L18 9H6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <path d="M4 9H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M6 9C6 8 6.5 7 7.5 7C8.5 7 9 8 9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <path d="M15 9C15 8 15.5 7 16.5 7C17.5 7 18 8 18 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </svg>
-                {getItemCount() > 0 && (
-                  <span className={styles.cartBadge}>{getItemCount()}</span>
-                )}
+                <path d="M6 9L4 20H20L18 9H6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M4 9H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 9C6 8 6.5 7 7.5 7C8.5 7 9 8 9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M15 9C15 8 15.5 7 16.5 7C17.5 7 18 8 18 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+              {getItemCount() > 0 && (
+                <span className={styles.cartBadge}>{getItemCount()}</span>
+              )}
                 <span className={styles.visuallyHidden}>Cart with {getItemCount()} items</span>
-              </Link>
+            </Link>
             </div>
-
+            
             {/* Mobile Menu Toggle */}
             <div className={`${styles.siteHeaderUtilities} ${styles.siteHeaderUtilitiesMenu}`}>
               <Link
@@ -296,14 +304,7 @@ const Navbar = () => {
                                   </svg>
                                 </div>
                               )}
-                              {item.name}
-                              {isFragrance && (
-                                <div className={styles.linkSparkleBottom}>
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none">
-                                    <path fill="currentColor" fillRule="evenodd" d="M6.512.563A.527.527 0 0 1 7.26.047a.53.53 0 0 1 .308.52c-.009 1.466-.008 2.529.08 3.314.088.792.257 1.22.515 1.479.26.26.686.434 1.479.534.788.098 1.857.116 3.334.13a.527.527 0 0 1 .37.897.528.528 0 0 1-.373.154h-.002c-1.477-.009-2.547-.008-3.337.08-.793.088-1.22.257-1.48.516-.262.26-.436.687-.536 1.478-.098.785-.116 1.85-.13 3.32a.523.523 0 0 1-.537.53.527.527 0 0 1-.52-.525v-.002c.008-1.475.008-2.543-.08-3.331-.088-.793-.257-1.22-.516-1.479-.26-.261-.689-.435-1.48-.535-.789-.1-1.858-.116-3.334-.13h-.004a.527.527 0 0 1 .01-1.054h.002c1.477.01 2.547.009 3.337-.079.793-.088 1.22-.256 1.481-.514.261-.259.435-.685.535-1.477.098-.784.116-1.846.13-3.31Zm.446 12.049.006-.135v-.002h-.005v.137Zm0-.137h.006l.01-.251h-.016v.25Zm.03-4.996c.11-.207.245-.39.409-.553.165-.164.352-.296.561-.405a2.294 2.294 0 0 1-.554-.41 2.296 2.296 0 0 1-.403-.559c-.111.207-.246.392-.412.555a2.296 2.296 0 0 1-.56.403c.208.11.393.246.556.411.163.165.295.35.403.558Z" clipRule="evenodd"></path>
-                                  </svg>
-                                </div>
-                              )}
+                              {item.displayName}
                             </Link>
                             
                             {/* Nested Mega Menu - Kylie's Structure */}
@@ -326,6 +327,19 @@ const Navbar = () => {
                                 <div className={megaMenuStyles.megaMenuWrapper}>
                                   <div className={megaMenuStyles.megaMenuGrid}>
                                     <div className={megaMenuStyles.megaMenuMain}>
+                                      {/* Dropdown Header Image - Place your image here */}
+                                      <div className={megaMenuStyles.megaMenuHeaderImageContainer}>
+                                        <img 
+                                          src={`/assets/images/menu/${item.category.toLowerCase().replace(/\s+/g, '-')}/header.jpg`}
+                                          alt={`${item.category} Header`}
+                                          className={megaMenuStyles.megaMenuHeaderImage}
+                                          onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                          }}
+                                        />
+                                      </div>
+                                      
                                       {/* Shop All Link - Only for non-Fragrance categories */}
                                       {!isFragrance && (
                                         <div className={megaMenuStyles.megaMenuShopAll}>
@@ -501,9 +515,9 @@ const Navbar = () => {
                       "url": typeof window !== 'undefined' ? `${window.location.origin}${item.href}` : item.href
                     })))
                   }} />
-                </div>
-              </div>
-            </nav>
+          </div>
+        </div>
+      </nav>
           </div>
         </div>
 
