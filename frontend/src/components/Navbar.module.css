@@ -15,23 +15,23 @@
   padding: 0 2rem;
 }
 
-/* Announcement Bar */
+/* Top Banner - Logo, Shipping, Icons */
 .siteHeaderAnnouncement {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
-/* Main Header Row */
+/* Main Header Row - Navigation Menu */
 .siteHeaderMain {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 60px;
-  height: 60px;
-  gap: 2rem;
+  justify-content: center;
+  min-height: 50px;
+  height: 50px;
   position: relative;
 }
 
@@ -89,11 +89,14 @@
   -moz-appearance: none;
 }
 
-/* Logo */
+/* Logo - Centered in Top Banner */
 .siteHeaderLogo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  z-index: 10;
 }
 
 .siteLogo {
@@ -102,28 +105,26 @@
 }
 
 .siteLogo a {
-  display: flex;
-  align-items: center;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-style: italic;
   color: #ffffff;
   text-decoration: none;
   transition: opacity 0.2s ease;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 .siteLogo a:hover {
   opacity: 0.7;
 }
 
-.siteLogo a svg {
-  width: auto;
-  height: 28px;
-  fill: currentColor;
-}
-
-/* Navigation */
+/* Navigation - Second Row */
 .siteHeaderNav {
   display: flex;
   align-items: center;
-  flex: 1;
+  width: 100%;
   justify-content: center;
 }
 
@@ -268,6 +269,7 @@
 .siteHeaderUtilitiesDesktop {
   display: flex;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .siteHeaderAction {
@@ -423,8 +425,13 @@
     display: none;
   }
 
+  .siteHeaderLogo {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   .siteHeaderMain {
-    gap: 1rem;
+    display: none;
   }
 
   .siteHeaderNav {
@@ -448,8 +455,8 @@
     top: 60px;
   }
 
-  .siteLogo a svg {
-    height: 24px;
+  .siteLogo a {
+    font-size: 1.5rem;
   }
 }
 
@@ -458,15 +465,11 @@
     padding: 0 1rem;
   }
 
-  .siteHeaderMain {
-    gap: 0.75rem;
-  }
-
   .siteHeaderUtilities {
     gap: 0.5rem;
   }
 
-  .siteLogo a svg {
-    height: 20px;
+  .siteLogo a {
+    font-size: 1.25rem;
   }
 }
