@@ -107,6 +107,13 @@ declare global {
         className?: string;
         [key: string]: any;
       };
+      'font': {
+        size?: string | number;
+        color?: string;
+        face?: string;
+        children?: React.ReactNode;
+        [key: string]: any;
+      };
     }
   }
 }
