@@ -98,3 +98,15 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
 }
+
+// Custom web component type declarations
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'fw-live-helper': {
+        className?: string;
+        [key: string]: any;
+      };
+    }
+  }
+}
