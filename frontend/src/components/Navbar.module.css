@@ -1,9 +1,3 @@
-/* Layout Header Wrapper */
-.layoutHeader {
-  position: relative;
-  width: 100%;
-}
-
 /* Site Header - Kylie's Exact Structure - Black Background */
 .siteHeader {
   position: fixed !important;
@@ -15,24 +9,29 @@
   background: #000000 !important;
 }
 
-.siteHeaderTransparent {
-  /* Reserved for transparent variant */
-}
-
-.siteHeaderMobileTransparent {
-  /* Reserved for mobile transparent variant */
-}
-
 .siteHeaderWrapper {
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 2rem;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+}
+
+/* Announcement Bar */
+.siteHeaderAnnouncement {
+  display: flex;
   align-items: center;
-  gap: 2rem;
+  justify-content: flex-start;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Main Header Row */
+.siteHeaderMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   min-height: 60px;
   height: 60px;
+  gap: 2rem;
   position: relative;
 }
 
@@ -90,17 +89,11 @@
   -moz-appearance: none;
 }
 
-/* Logo - Center */
+/* Logo */
 .siteHeaderLogo {
   display: flex;
-  justify-content: center;
   align-items: center;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  z-index: 10;
-  pointer-events: auto;
+  flex-shrink: 0;
 }
 
 .siteLogo {
@@ -109,30 +102,32 @@
 }
 
 .siteLogo a {
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  font-style: italic;
+  display: flex;
+  align-items: center;
   color: #ffffff;
   text-decoration: none;
   transition: opacity 0.2s ease;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
 }
 
 .siteLogo a:hover {
   opacity: 0.7;
 }
 
-/* Navigation - First (Mobile/Scripts) - Inside Wrapper */
-.siteHeaderNavigation {
-  display: flex;
-  align-items: center;
-  grid-column: 1;
-  justify-self: start;
+.siteLogo a svg {
+  width: auto;
+  height: 28px;
+  fill: currentColor;
 }
 
-.siteHeaderMenuMobile {
+/* Navigation */
+.siteHeaderNav {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.siteHeaderMenuDesktop {
   width: 100%;
 }
 
@@ -142,30 +137,6 @@
 
 .flyoutOverlay {
   /* Flyout overlay for mini-cart */
-}
-
-/* Desktop Navigation - Outside Wrapper but Inside site-header */
-.siteHeaderNavigationDesktop {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background: #000000;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50px;
-  z-index: 1000;
-  grid-column: unset;
-}
-
-.siteHeaderMenuDesktop {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 2rem;
 }
 
 .linklist {
@@ -291,19 +262,12 @@
 }
 
 .siteHeaderUtilitiesMenu {
-  position: absolute;
-  right: 2rem;
   display: none;
-  z-index: 11;
 }
 
 .siteHeaderUtilitiesDesktop {
-  grid-column: 3;
   display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-self: end;
-  z-index: 11;
+  flex-shrink: 0;
 }
 
 .siteHeaderAction {
@@ -448,24 +412,22 @@
 
 @media (max-width: 768px) {
   .siteHeaderWrapper {
-    grid-template-columns: 1fr auto;
-    gap: 1rem;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .siteHeaderAnnouncement {
+    padding: 0.375rem 0;
   }
 
   .localizationForm {
     display: none;
   }
 
-  .siteHeaderLogo {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    justify-content: center;
-    grid-column: 1 / -1;
+  .siteHeaderMain {
+    gap: 1rem;
   }
 
-  .siteHeaderNavigation {
+  .siteHeaderNav {
     display: none;
   }
 
@@ -475,8 +437,6 @@
 
   .siteHeaderUtilitiesMenu {
     display: flex;
-    position: static;
-    right: auto;
   }
 
   .siteHeaderUtilitiesDesktop {
@@ -488,14 +448,17 @@
     top: 60px;
   }
 
-  .siteLogo a {
-    font-size: 1.5rem;
+  .siteLogo a svg {
+    height: 24px;
   }
 }
 
 @media (max-width: 480px) {
   .siteHeaderWrapper {
     padding: 0 1rem;
+  }
+
+  .siteHeaderMain {
     gap: 0.75rem;
   }
 
@@ -503,7 +466,7 @@
     gap: 0.5rem;
   }
 
-  .siteLogo a {
-    font-size: 1.25rem;
+  .siteLogo a svg {
+    height: 20px;
   }
 }
