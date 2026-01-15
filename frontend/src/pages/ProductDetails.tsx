@@ -366,67 +366,6 @@ const ProductDetails = () => {
               )}
             </div>
 
-            {/* Variants */}
-            {product.variants && product.variants.length > 0 && (
-              <div className={styles.variants}>
-                <label className={styles.label}>Select {product.variants[0].name}:</label>
-                <div className={styles.variantOptions}>
-                  {product.variants.map((variant) => (
-                    <button
-                      key={variant.id}
-                      type="button"
-                      onClick={() => setSelectedVariant(variant.id)}
-                      className={`${styles.variantBtn} ${selectedVariant === variant.id ? styles.active : ''}`}
-                    >
-                      {variant.value}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Sephora-style fulfillment/service section */}
-            <div className={styles.fulfillmentSection} aria-label="Delivery and services">
-              <div className={styles.serviceBoxes}>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>
-                    <a className={styles.serviceLink} href="/account">
-                      Sign in
-                    </a>{' '}
-                    for <b>FREE</b> shipping
-                  </div>
-                  <div className={styles.serviceSub}>Delivery by {deliveryDateLabel} to {zipCode}</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Auto‑Replenish</div>
-                  <div className={styles.serviceSub}>Save 5% on this item</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Same‑Day Delivery</div>
-                  <div className={styles.serviceSub}>{zipCode}</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Buy Online &amp; Pick Up</div>
-                  <div className={styles.serviceSub}>GLENDALE TOWN CENTER</div>
-                </div>
-              </div>
-
-              <div className={styles.deliveryBlock}>
-                <div className={styles.deliveryLine}>
-                  <b>Delivery by {deliveryDateLabel}</b> to {zipCode}
-                </div>
-                <div className={styles.deliverySub}>
-                  <a className={styles.serviceLink} href="/account">
-                    Sign in
-                  </a>{' '}
-                  or create an account to enjoy <b>FREE</b> standard shipping.
-                </div>
-                <a className={styles.serviceLink} href="/shipping-returns">
-                  Shipping &amp; Returns
-                </a>
-              </div>
-            </div>
-
             {/* Add to cart + favorites */}
             <div className={styles.actions}>
               <div className={styles.qtyBlock}>
@@ -480,6 +419,70 @@ const ProductDetails = () => {
                 </div>
               </div>
             </div>
+
+            {/* Variants */}
+            {product.variants && product.variants.length > 0 && (
+              <div className={styles.variants}>
+                <label className={styles.label}>Select {product.variants[0].name}:</label>
+                <div className={styles.variantOptions}>
+                  {product.variants.map((variant) => (
+                    <button
+                      key={variant.id}
+                      type="button"
+                      onClick={() => setSelectedVariant(variant.id)}
+                      className={`${styles.variantBtn} ${selectedVariant === variant.id ? styles.active : ''}`}
+                    >
+                      {variant.value}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Delivery & services (collapsed by default to keep PDP compact) */}
+            <details className={styles.fulfillmentDetails}>
+              <summary className={styles.fulfillmentSummary}>Delivery &amp; services</summary>
+              <div className={styles.fulfillmentSection} aria-label="Delivery and services">
+                <div className={styles.serviceBoxes}>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>
+                      <a className={styles.serviceLink} href="/account">
+                        Sign in
+                      </a>{' '}
+                      for <b>FREE</b> shipping
+                    </div>
+                    <div className={styles.serviceSub}>Delivery by {deliveryDateLabel} to {zipCode}</div>
+                  </div>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>Auto‑Replenish</div>
+                    <div className={styles.serviceSub}>Save 5% on this item</div>
+                  </div>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>Same‑Day Delivery</div>
+                    <div className={styles.serviceSub}>{zipCode}</div>
+                  </div>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>Buy Online &amp; Pick Up</div>
+                    <div className={styles.serviceSub}>GLENDALE TOWN CENTER</div>
+                  </div>
+                </div>
+
+                <div className={styles.deliveryBlock}>
+                  <div className={styles.deliveryLine}>
+                    <b>Delivery by {deliveryDateLabel}</b> to {zipCode}
+                  </div>
+                  <div className={styles.deliverySub}>
+                    <a className={styles.serviceLink} href="/account">
+                      Sign in
+                    </a>{' '}
+                    or create an account to enjoy <b>FREE</b> standard shipping.
+                  </div>
+                  <a className={styles.serviceLink} href="/shipping-returns">
+                    Shipping &amp; Returns
+                  </a>
+                </div>
+              </div>
+            </details>
           </section>
         </div>
 
