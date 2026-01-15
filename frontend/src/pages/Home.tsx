@@ -1,49 +1,7 @@
-import { useEffect, useState } from 'react';
-import CategoryCard from '../components/CategoryCard';
 import ProductCarousel from '../components/ProductCarousel';
-import Loader from '../components/Loader';
-import { Category } from '../types/global';
-import * as categoriesApi from '../api/categoriesApi';
 import styles from './Home.module.css';
 
 const Home = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log('[HOME] Fetching categories for homepage...');
-        setLoading(true);
-        
-        // Fetch categories
-        const categoriesRes = await categoriesApi.getCategories();
-        setCategories(categoriesRes);
-        console.log('[HOME] Categories fetched:', categoriesRes.length);
-        
-      } catch (error: any) {
-        console.error('[HOME] ❌ Failed to fetch categories:', error);
-        setCategories([]);
-      } finally {
-        setLoading(false);
-        console.log('[HOME] ✅ Categories loading complete');
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Log rendering state for debugging
-  console.log('[HOME RENDER] ========== RENDERING HOME PAGE ==========');
-  console.log('[HOME RENDER] Loading:', loading);
-  console.log('[HOME RENDER] Categories:', categories.length);
-
-  // Show loader only if categories are loading
-  if (loading) {
-    console.log('[HOME RENDER] Showing loader...');
-    return <Loader />;
-  }
-
   return (
     <div className={styles.home}>
       {/* Hero Banner Section - Single Image */}
@@ -107,23 +65,6 @@ const Home = () => {
 
       {/* Product Carousel - Directly under hero banner */}
       <ProductCarousel />
-
-      {/* Shop by Category Section */}
-      {categories.length > 0 && (
-        <section className={styles.categorySection}>
-          <div className={styles.container}>
-            <h2 className={styles.sectionTitle}>Shop by Category</h2>
-            <div className={styles.categoriesGrid}>
-              {categories.map((category) => (
-                <CategoryCard key={category.id} category={category} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Cloud Divider - Only show at bottom if we have content */}
-      {categories.length > 0 && <div className={styles.cloudDivider}></div>}
     </div>
   );
 };

@@ -28,7 +28,8 @@
 .megaMenuWrapper {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 40px;
+  /* Add top padding so the first row of tiles doesn't touch the header edge */
+  padding: 24px 40px 32px;
   width: 100%;
   box-sizing: border-box;
 }
