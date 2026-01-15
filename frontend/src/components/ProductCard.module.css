@@ -1,13 +1,13 @@
-/* Kylie Cosmetics-style product card - Pixel-perfect match */
+/* Category/Product grid card (match screenshot layout) */
 .card {
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border-radius: 6px; /* Minimal rounded corners */
-  overflow: hidden;
-  transition: all 0.2s ease;
+  border-radius: 0;
+  overflow: visible;
+  transition: transform 0.2s ease;
   box-shadow: none;
-  border: 1px solid #E5E5E5; /* Subtle light gray border */
+  border: none;
   position: relative;
   width: 100%;
   height: 100%;
@@ -18,8 +18,6 @@
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border-color: #D0D0D0;
 }
 
 .link {
@@ -35,9 +33,9 @@
 .imageContainer {
   position: relative;
   width: 100%;
-  padding-top: 115%; /* Portrait orientation - taller than wide */
+  padding-top: 110%;
   overflow: hidden;
-  background: #FFFFFF; /* Pure white background */
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,8 +46,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-width: 85%; /* Center product with white space around */
-  max-height: 85%;
+  max-width: 78%;
+  max-height: 78%;
   width: auto;
   height: auto;
   object-fit: contain; /* Show full product without cropping */
@@ -74,76 +72,78 @@
   font-size: 0.85rem;
 }
 
-/* Award Badge - Top left, circular style */
-.awardBadge {
+/* NEW badge - top-left */
+.badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  background: #D32F2F; /* Red like reference */
-  color: #FFFFFF;
-  padding: 0.4rem 0.7rem;
-  border-radius: 20px; /* Pill shape */
+  top: 10px;
+  left: 10px;
+  background: #000;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
   font-size: 0.65rem;
-  font-weight: 500;
-  text-transform: lowercase;
-  letter-spacing: 0.2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   z-index: 2;
-  line-height: 1.2;
   white-space: nowrap;
 }
 
-/* Regular Badge - Top right, rectangular style */
-.badge {
+/* Heart button - top-right */
+.favoriteButton {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(245, 240, 235, 0.95); /* Light beige like reference */
-  color: #000;
-  padding: 0.35rem 0.7rem;
-  border-radius: 0; /* Sharp corners */
-  font-size: 0.65rem;
-  font-weight: 400;
-  text-transform: lowercase;
-  letter-spacing: 0.3px;
-  z-index: 2;
-  white-space: nowrap;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favoriteButton svg {
+  width: 22px;
+  height: 22px;
+}
+
+.favoriteActive svg {
+  fill: #000;
 }
 
 /* Content Area - Proper padding and spacing */
 .content {
-  padding: 1rem 1.25rem 0.75rem; /* Generous padding like reference */
+  padding: 1.1rem 0 0;
   flex: 1;
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
   min-height: 0;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
-/* Product Name */
+/* Brand (bold) */
+.brand {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 0;
+  color: #000;
+  line-height: 1.25;
+}
+
+/* Product title */
 .name {
-  font-size: 0.9rem;
-  font-weight: 500; /* Slightly bolder than rest */
+  font-size: 1rem;
+  font-weight: 400;
   margin: 0;
   color: #000;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-transform: lowercase;
-  letter-spacing: 0.1px;
-}
-
-/* Description/Tagline - Subtle, benefit-driven */
-.description {
-  font-size: 0.8rem;
-  font-weight: 400;
-  margin: 0;
-  color: #666;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -152,8 +152,8 @@
 .rating {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  margin: 0.25rem 0;
+  gap: 0.35rem;
+  margin: 0.1rem 0;
   flex-shrink: 0;
 }
 
@@ -161,21 +161,21 @@
   display: flex;
   align-items: center;
   gap: 0.05rem;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   line-height: 1;
 }
 
 .starFilled {
-  color: #000; /* Black filled stars */
+  color: #000;
 }
 
 .starEmpty {
-  color: #CCC; /* Light gray for empty stars */
-  opacity: 0.5;
+  color: #CCC;
+  opacity: 0.65;
 }
 
 .ratingText {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: #000;
   font-weight: 400;
 }
@@ -184,121 +184,46 @@
 .priceContainer {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
-  margin: 0.25rem 0;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0;
   flex-shrink: 0;
 }
 
 .price {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #000;
-}
-
-.originalPrice {
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #999;
-  text-decoration: line-through;
-}
-
-/* Size Selector - Hidden by default */
-.sizeSelector {
-  display: none; /* Hidden to match Kylie style */
-}
-
-.sizeOption {
-  padding: 0.35rem 0.7rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0;
-  background: #FFFFFF;
-  font-size: 0.7rem;
-  color: #000;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.sizeOption:hover {
-  border-color: #000;
-}
-
-.sizeOption.active {
-  background: #000;
-  color: white;
-  border-color: #000;
-}
-
-/* CTA Button - Full width, dark grey */
-.addToCart {
-  margin: 0 1.25rem 1rem;
-  padding: 0.9rem;
-  background: #2a2a2a; /* Dark grey like reference */
-  color: #FFFFFF;
-  border: none;
-  border-radius: 0;
-  font-weight: 400;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: lowercase;
-  letter-spacing: 0.2px;
-  width: calc(100% - 2.5rem);
-  flex-shrink: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.addToCart:hover {
-  background: #1a1a1a;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.addToCart:active {
-  transform: translateY(0);
 }
 
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .content {
-    padding: 0.9rem 1rem 0.7rem;
+    padding: 1rem 0 0;
   }
 
   .name {
-    font-size: 0.85rem;
-  }
-
-  .description {
-    font-size: 0.75rem;
-  }
-
-  .addToCart {
-    margin: 0 1rem 0.9rem;
-    padding: 0.85rem;
-    width: calc(100% - 2rem);
-    font-size: 0.8rem;
+    font-size: 0.95rem;
   }
 }
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
   .imageContainer {
-    padding-top: 110%;
+    padding-top: 115%;
   }
 
   .content {
-    padding: 0.85rem 1rem 0.65rem;
-    gap: 0.4rem;
+    padding: 0.9rem 0 0;
+    gap: 0.3rem;
+  }
+
+  .brand {
+    font-size: 0.9rem;
   }
 
   .name {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     margin-bottom: 0;
-  }
-
-  .description {
-    font-size: 0.7rem;
   }
 
   .rating {
@@ -309,10 +234,10 @@
     margin: 0.2rem 0;
   }
 
-  .addToCart {
-    margin: 0 1rem 0.85rem;
-    padding: 0.8rem;
-    font-size: 0.75rem;
-    width: calc(100% - 2rem);
+  .favoriteButton {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
   }
 }

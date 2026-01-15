@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types/global';
-import { useCart } from '../hooks/useCart';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
@@ -9,49 +8,63 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const { addItem } = useCart();
-  
-  // Get size options from variants if available
-  const sizeVariants = product.variants?.filter(v => v.name.toLowerCase() === 'size') || [];
-  const hasSizeOptions = sizeVariants.length > 0;
-  
-  // Set default selected size if available
-  const defaultSize = hasSizeOptions && sizeVariants.length > 0 ? sizeVariants[0].value : null;
-  const [selectedSize, setSelectedSize] = useState<string | null>(defaultSize);
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Add to cart functionality
-    const selectedVariant = selectedSize ? sizeVariants.find(v => v.value === selectedSize) : undefined;
-    addItem(product, selectedVariant);
-  };
+  // Consistent demo rating per product (until you wire real review data)
+  const { rating, reviewCount } = useMemo(() => {
+    const seed = product.id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    const r = (4.0 + (seed % 10) / 10);
+    const count = 50 + (seed % 500);
+    return {
+      rating: r.toFixed(1),
+      reviewCount: count >= 1000 ? `${(count / 1000).toFixed(1)}K` : count.toString(),
+    };
+  }, [product.id]);
 
-  // Generate random rating for demo (4.0 to 5.0) - consistent per product
-  const [rating] = useState(() => (4.0 + Math.random() * 1.0).toFixed(1));
-  const [reviewCount] = useState(() => Math.floor(Math.random() * 500) + 50);
-  
-  // Determine badges - award badge top-left, other badges top-right
-  const hasAwardBadge = product.featured || Math.random() > 0.7;
-  const otherBadges: string[] = [];
-  
-  if (product.featured) {
-    if (Math.random() > 0.5) {
-      otherBadges.push("tori's favorite");
-    } else {
-      otherBadges.push("best seller");
+  // Split "Brand Title" into separate lines using the seeded DB pattern:
+  // - product.name is "Brand Title"
+  // - product.description is the Title
+  const { brand, title } = useMemo(() => {
+    const desc = (product.description || '').trim();
+    const name = (product.name || '').trim();
+
+    if (desc && name && name.endsWith(desc)) {
+      const b = name.slice(0, Math.max(0, name.length - desc.length)).trim();
+      return { brand: b || name, title: desc };
     }
-  }
-  
-  // Extract short description/tagline from product description
-  const description = product.description ? 
-    product.description.split(/[.!?]/).filter(s => s.trim().length > 0)[0]?.trim().substring(0, 45) + '...' : 
-    null;
+
+    return { brand: name, title: desc || name };
+  }, [product.description, product.name]);
 
   return (
     <div className={styles.card}>
       <Link to={`/products/${product.id}`} className={styles.link}>
         <div className={styles.imageContainer}>
+          {/* Favorite Heart Button (top-right) */}
+          <button
+            type="button"
+            className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setIsFavorite((v) => !v);
+            }}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill={isFavorite ? '#000' : 'none'}
+              stroke="#000"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+          </button>
+
           {product.images && product.images.length > 0 && product.images[0] ? (
             <img src={product.images[0]} alt={product.name} className={styles.image} onError={(e) => {
               e.currentTarget.style.display = 'none';
@@ -60,24 +73,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <div className={styles.placeholder}>Product Image</div>
           )}
           
-          {/* Award badge - top left (circular style like reference) */}
-          {hasAwardBadge && (
-            <span className={styles.awardBadge}>award winner</span>
+          {/* Featured/New badge (top-left) */}
+          {product.featured && (
+            <span className={styles.badge}>NEW</span>
           )}
-          
-          {/* Other badges - top right (rectangular style) */}
-          {otherBadges.map((badge, index) => (
-            <span key={index} className={styles.badge}>{badge}</span>
-          ))}
         </div>
         
         <div className={styles.content}>
-          <h3 className={styles.name}>{product.name.toLowerCase()}</h3>
-          
-          {/* Description/Tagline */}
-          {description && (
-            <p className={styles.description}>{description}</p>
-          )}
+          <p className={styles.brand}>{brand}</p>
+          <h3 className={styles.name}>{title}</h3>
           
           {/* Rating Row */}
           <div className={styles.rating}>
@@ -93,41 +97,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           </div>
           
-          {/* Price - with optional original price for bundles */}
           <div className={styles.priceContainer}>
             <span className={styles.price}>${product.price.toFixed(2)}</span>
-            {product.price < (product.price * 1.15) && Math.random() > 0.7 && (
-              <span className={styles.originalPrice}>
-                ${(product.price * 1.15).toFixed(0)}
-              </span>
-            )}
           </div>
-          
-          {/* Size selector - hidden for now to match Kylie style */}
-          {false && hasSizeOptions && (
-            <div className={styles.sizeSelector}>
-              {sizeVariants.map((variant, index) => (
-                <button
-                  key={variant.id || index}
-                  className={`${styles.sizeOption} ${selectedSize === variant.value ? styles.active : ''}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setSelectedSize(variant.value);
-                  }}
-                >
-                  {variant.value}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       </Link>
-      
-      {/* CTA Button - Full width, outside link */}
-      <button onClick={handleAddToCart} className={styles.addToCart}>
-        add to cart - ${product.price.toFixed(2)}
-      </button>
     </div>
   );
 };

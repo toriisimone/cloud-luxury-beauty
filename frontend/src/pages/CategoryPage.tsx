@@ -79,6 +79,13 @@ const CategoryPage = () => {
 
   return (
     <div className={styles.categoryPage}>
+      <button
+        className={styles.backToTop}
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      >
+        Back to Top
+      </button>
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
