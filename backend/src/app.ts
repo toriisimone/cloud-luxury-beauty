@@ -13,8 +13,27 @@ const app: Express = express();
 console.log('DEBUG: Express app created');
 
 // CORS configuration - use explicit env value(s) only
-const corsOptions = {
-  origin: config.CORS_ORIGIN.split(','),
+const allowedOrigins = config.CORS_ORIGIN.split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+// IMPORTANT:
+// - Vercel deployments can change domains (preview + prod).
+// - If CORS blocks the frontend, the site will show "no products" even while backend is healthy.
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Non-browser requests (curl/postman/server-to-server) have no Origin header.
+    if (!origin) return callback(null, true);
+
+    // Exact allowlist from env
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+
+    // Allow Vercel frontends (prod + preview) to prevent breaking deployments.
+    // Example: https://cloud-luxury-beauty-frontend-22it8mee5-luxesavings.vercel.app
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
