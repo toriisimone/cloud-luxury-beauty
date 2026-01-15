@@ -248,52 +248,33 @@ const ProductDetails = () => {
         </div>
 
         <div className={styles.layout}>
-          {/* Left thumbnails */}
-          <aside className={styles.thumbs} aria-label="Product images">
-            {images.length > 1 &&
-              images.map((src, idx) => (
-                <button
-                  key={`${src}-${idx}`}
-                  type="button"
-                  className={`${styles.thumbButton} ${idx === activeImageIndex ? styles.thumbActive : ''}`}
-                  onClick={() => setActiveImageIndex(idx)}
-                  aria-label={`View image ${idx + 1}`}
-                >
-                  <img src={src} alt="" className={styles.thumbImage} loading="lazy" />
-                </button>
-              ))}
-          </aside>
-
-          {/* Main image */}
-          <section className={styles.imageStage}>
-            <div className={styles.mainImageFrame}>
-              {activeImage ? (
-                <img src={activeImage} alt={product.name} className={styles.mainImage} />
-              ) : (
-                <div className={styles.placeholder}>No Image</div>
-              )}
-
-              {images.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    className={`${styles.arrow} ${styles.arrowLeft}`}
-                    aria-label="Previous image"
-                    onClick={() => setActiveImageIndex((i) => (i - 1 + images.length) % images.length)}
-                  >
-                    ‹
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.arrow} ${styles.arrowRight}`}
-                    aria-label="Next image"
-                    onClick={() => setActiveImageIndex((i) => (i + 1) % images.length)}
-                  >
-                    ›
-                  </button>
-                </>
-              )}
+          {/* Media (compact, square) */}
+          <section className={styles.mediaColumn} aria-label="Product media">
+            <div className={styles.imageStage}>
+              <div className={styles.mainImageFrame}>
+                {activeImage ? (
+                  <img src={activeImage} alt={product.name} className={styles.mainImage} />
+                ) : (
+                  <div className={styles.placeholder}>No Image</div>
+                )}
+              </div>
             </div>
+
+            {images.length > 1 && (
+              <div className={styles.thumbsRow} aria-label="More product images">
+                {images.map((src, idx) => (
+                  <button
+                    key={`${src}-${idx}`}
+                    type="button"
+                    className={`${styles.thumbButton} ${idx === activeImageIndex ? styles.thumbActive : ''}`}
+                    onClick={() => setActiveImageIndex(idx)}
+                    aria-label={`View image ${idx + 1}`}
+                  >
+                    <img src={src} alt="" className={styles.thumbImage} loading="lazy" />
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Right info */}
@@ -329,19 +310,6 @@ const ProductDetails = () => {
                 <div className={styles.price}>${price.toFixed(2)}</div>
               </div>
 
-              <div className={styles.paymentsRow}>
-                <span>or 4 payments of </span>
-                <b>${payments}</b>
-                <span> with </span>
-                <span className={styles.paymentsBrand}>Klarna</span>
-                <span className={styles.paymentsBrand}>Afterpay</span>
-                <span className={styles.paymentsBrand}>PayPal</span>
-              </div>
-
-              <div className={styles.autoReplenishRow}>
-                Get It For <b>${autoReplenishPrice}</b> (5% Off) With Auto‑Replenish
-              </div>
-
               {sizeText && (
                 <div className={styles.metaRow}>
                   <span className={styles.metaLabel}>Size:</span>
@@ -364,6 +332,22 @@ const ProductDetails = () => {
               {!extras.shortDescription && product.description && (
                 <p className={styles.description}>{product.description}</p>
               )}
+
+              <details className={styles.moreDetails}>
+                <summary className={styles.moreSummary}>More</summary>
+                <div className={styles.paymentsRow}>
+                  <span>or 4 payments of </span>
+                  <b>${payments}</b>
+                  <span> with </span>
+                  <span className={styles.paymentsBrand}>Klarna</span>
+                  <span className={styles.paymentsBrand}>Afterpay</span>
+                  <span className={styles.paymentsBrand}>PayPal</span>
+                </div>
+
+                <div className={styles.autoReplenishRow}>
+                  Get It For <b>${autoReplenishPrice}</b> (5% Off) With Auto‑Replenish
+                </div>
+              </details>
             </div>
 
             {/* Variants */}
@@ -384,48 +368,6 @@ const ProductDetails = () => {
                 </div>
               </div>
             )}
-
-            {/* Sephora-style fulfillment/service section */}
-            <div className={styles.fulfillmentSection} aria-label="Delivery and services">
-              <div className={styles.serviceBoxes}>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>
-                    <a className={styles.serviceLink} href="/account">
-                      Sign in
-                    </a>{' '}
-                    for <b>FREE</b> shipping
-                  </div>
-                  <div className={styles.serviceSub}>Delivery by {deliveryDateLabel} to {zipCode}</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Auto‑Replenish</div>
-                  <div className={styles.serviceSub}>Save 5% on this item</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Same‑Day Delivery</div>
-                  <div className={styles.serviceSub}>{zipCode}</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Buy Online &amp; Pick Up</div>
-                  <div className={styles.serviceSub}>GLENDALE TOWN CENTER</div>
-                </div>
-              </div>
-
-              <div className={styles.deliveryBlock}>
-                <div className={styles.deliveryLine}>
-                  <b>Delivery by {deliveryDateLabel}</b> to {zipCode}
-                </div>
-                <div className={styles.deliverySub}>
-                  <a className={styles.serviceLink} href="/account">
-                    Sign in
-                  </a>{' '}
-                  or create an account to enjoy <b>FREE</b> standard shipping.
-                </div>
-                <a className={styles.serviceLink} href="/shipping-returns">
-                  Shipping &amp; Returns
-                </a>
-              </div>
-            </div>
 
             {/* Add to cart + favorites */}
             <div className={styles.actions}>
@@ -480,66 +422,116 @@ const ProductDetails = () => {
                 </div>
               </div>
             </div>
+
+            {/* Delivery & services (collapsed by default for compact layout) */}
+            <details className={styles.moreDetails} aria-label="Delivery and services">
+              <summary className={styles.moreSummary}>Delivery &amp; services</summary>
+              <div className={styles.fulfillmentSection}>
+                <div className={styles.serviceBoxes}>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>
+                      <a className={styles.serviceLink} href="/account">
+                        Sign in
+                      </a>{' '}
+                      for <b>FREE</b> shipping
+                    </div>
+                    <div className={styles.serviceSub}>
+                      Delivery by {deliveryDateLabel} to {zipCode}
+                    </div>
+                  </div>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>Auto‑Replenish</div>
+                    <div className={styles.serviceSub}>Save 5% on this item</div>
+                  </div>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>Same‑Day Delivery</div>
+                    <div className={styles.serviceSub}>{zipCode}</div>
+                  </div>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>Buy Online &amp; Pick Up</div>
+                    <div className={styles.serviceSub}>GLENDALE TOWN CENTER</div>
+                  </div>
+                </div>
+
+                <div className={styles.deliveryBlock}>
+                  <div className={styles.deliveryLine}>
+                    <b>Delivery by {deliveryDateLabel}</b> to {zipCode}
+                  </div>
+                  <div className={styles.deliverySub}>
+                    <a className={styles.serviceLink} href="/account">
+                      Sign in
+                    </a>{' '}
+                    or create an account to enjoy <b>FREE</b> standard shipping.
+                  </div>
+                  <a className={styles.serviceLink} href="/shipping-returns">
+                    Shipping &amp; Returns
+                  </a>
+                </div>
+              </div>
+            </details>
           </section>
         </div>
 
         {/* You Might Also Like */}
-        <section className={styles.relatedSection} aria-label="Product recommendations">
-          {featuredProducts.length > 0 && (
-            <div className={styles.sectionPanel}>
-              <div className={styles.panelHeaderRow}>
-                <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Featured Products')}</div>
-                <div className={styles.panelSubtitle}>Sponsored</div>
-              </div>
-              <div className={`${styles.cardsRow} ${styles.cardsRowWide}`}>
-                {featuredProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {useItWithProducts.length > 0 && (
-            <div className={styles.sectionPanel}>
-              <div className={styles.panelHeaderRow}>
-                <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Use It With')}</div>
-              </div>
-              <div className={`${styles.cardsRow} ${styles.cardsRowCompact}`}>
-                {useItWithProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {similarProducts.length > 0 && (
-            <div className={styles.sectionPanel}>
-              <div className={styles.panelHeaderRow}>
-                <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Similar Products')}</div>
-              </div>
-              <div className={styles.cardsRow}>
-                {similarProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className={styles.sectionPanel}>
-            <div className={styles.panelHeaderRow}>
-              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('You May Also Like')}</div>
-            </div>
-            {relatedLoading ? (
-              <div className={styles.relatedLoading}>Loading...</div>
-            ) : (
-              <div className={styles.cardsRow}>
-                {(youMayAlsoLikeProducts.length > 0 ? youMayAlsoLikeProducts : relatedProducts).map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
+        <details className={styles.moreDetails} aria-label="Product recommendations">
+          <summary className={styles.moreSummary}>Recommendations</summary>
+          <section className={styles.relatedSection}>
+            {featuredProducts.length > 0 && (
+              <div className={styles.sectionPanel}>
+                <div className={styles.panelHeaderRow}>
+                  <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Featured Products')}</div>
+                  <div className={styles.panelSubtitle}>Sponsored</div>
+                </div>
+                <div className={`${styles.cardsRow} ${styles.cardsRowWide}`}>
+                  {featuredProducts.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
               </div>
             )}
-          </div>
-        </section>
+
+            {useItWithProducts.length > 0 && (
+              <div className={styles.sectionPanel}>
+                <div className={styles.panelHeaderRow}>
+                  <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Use It With')}</div>
+                </div>
+                <div className={`${styles.cardsRow} ${styles.cardsRowCompact}`}>
+                  {useItWithProducts.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {similarProducts.length > 0 && (
+              <div className={styles.sectionPanel}>
+                <div className={styles.panelHeaderRow}>
+                  <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Similar Products')}</div>
+                </div>
+                <div className={styles.cardsRow}>
+                  {similarProducts.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className={styles.sectionPanel}>
+              <div className={styles.panelHeaderRow}>
+                <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('You May Also Like')}</div>
+              </div>
+              {relatedLoading ? (
+                <div className={styles.relatedLoading}>Loading...</div>
+              ) : (
+                <div className={styles.cardsRow}>
+                  {(youMayAlsoLikeProducts.length > 0 ? youMayAlsoLikeProducts : relatedProducts).map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        </details>
       </div>
     </div>
   );
