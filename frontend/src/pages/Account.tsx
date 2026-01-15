@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import * as usersApi from '../api/usersApi';
@@ -19,6 +19,8 @@ const Account = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const supportEmailHref = useMemo(() => `mailto:support@aurapop.com?subject=Password%20reset`, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -102,20 +104,26 @@ const Account = () => {
     <div className={styles.account}>
       <div className={styles.container}>
         <div className={styles.authForm}>
-          <h1 className={styles.title}>{isLogin ? 'Login' : 'Register'}</h1>
+          <div className={styles.authHeader}>
+            <div className={styles.authLogo}>AURAPOP</div>
+            <h1 className={styles.title}>{isLogin ? 'Sign In' : 'Create Account'}</h1>
+            <p className={styles.subtitle}>
+              {isLogin ? 'Welcome back.' : 'Create an account to save favorites and checkout faster.'}
+            </p>
+          </div>
           
           <div className={styles.toggle}>
             <button
               onClick={() => setIsLogin(true)}
               className={isLogin ? styles.active : ''}
             >
-              Login
+              Sign In
             </button>
             <button
               onClick={() => setIsLogin(false)}
               className={!isLogin ? styles.active : ''}
             >
-              Register
+              Create Account
             </button>
           </div>
 
@@ -163,8 +171,27 @@ const Account = () => {
               />
             </div>
             <button type="submit" disabled={loading} className={styles.submitBtn}>
-              {loading ? 'Processing...' : isLogin ? 'Login' : 'Register'}
+              {loading ? 'Please wait…' : isLogin ? 'Sign In' : 'Create Account'}
             </button>
+
+            {isLogin && (
+              <div className={styles.formLinks}>
+                <button
+                  type="button"
+                  className={styles.linkBtn}
+                  onClick={() => {
+                    // Backend reset endpoint isn't implemented in this repo yet.
+                    // Provide a clean UX path without lying about functionality.
+                    window.open(supportEmailHref, '_self');
+                  }}
+                >
+                  Forgot Password?
+                </button>
+                <button type="button" className={styles.linkBtn} onClick={() => setIsLogin(false)}>
+                  Create an account
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>

@@ -12,6 +12,9 @@ const Home = () => {
         >
           {/* CRT TV Overlay */}
           <div className={styles.crtOverlay}></div>
+
+          {/* Subtle shimmer distortion (soft TV-glitch) */}
+          <div className={styles.shimmerOverlay} />
           
           {/* Finger Smoothing Overlay */}
           <div className={styles.fingerSmoothOverlay}></div>

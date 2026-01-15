@@ -1,6 +1,7 @@
 .account {
   min-height: 100vh;
-  padding: 2rem 0;
+  padding: 1.25rem 0 2.5rem;
+  background: #fff;
 }
 
 .container {
@@ -10,9 +11,32 @@
 }
 
 .title {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  color: var(--color-text);
+  font-family: var(--aurapop-font);
+  font-style: normal;
+  font-size: 16px;
+  margin: 0;
+  color: #000;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.authHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.authLogo {
+  font-family: var(--aurapop-font);
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #000;
 }
 
 .sections {
@@ -93,41 +117,43 @@
 .authForm {
   max-width: 500px;
   margin: 0 auto;
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 3rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 18px;
+  background: #fff;
 }
 
 .toggle {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 2rem;
-  background: white;
-  border-radius: 10px;
-  padding: 0.25rem;
+  margin-bottom: 14px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 999px;
+  padding: 4px;
 }
 
 .toggle button {
   flex: 1;
-  padding: 0.75rem;
+  padding: 10px 12px;
   background: transparent;
-  border-radius: 8px;
-  font-weight: 600;
-  color: var(--color-text-light);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
   transition: all 0.3s;
 }
 
 .toggle button.active {
-  background: var(--color-rose-gold);
+  background: #fff;
   color: white;
+  color: #000;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 12px;
 }
 
 .formGroup {
@@ -137,37 +163,40 @@
 }
 
 .formGroup label {
-  font-weight: 600;
-  color: var(--color-text);
+  font-weight: 700;
+  font-size: 12px;
+  color: #000;
 }
 
 .formGroup input {
-  padding: 0.75rem;
-  border: 2px solid var(--color-blush-dark);
-  border-radius: 10px;
-  font-size: 1rem;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  font-size: 12px;
   transition: border-color 0.3s;
 }
 
 .formGroup input:focus {
   outline: none;
-  border-color: var(--color-rose-gold);
+  border-color: var(--aurapop-pink);
 }
 
 .submitBtn {
-  padding: 1rem;
-  background: var(--color-rose-gold);
+  height: 40px;
+  padding: 0 14px;
+  background: var(--aurapop-pink);
   color: white;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 1.1rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.02em;
   transition: all 0.3s;
-  margin-top: 0.5rem;
+  margin-top: 4px;
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: var(--color-gold);
-  transform: translateY(-2px);
+  filter: brightness(0.95);
 }
 
 .submitBtn:disabled {
@@ -178,10 +207,30 @@
 .error {
   color: #e74c3c;
   text-align: center;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
+  margin-bottom: 10px;
+  padding: 10px;
   background: rgba(231, 76, 60, 0.1);
-  border-radius: 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.formLinks {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.linkBtn {
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--aurapop-pink);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 @media (max-width: 768px) {
@@ -189,22 +238,17 @@
     padding: 0 1rem;
   }
 
-  .title {
-    font-size: 1.6rem;
-    margin-bottom: 1.5rem;
-  }
-
   .sections {
     grid-template-columns: 1fr;
   }
 
   .authForm {
-    padding: 2rem 1.5rem;
+    padding: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .title {
-    font-size: 1.4rem;
+    font-size: 14px;
   }
 }
