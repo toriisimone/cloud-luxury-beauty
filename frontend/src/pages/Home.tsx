@@ -59,7 +59,7 @@ const Home = () => {
                 data-placement="button 1"
                 className="hero__content__desktop_button hero__content__mobile_button action action--primary"
               >
-                Subscribe For New
+                Subscribe for New
               </button>
             </div>
           </div>

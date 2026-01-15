@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartDrawerProvider } from './context/CartDrawerContext';
+import InitialLoadingScreen from './components/InitialLoadingScreen';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
@@ -23,6 +25,16 @@ import ErrorBoundary from './components/ErrorBoundary';
 import styles from './App.module.css';
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    if (!showSplash) return;
+    document.documentElement.style.overflow = 'hidden';
+    return () => {
+      document.documentElement.style.overflow = '';
+    };
+  }, [showSplash]);
+
   return (
     <AuthProvider>
       <CartProvider>
@@ -30,6 +42,7 @@ function App() {
           <CartDrawerProvider>
             <Router>
               <div className={styles.app}>
+                {showSplash && <InitialLoadingScreen onDone={() => setShowSplash(false)} />}
                 <Navbar />
                 <CartDrawer />
                 <main className={styles.main}>

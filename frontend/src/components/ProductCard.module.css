@@ -136,7 +136,11 @@
   margin: 0;
   color: #000;
   line-height: 1.25;
-  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(1.25em * 1);
 }
 
 /* Product title */
@@ -214,7 +218,8 @@
 }
 
 .cardActions {
-  margin-top: 8px;
+  margin-top: auto;
+  padding-top: 8px;
   display: flex;
   align-items: center;
 }
