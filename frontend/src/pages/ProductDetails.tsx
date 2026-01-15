@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import { Product } from '../types/global';
 import { useCart } from '../hooks/useCart';
 import * as productsApi from '../api/productsApi';
+import ProductCard from '../components/ProductCard';
 import styles from './ProductDetails.module.css';
 
 const ProductDetails = () => {
@@ -18,6 +19,8 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,6 +48,29 @@ const ProductDetails = () => {
 
     fetchProduct();
   }, [id]);
+
+  useEffect(() => {
+    const fetchRelated = async () => {
+      if (!product?.category?.slug) return;
+      setRelatedLoading(true);
+      try {
+        const res = await productsApi.getProducts({
+          category: product.category.slug,
+          page: 1,
+          limit: 24,
+        });
+        const others = (res.products || []).filter((p) => p.id !== product.id).slice(0, 12);
+        setRelatedProducts(others);
+      } catch (e) {
+        console.error('[ProductDetails] Failed to load related products:', e);
+        setRelatedProducts([]);
+      } finally {
+        setRelatedLoading(false);
+      }
+    };
+
+    fetchRelated();
+  }, [product?.category?.slug, product?.id]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -92,9 +118,56 @@ const ProductDetails = () => {
   const rating = typeof extras.rating === 'number' ? extras.rating : null;
   const reviewCount = typeof extras.reviewCount === 'number' ? extras.reviewCount : null;
 
+  const toTitleCase = (input: string): string => {
+    const smallWords = new Set(['to', 'and', 'or', 'the', 'a', 'an', 'of', 'in', 'on', 'for', 'with', 'at', 'by']);
+    return input
+      .split(' ')
+      .filter(Boolean)
+      .map((word, idx) => {
+        const lower = word.toLowerCase();
+        if (idx !== 0 && smallWords.has(lower)) return lower;
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+      })
+      .join(' ');
+  };
+
+  const deriveBrandTitle = (p: Product): { brand: string | null; title: string } => {
+    const desc = (p.description || '').trim();
+    const name = (p.name || '').trim();
+
+    // Seed pattern: name = "Brand - Full Title", description = "Full Title"
+    if (desc && name && name.toLowerCase().includes(desc.toLowerCase())) {
+      const idx = name.toLowerCase().indexOf(desc.toLowerCase());
+      const before = name.slice(0, idx).replace(/[-–—]+$/g, '').trim();
+      return { brand: before || null, title: desc };
+    }
+
+    // Fallback: use full name as title
+    return { brand: null, title: name };
+  };
+
+  const { brand, title } = deriveBrandTitle(product);
+
   return (
     <div className={styles.details}>
       <div className={styles.container}>
+        {/* Breadcrumbs (Sephora-style structure) */}
+        <div className={styles.breadcrumbs} aria-label="Breadcrumb">
+          <Link to="/" className={styles.breadcrumbLink}>
+            Home
+          </Link>
+          <span className={styles.breadcrumbSep}>›</span>
+          {product.category?.slug ? (
+            <Link to={`/category/${product.category.slug}`} className={styles.breadcrumbLink}>
+              {toTitleCase(product.category.name || product.category.slug)}
+            </Link>
+          ) : (
+            <span className={styles.breadcrumbCurrent}>Products</span>
+          )}
+          <span className={styles.breadcrumbSep}>›</span>
+          <span className={styles.breadcrumbCurrent}>{toTitleCase(title)}</span>
+        </div>
+
         <div className={styles.layout}>
           {/* Left thumbnails */}
           <aside className={styles.thumbs} aria-label="Product images">
@@ -146,7 +219,21 @@ const ProductDetails = () => {
 
           {/* Right info */}
           <section className={styles.info}>
-            <h1 className={styles.name}>{product.name}</h1>
+            {brand && <div className={styles.brand}>{toTitleCase(brand)}</div>}
+            <h1 className={styles.title}>{toTitleCase(title)}</h1>
+
+            {rating !== null && reviewCount !== null && (
+              <div className={styles.topRatingRow} aria-label={`${rating} stars from ${reviewCount} reviews`}>
+                <span className={styles.stars} aria-hidden="true">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <span key={i} className={i < Math.round(rating) ? styles.starFilled : styles.starEmpty}>
+                      ★
+                    </span>
+                  ))}
+                </span>
+                <span className={styles.reviewCount}>{reviewCount}</span>
+              </div>
+            )}
 
             {/* Clean info block (no fulfillment/shipping UI) */}
             <div className={styles.infoBlock}>
@@ -158,19 +245,6 @@ const ProductDetails = () => {
                 <div className={styles.metaRow}>
                   <span className={styles.metaLabel}>Size:</span>
                   <span className={styles.metaValue}>{sizeText}</span>
-                </div>
-              )}
-
-              {rating !== null && reviewCount !== null && (
-                <div className={styles.ratingRow} aria-label={`${rating} stars from ${reviewCount} reviews`}>
-                  <span className={styles.stars} aria-hidden="true">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <span key={i} className={i < Math.round(rating) ? styles.starFilled : styles.starEmpty}>
-                        ★
-                      </span>
-                    ))}
-                  </span>
-                  <span className={styles.reviewCount}>{reviewCount}</span>
                 </div>
               )}
 
@@ -212,45 +286,55 @@ const ProductDetails = () => {
 
             {/* Add to cart + favorites */}
             <div className={styles.actions}>
-              <div className={styles.quantity}>
-                <label className={styles.label} htmlFor="qty">
-                  Qty
-                </label>
-                <input
-                  id="qty"
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)}
-                  className={styles.quantityInput}
-                />
+              <div className={styles.qtyBlock}>
+                <div className={styles.qtyLabel}>Qty</div>
+                <div className={styles.actionRow}>
+                  <input
+                    id="qty"
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)}
+                    className={styles.quantityInput}
+                    aria-label="Quantity"
+                  />
+
+                  <button type="button" onClick={handleAddToCart} className={styles.addToCartHeart} aria-label="Add to Cart">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.heartIcon}>
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                    <span className={styles.addToCartLabel}>Add to Cart</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`${styles.favoriteHeart} ${isFavorite ? styles.favoriteActive : ''}`}
+                    aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                    onClick={() => setIsFavorite((v) => !v)}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.heartIconSmall}>
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                  </button>
+                </div>
               </div>
-
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className={styles.addToCartHeart}
-                aria-label="Add to cart"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.heartIcon}>
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-                <span className={styles.addToCartText}>Add</span>
-              </button>
-
-              <button
-                type="button"
-                className={`${styles.favoriteHeart} ${isFavorite ? styles.favoriteActive : ''}`}
-                aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                onClick={() => setIsFavorite((v) => !v)}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.heartIconSmall}>
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </button>
             </div>
           </section>
         </div>
+
+        {/* You Might Also Like */}
+        <section className={styles.relatedSection} aria-label="You Might Also Like">
+          <div className={styles.relatedHeader}>{toTitleCase('You Might Also Like')}</div>
+          {relatedLoading ? (
+            <div className={styles.relatedLoading}>Loading...</div>
+          ) : relatedProducts.length > 0 ? (
+            <div className={styles.relatedGrid}>
+              {relatedProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          ) : null}
+        </section>
       </div>
     </div>
   );
