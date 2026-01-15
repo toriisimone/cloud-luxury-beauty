@@ -80,6 +80,23 @@
   color: #666;
 }
 
+.error {
+  margin: 1rem 0 2rem;
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #000;
+  background: #fff;
+}
+
+/* Product Grid (DB-backed) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  min-height: 200px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .categoryPage {
@@ -88,5 +105,16 @@
 
   .pageTitle {
     font-size: 1.5rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
 }

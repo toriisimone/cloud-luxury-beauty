@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
-import { getCategoryStructure, TopCategory, getProductsByCategory, loadAllProducts, Product } from '../data/productData';
+import { getCategoryStructure, TopCategory } from '../data/productData';
 import styles from './Navbar.module.css';
 import megaMenuStyles from './MegaMenu.module.css';
 
@@ -13,17 +13,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Load products on mount
-  useEffect(() => {
-    const loadProducts = async () => {
-      const products = await loadAllProducts();
-      setAllProducts(products);
-    };
-    loadProducts();
-  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -77,11 +67,6 @@ const Navbar = () => {
     const topSlug = topCategory.toLowerCase().replace(/\s+/g, '-');
     const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
     return `/category/${topSlug}/${subSlug}`;
-  };
-
-  const getSubCategoryProducts = (topCategory: TopCategory, subCategory: string, limit: number = 4): Product[] => {
-    const products = getProductsByCategory(allProducts, topCategory, subCategory);
-    return products.slice(0, limit);
   };
 
   const categoryNames: Record<TopCategory, string> = {

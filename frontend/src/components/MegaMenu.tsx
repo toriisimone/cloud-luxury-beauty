@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import type { CSSProperties } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { TopCategory, getCategoryStructure, getProductsByCategory, loadAllProducts, Product } from '../data/productData';
+import { TopCategory, getCategoryStructure } from '../data/productData';
 import styles from './MegaMenu.module.css';
 
 interface MegaMenuProps {
@@ -13,17 +14,7 @@ interface MegaMenuProps {
 
 const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave }: MegaMenuProps) => {
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(activeCategory);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const categories = getCategoryStructure();
-
-  // Load products on mount
-  useEffect(() => {
-    const loadProducts = async () => {
-      const products = await loadAllProducts();
-      setAllProducts(products);
-    };
-    loadProducts();
-  }, []);
 
   // Update hovered category when activeCategory changes
   useEffect(() => {
@@ -66,12 +57,6 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     return `/category/${topSlug}/${subSlug}`;
   };
 
-  // Get products for a subcategory to show as menu items
-  const getSubCategoryProducts = (topCategory: TopCategory, subCategory: string, limit: number = 4): Product[] => {
-    const products = getProductsByCategory(allProducts, topCategory, subCategory);
-    return products.slice(0, limit);
-  };
-
   // Get active category data
   const activeCategoryData = activeCategory 
     ? categories.find(cat => cat.topCategory === activeCategory)
@@ -107,8 +92,6 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
 
             <div className={styles.megaMenuImageMenuBlocks}>
               {activeCategoryData.subCategories.slice(0, 8).map((subCategory) => {
-                const subCategoryProducts = getSubCategoryProducts(currentCategory, subCategory, 4);
-                
                 return (
                   <div
                     key={subCategory}
@@ -132,7 +115,7 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                           '--max-width': '200px',
                           '--object-fit': 'cover',
                           '--object-position': 'center'
-                        } as React.CSSProperties}
+                        } as unknown as CSSProperties}
                         tabIndex={0}
                       >
                         <img
@@ -154,29 +137,6 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                         {subCategory}
                       </h2>
                     </Link>
-                    
-                    {/* Menu items for subcategory - Kylie's structure */}
-                    {subCategoryProducts.length > 0 && (
-                      <ul className={styles.imageMenuBlockMenu}>
-                        {subCategoryProducts.map((product) => (
-                          <li key={product.id} className={styles.imageMenuBlockMenuItem}>
-                            <Link
-                              to={`/products/${product.slug}`}
-                              data-level="3"
-                              data-track-title={product.title}
-                              data-parent-title={subCategory}
-                              data-grand-title={currentCategory}
-                              data-track-url={product.title}
-                              rel="follow"
-                              className={styles.imageMenuBlockMenuItemLink}
-                              onClick={onClose}
-                            >
-                              {product.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
                   </div>
                 );
               })}
@@ -200,7 +160,7 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                     '--max-width': '610px',
                     '--object-fit': 'cover',
                     '--object-position': 'center'
-                  } as React.CSSProperties}
+                  } as unknown as CSSProperties}
                   tabIndex={0}
                 >
                   <img

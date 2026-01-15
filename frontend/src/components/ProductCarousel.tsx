@@ -65,12 +65,12 @@ const ProductCarousel = () => {
 
   useEffect(() => {
     const checkScrollability = () => {
-      if (scrollContainerRef.current) {
+    if (scrollContainerRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
         setCanScrollLeft(scrollLeft > 0);
-        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-      }
-    };
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
 
     checkScrollability();
     const container = scrollContainerRef.current;
@@ -150,12 +150,12 @@ const ProductCarousel = () => {
                           <span className={styles.starContainer}>
                             {Array.from({ length: 5 }, (_, j) => (
                               <span key={j} className={styles.starEmpty}>★</span>
-                            ))}
+            ))}
                           </span>
                         </span>
                       </div>
-                    </div>
-                  </div>
+          </div>
+        </div>
                 </li>
               ))
             : products.map((product) => {
@@ -165,7 +165,7 @@ const ProductCarousel = () => {
                 const seed = product.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
                 const isNew = product.featured || seed % 2 === 0;
 
-                return (
+              return (
                   <li key={product.id} className={styles.productItem}>
                     <Link
                       to={`/products/${product.id}`}
@@ -185,8 +185,8 @@ const ProductCarousel = () => {
                                 srcSet={`${product.images[0]} 1x, ${product.images[0]} 2x`}
                                 loading="lazy" 
                                 alt={product.name}
-                                className={styles.productImage}
-                                onError={(e) => {
+                        className={styles.productImage}
+                        onError={(e) => {
                                   const target = e.target as HTMLImageElement;
                                   target.style.display = 'none';
                                 }}
@@ -196,9 +196,9 @@ const ProductCarousel = () => {
                             <div className={styles.productPlaceholder}>No Image</div>
                           )}
                         </div>
-                      </div>
-
-                      <div className={styles.productInfo}>
+                    </div>
+                    
+                    <div className={styles.productInfo}>
                         <div className={styles.productBrandName}>
                           <span className={styles.productBrand}>
                             {product.category?.name || 'AURAPOP'}
@@ -206,7 +206,7 @@ const ProductCarousel = () => {
                           <span className={styles.productName}>
                             {product.name}
                           </span>
-                        </div>
+                          </div>
                         <b className={styles.productPrice}>
                           <span>${product.price.toFixed(2)}</span>
                         </b>
@@ -218,7 +218,7 @@ const ProductCarousel = () => {
                             <span className={styles.starContainer}>
                               {Array.from({ length: 5 }, (_, i) => (
                                 <span key={i} className={styles.starEmpty}>★</span>
-                              ))}
+                        ))}
                             </span>
                             <span 
                               className={styles.starRatingFill}
@@ -226,21 +226,21 @@ const ProductCarousel = () => {
                             >
                               {Array.from({ length: 5 }, (_, i) => (
                                 <span key={i} className={styles.starFilled}>★</span>
-                              ))}
+                        ))}
                             </span>
                           </span>
                           <span className={styles.reviewCount} aria-label={`${reviewCount} reviews`}>
                             {reviewCount}
-                          </span>
+                      </span>
                         </div>
-                      </div>
-
+                    </div>
+                    
                       {isNew && (
                         <div className={styles.productBadge}>
                           <span className={styles.newBadge}>New</span>
-                        </div>
+                    </div>
                       )}
-                    </Link>
+                  </Link>
                   </li>
                 );
               })}
@@ -251,7 +251,7 @@ const ProductCarousel = () => {
 
         {/* Navigation Buttons */}
         {!showSkeleton && (
-        <button
+                  <button
           className={`${styles.carouselButton} ${styles.carouselButtonPrev} ${!canScrollLeft ? styles.carouselButtonDisabled : ''}`}
           aria-label="Previous slide"
           type="button"
@@ -266,11 +266,11 @@ const ProductCarousel = () => {
               />
             </g>
           </svg>
-        </button>
+                  </button>
         )}
 
         {!showSkeleton && (
-        <button
+          <button
           className={`${styles.carouselButton} ${styles.carouselButtonNext} ${!canScrollRight ? styles.carouselButtonDisabled : ''}`}
           aria-label="Next slide"
           type="button"
@@ -284,8 +284,8 @@ const ProductCarousel = () => {
                 fill="currentColor"
               />
             </g>
-          </svg>
-        </button>
+            </svg>
+          </button>
         )}
       </div>
     </section>
