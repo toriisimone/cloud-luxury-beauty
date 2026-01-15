@@ -4,17 +4,20 @@ import { Product } from '../types/global';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
 import { useWishlist } from '../hooks/useWishlist';
+import { useCartDrawer } from '../context/CartDrawerContext';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
   product: Product;
+  variant?: 'default' | 'search';
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, variant = 'default' }: ProductCardProps) => {
   const navigate = useNavigate();
   const { addItem } = useCart();
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const cartDrawer = useCartDrawer();
   const isFavorite = isInWishlist(product.id);
 
   // Consistent demo rating per product (until you wire real review data)
@@ -44,7 +47,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   }, [product.description, product.name]);
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-variant={variant}>
       <Link to={`/products/${product.id}`} className={styles.link}>
         <div className={styles.imageContainer}>
           {/* Favorite Heart Button (top-right) */}
@@ -55,10 +58,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
             onClick={async (e) => {
               e.preventDefault();
               e.stopPropagation();
-              if (!isAuthenticated) {
-                navigate('/account');
-                return;
-              }
               await toggleWishlist(product.id);
             }}
           >
@@ -120,6 +119,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 e.preventDefault();
                 e.stopPropagation();
                 addItem(product, undefined, 1);
+                cartDrawer.open({ product, quantity: 1 });
               }}
               aria-label={`Add ${product.name} to cart`}
             >

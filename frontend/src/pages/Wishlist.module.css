@@ -5,51 +5,208 @@
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.title {
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--aurapop-pink);
+  margin: 0 0 18px;
+}
+
+.emptyWrap {
+  text-align: center;
+  padding: 30px 0 10px;
+}
+
+.emptyText {
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.85);
   margin-bottom: 16px;
 }
 
-.title {
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 18px;
+  background: var(--aurapop-pink);
+  color: #fff;
+  border-radius: 2px;
   font-family: var(--aurapop-font);
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: lowercase;
 }
 
-.refresh {
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  font-size: 12px;
-  font-weight: 700;
+.secondaryBtn {
+  height: 44px;
+  padding: 0 18px;
+  background: #fff;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: lowercase;
 }
 
-.grid {
+.items {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px 24px;
+  gap: 18px;
+  justify-items: center;
+  margin: 0 auto;
 }
 
-.empty {
+.itemRow {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.itemCard {
+  width: 100%;
+  max-width: 360px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.itemImageWrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.itemImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.itemInfo {
+  padding: 12px 12px 14px;
+  text-align: left;
+}
+
+.itemName {
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 800;
+  color: rgba(0, 0, 0, 0.85);
+  text-transform: lowercase;
+}
+
+.itemShade {
+  font-family: var(--aurapop-font);
+  font-style: italic;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.7);
-  padding: 24px 0;
+  margin-top: 2px;
+  min-height: 16px;
 }
 
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.addBtn {
+  margin-top: 10px;
+  width: 100%;
+  height: 38px;
+  background: var(--aurapop-pink);
+  color: #fff;
+  border-radius: 6px;
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: lowercase;
+}
+
+.removeLink {
+  margin-top: 8px;
+  background: transparent;
+  padding: 0;
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.7);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.addAllBtn {
+  margin: 26px auto 0;
+  width: min(620px, 100%);
+  height: 48px;
+  background: var(--aurapop-pink);
+  color: #fff;
+  border-radius: 6px;
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 16px;
+  text-transform: lowercase;
+  display: block;
+}
+
+.promptBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2200;
+  padding: 16px;
+}
+
+.prompt {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+.promptTitle {
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.9);
+  margin-bottom: 6px;
+}
+
+.promptText {
+  font-family: var(--aurapop-font);
+  font-style: italic;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.75);
+  margin-bottom: 14px;
+}
+
+.promptActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 @media (max-width: 768px) {
@@ -59,7 +216,11 @@
 }
 
 @media (max-width: 480px) {
-  .grid {
+  .title {
+    font-size: 28px;
+  }
+
+  .promptActions {
     grid-template-columns: 1fr;
   }
 }

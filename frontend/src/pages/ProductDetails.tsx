@@ -6,6 +6,7 @@ import { Product } from '../types/global';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
 import { useWishlist } from '../hooks/useWishlist';
+import { useCartDrawer } from '../context/CartDrawerContext';
 import * as productsApi from '../api/productsApi';
 import ProductCard from '../components/ProductCard';
 import styles from './ProductDetails.module.css';
@@ -16,6 +17,7 @@ const ProductDetails = () => {
   const { isAuthenticated } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addItem } = useCart();
+  const cartDrawer = useCartDrawer();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -134,7 +136,7 @@ const ProductDetails = () => {
     if (!product) return;
     const variant = product.variants?.find((v) => v.id === selectedVariant);
     addItem(product, variant, quantity);
-    navigate('/cart');
+    cartDrawer.open({ product, variant, quantity });
   };
 
   if (loading) {
@@ -416,10 +418,6 @@ const ProductDetails = () => {
                     className={`${styles.favoriteHeart} ${isFavorite ? styles.favoriteActive : ''}`}
                     aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                     onClick={async () => {
-                      if (!isAuthenticated) {
-                        navigate('/account');
-                        return;
-                      }
                       await toggleWishlist(product.id);
                     }}
                   >

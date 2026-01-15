@@ -76,7 +76,7 @@
   font-family: var(--aurapop-font);
   font-size: 0.75rem;
   font-weight: 700;
-  font-style: normal;
+  font-style: italic;
   color: var(--aurapop-pink);
   text-decoration: none;
   text-transform: capitalize;
@@ -150,7 +150,7 @@
 .imageMenuBlockTitle {
   font-size: 0.7rem;
   font-weight: 700;
-  font-style: normal;
+  font-style: italic;
   color: var(--aurapop-pink);
   margin: 0;
   text-transform: capitalize;
@@ -184,7 +184,7 @@
   transition: opacity 0.2s ease;
   text-transform: capitalize;
   font-family: var(--aurapop-font);
-  font-style: normal;
+  font-style: italic;
   font-weight: 700;
   line-height: 1.5;
   display: block;

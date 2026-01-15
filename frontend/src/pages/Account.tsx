@@ -104,28 +104,15 @@ const Account = () => {
     <div className={styles.account}>
       <div className={styles.container}>
         <div className={styles.authForm}>
-          <div className={styles.authHeader}>
-            <div className={styles.authLogo}>AURAPOP</div>
-            <h1 className={styles.title}>{isLogin ? 'Sign In' : 'Create Account'}</h1>
-            <p className={styles.subtitle}>
-              {isLogin ? 'Welcome back.' : 'Create an account to save favorites and checkout faster.'}
-            </p>
-          </div>
+          <h1 className={styles.loginTitle}>{isLogin ? 'LOGIN' : 'CREATE ACCOUNT'}</h1>
           
-          <div className={styles.toggle}>
-            <button
-              onClick={() => setIsLogin(true)}
-              className={isLogin ? styles.active : ''}
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => setIsLogin(false)}
-              className={!isLogin ? styles.active : ''}
-            >
-              Create Account
-            </button>
-          </div>
+          {!isLogin && (
+            <div className={styles.toggle}>
+              <button onClick={() => setIsLogin(true)} className={styles.linkBtn}>
+                back to login
+              </button>
+            </div>
+          )}
 
           {error && <p className={styles.error}>{error}</p>}
 
@@ -153,42 +140,62 @@ const Account = () => {
               </>
             )}
             <div className={styles.formGroup}>
-              <label>Email</label>
               <input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="email"
               />
             </div>
             <div className={styles.formGroup}>
-              <label>Password</label>
+              <div className={styles.passwordRow}>
+                <span className={styles.passwordLabel}>password</span>
+                {isLogin && (
+                  <button
+                    type="button"
+                    className={styles.forgotLink}
+                    onClick={() => window.open(supportEmailHref, '_self')}
+                  >
+                    forgot password?
+                  </button>
+                )}
+              </div>
               <input
                 type="password"
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="password"
               />
             </div>
-            <button type="submit" disabled={loading} className={styles.submitBtn}>
-              {loading ? 'Please wait…' : isLogin ? 'Sign In' : 'Create Account'}
+
+            {isLogin && (
+              <div className={styles.terms}>
+                by logging in, you agree to our{' '}
+                <a className={styles.termsLink} href="/terms">
+                  terms
+                </a>
+                ,{' '}
+                <a className={styles.termsLink} href="/privacy">
+                  privacy policy
+                </a>
+                , and{' '}
+                <a className={styles.termsLink} href="/rewards">
+                  rewards program terms
+                </a>
+              </div>
+            )}
+
+            <button type="submit" disabled={loading} className={styles.loginBtn}>
+              {loading ? 'please wait…' : isLogin ? 'log in' : 'create account'}
             </button>
 
             {isLogin && (
-              <div className={styles.formLinks}>
-                <button
-                  type="button"
-                  className={styles.linkBtn}
-                  onClick={() => {
-                    // Backend reset endpoint isn't implemented in this repo yet.
-                    // Provide a clean UX path without lying about functionality.
-                    window.open(supportEmailHref, '_self');
-                  }}
-                >
-                  Forgot Password?
-                </button>
-                <button type="button" className={styles.linkBtn} onClick={() => setIsLogin(false)}>
-                  Create an account
+              <div className={styles.createPrompt}>
+                <div>don&apos;t have an account yet?</div>
+                <button type="button" className={styles.createLink} onClick={() => setIsLogin(false)}>
+                  create account
                 </button>
               </div>
             )}

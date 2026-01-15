@@ -3,16 +3,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import { getCategoryStructure, TopCategory } from '../data/productData';
+import { useCartDrawer } from '../context/CartDrawerContext';
+import SearchOverlay from './SearchOverlay';
 import styles from './Navbar.module.css';
 import megaMenuStyles from './MegaMenu.module.css';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const { getItemCount } = useCart();
+  const cartDrawer = useCartDrawer();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleLogout = async () => {
@@ -79,6 +83,7 @@ const Navbar = () => {
 
   return (
     <>
+      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       {/* Main Header */}
       <header className={styles.siteHeader}>
         <div className={styles.siteHeaderWrapper}>
@@ -149,18 +154,18 @@ const Navbar = () => {
             {/* Desktop Utilities - Icons Right */}
             <div className={`${styles.siteHeaderUtilities} ${styles.siteHeaderUtilitiesDesktop}`}>
               {/* Search */}
-              <Link
-                to="/search"
+              <button
+                type="button"
                 className={`${styles.siteHeaderAction} ${styles.siteHeaderActionSearch}`}
                 title="Search"
-                rel="nofollow"
-                role="button"
+                aria-label="Search"
+                onClick={() => setSearchOpen(true)}
               >
                 <svg width="20" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                   <path d="M17 17l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 </svg>
-          </Link>
+              </button>
               {/* Account */}
               <Link
                 to="/account"
@@ -195,6 +200,10 @@ const Navbar = () => {
                 role="button"
                 data-cart-count={getItemCount()}
                 aria-label={`${getItemCount()} items in cart`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  cartDrawer.open();
+                }}
               >
                 <svg width="21" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 9L4 20H20L18 9H6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>

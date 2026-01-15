@@ -10,89 +10,126 @@ const Cart = () => {
     return (
       <div className={styles.cart}>
         <div className={styles.container}>
-          <h1 className={styles.title}>Shopping Cart</h1>
-          <p className={styles.empty}>Your cart is empty.</p>
-          <button onClick={() => navigate('/products')} className={styles.shopBtn}>
-            Continue Shopping
-          </button>
+          <div className={styles.header}>
+            <div className={styles.headerTitle}>cart 0 items</div>
+            <div className={styles.shippingMsg}>you are $40 away from free shipping!</div>
+          </div>
+
+          <div className={styles.promo}>
+            <div className={styles.promoTitle}>free travel accessory gift!</div>
+            <div className={styles.promoSub}>online exclusive and limited time only.</div>
+            <div className={styles.promoOptions}>
+              <div className={styles.promoOption}>compact mirror</div>
+              <div className={styles.promoOption}>cosmic t</div>
+            </div>
+            <div className={styles.promoFooter}>spend another $55 and select 1 free gift(s)</div>
+          </div>
+
+          <div className={styles.emptyBlock}>
+            <div className={styles.emptyText}>
+              your cart is empty, get started with recommend products below or{' '}
+              <button type="button" className={styles.inlineLink} onClick={() => navigate('/products')}>
+                continue shopping
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.beforeYouGo}>
+            <div className={styles.beforeTitle}>before you go…</div>
+            <div className={styles.recoCard}>
+              <div className={styles.recoImgPlaceholder} />
+              <div className={styles.recoInfo}>
+                <div className={styles.recoName}>lip butter</div>
+                <div className={styles.recoDesc}>
+                  instantly quenches dry, chapped lips in silky moisture for up to 24 hours.
+                </div>
+              </div>
+              <button type="button" className={styles.recoBtn} onClick={() => navigate('/products')}>
+                choose shade
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   const total = getTotal();
-  const shipping = total >= 75 ? 0 : 10;
+  const shippingRemaining = Math.max(0, 40 - total);
+  const giftRemaining = Math.max(0, 55 - total);
 
   return (
     <div className={styles.cart}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Shopping Cart</h1>
+        <div className={styles.header}>
+          <div className={styles.headerTitle}>
+            cart {items.reduce((n, i) => n + i.quantity, 0)} {items.reduce((n, i) => n + i.quantity, 0) === 1 ? 'item' : 'items'}
+          </div>
+          <div className={styles.shippingMsg}>you are ${shippingRemaining.toFixed(0)} away from free shipping!</div>
+        </div>
         
+        <div className={styles.promo}>
+          <div className={styles.promoTitle}>free travel accessory gift!</div>
+          <div className={styles.promoSub}>online exclusive and limited time only.</div>
+          <div className={styles.promoOptions}>
+            <div className={styles.promoOption}>compact mirror</div>
+            <div className={styles.promoOption}>cosmic t</div>
+          </div>
+          <div className={styles.promoFooter}>spend another ${giftRemaining.toFixed(0)} and select 1 free gift(s)</div>
+        </div>
+
         <div className={styles.content}>
           <div className={styles.items}>
             {items.map((item) => (
               <div key={item.id} className={styles.item}>
-                <div className={styles.itemInfo}>
-                  <h3 className={styles.itemName}>{item.product?.name}</h3>
-                  {item.variant && (
-                    <p className={styles.variant}>{item.variant.name}: {item.variant.value}</p>
-                  )}
-                  <p className={styles.itemPrice}>
-                    ${((item.variant?.price || item.product?.price || 0) * item.quantity).toFixed(2)}
-                  </p>
-                </div>
-                <div className={styles.itemActions}>
+                <div className={styles.itemRow}>
+                  <div className={styles.itemLeft}>
+                    {item.product?.images?.[0] ? (
+                      <img className={styles.itemImg} src={item.product.images[0]} alt={item.product.name} />
+                    ) : (
+                      <div className={styles.itemImgPlaceholder} />
+                    )}
+                  </div>
+                  <div className={styles.itemMid}>
+                    <div className={styles.itemName}>
+                      {item.product?.name} - ${(item.variant?.price || item.product?.price || 0).toFixed(0)}
+                    </div>
+                    <div className={styles.variant}>{item.variant?.value || ''}</div>
+                    <button onClick={() => removeItem(item.id)} className={styles.removeLink}>
+                      remove
+                    </button>
+                  </div>
                   <div className={styles.quantity}>
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className={styles.quantityBtn}
-                    >
-                      -
+                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className={styles.quantityBtn}>
+                      –
                     </button>
                     <span className={styles.quantityValue}>{item.quantity}</span>
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className={styles.quantityBtn}
-                    >
+                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className={styles.quantityBtn}>
                       +
                     </button>
                   </div>
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className={styles.removeBtn}
-                  >
-                    Remove
-                  </button>
                 </div>
               </div>
             ))}
           </div>
           
           <div className={styles.summary}>
-            <h2 className={styles.summaryTitle}>Order Summary</h2>
-            <div className={styles.summaryRow}>
-              <span>Subtotal</span>
-              <span>${total.toFixed(2)}</span>
+            <div className={styles.rewards}>
+              <span className={styles.rewardsLabel}>kylie rewards</span> <span className={styles.rewardsLink}>log in</span> to earn{' '}
+              {Math.max(1, Math.round(total))} points with this purchase
             </div>
-            <div className={styles.summaryRow}>
-              <span>Shipping</span>
-              <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
-            </div>
-            <div className={styles.summaryRowTotal}>
-              <span>Total</span>
-              <span>${(total + shipping).toFixed(2)}</span>
+            <div className={styles.totalRow}>
+              <div>
+                <div className={styles.totalLabel}>estimated total:</div>
+                <div className={styles.totalSub}>shipping &amp; discounts calculated at checkout</div>
+              </div>
+              <div className={styles.totalVal}>${total.toFixed(0)}</div>
             </div>
             <button onClick={() => navigate('/checkout')} className={styles.checkoutBtn}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '0.5rem' }}>
-                {/* Shopping bag icon - same design as navbar, black and white, no borders */}
-                <rect x="6" y="9" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M8 9C8 7.5 8.5 6.5 9.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M16 9C16 7.5 15.5 6.5 14.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
-              Proceed to Checkout
+              checkout
             </button>
             <button onClick={clearCart} className={styles.clearBtn}>
-              Clear Cart
+              clear cart
             </button>
           </div>
         </div>
