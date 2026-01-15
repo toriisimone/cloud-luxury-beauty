@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CategoryTileGrid from '../components/CategoryTileGrid';
+import CategoryHeaderStack from '../components/CategoryHeaderStack';
 import ProductCard from '../components/ProductCard';
 import Loader from '../components/Loader';
 import { Product } from '../types/global';
@@ -88,26 +88,16 @@ const CategoryPage = () => {
         Back to Top
       </button>
       <div className={styles.container}>
-        {/* Header */}
-        <div className={styles.header}>
-          <h1 className={styles.pageTitle}>{getPageTitle()}</h1>
-          <p className={styles.productCount}>{total || products.length} Results</p>
-        </div>
-
-        {/* Sort Bar */}
-        <div className={styles.sortBar}>
-          <div className={styles.sortContainer}>
-            <button className={styles.sortButton}>
-              Sort by: <b>Relevance</b>
-              <svg width="7" height="4" viewBox="0 0 7 4" className={styles.sortChevron}>
-                <path d="m.5.5 3 3 3-3" fill="none" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" stroke="currentColor" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Kylie-style category tile grid (above product grid) */}
-        <CategoryTileGrid baseCategorySlug={normalizedCategory} />
+        {/* Kylie-style category header stack (banner + breadcrumb + 6 tiles + count + boxed sort/filter) */}
+        {normalizedCategory && (
+          <CategoryHeaderStack
+            bannerKey={normalizedCategory}
+            bannerTitle={getPageTitle().toUpperCase()}
+            breadcrumbLabel={getPageTitle().toLowerCase()}
+            productCount={total || products.length}
+            baseCategorySlug={normalizedCategory}
+          />
+        )}
 
         {error && (
           <div className={styles.error}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import CategoryTileGrid from '../components/CategoryTileGrid';
+import CategoryHeaderStack from '../components/CategoryHeaderStack';
 import ProductCard from '../components/ProductCard';
 import Loader from '../components/Loader';
 import { Product } from '../types/global';
@@ -37,13 +37,13 @@ const Skincare = () => {
       </button>
 
       <div className={styles.container}>
-        {/* Page Header */}
-        <div className={styles.header}>
-          <h1 className={styles.pageTitle}>Skincare</h1>
-        </div>
-
-        {/* Kylie-style category tile grid (above product grid) */}
-        <CategoryTileGrid baseCategorySlug="skincare" />
+        <CategoryHeaderStack
+          bannerKey="skincare"
+          bannerTitle="SKINCARE"
+          breadcrumbLabel="skincare"
+          productCount={products.length}
+          baseCategorySlug="skincare"
+        />
 
         {/* Products Grid */}
         {loading ? (
