@@ -248,24 +248,8 @@ const ProductDetails = () => {
         </div>
 
         <div className={styles.layout}>
-          {/* Left thumbnails */}
-          <aside className={styles.thumbs} aria-label="Product images">
-            {images.length > 1 &&
-              images.map((src, idx) => (
-                <button
-                  key={`${src}-${idx}`}
-                  type="button"
-                  className={`${styles.thumbButton} ${idx === activeImageIndex ? styles.thumbActive : ''}`}
-                  onClick={() => setActiveImageIndex(idx)}
-                  aria-label={`View image ${idx + 1}`}
-                >
-                  <img src={src} alt="" className={styles.thumbImage} loading="lazy" />
-                </button>
-              ))}
-          </aside>
-
-          {/* Main image */}
-          <section className={styles.imageStage}>
+          {/* Media (compact, square image + thumbs) */}
+          <section className={styles.media} aria-label="Product images">
             <div className={styles.mainImageFrame}>
               {activeImage ? (
                 <img src={activeImage} alt={product.name} className={styles.mainImage} />
@@ -294,6 +278,22 @@ const ProductDetails = () => {
                 </>
               )}
             </div>
+
+            {images.length > 1 && (
+              <div className={styles.thumbsRow} aria-label="Thumbnails">
+                {images.map((src, idx) => (
+                  <button
+                    key={`${src}-${idx}`}
+                    type="button"
+                    className={`${styles.thumbButton} ${idx === activeImageIndex ? styles.thumbActive : ''}`}
+                    onClick={() => setActiveImageIndex(idx)}
+                    aria-label={`View image ${idx + 1}`}
+                  >
+                    <img src={src} alt="" className={styles.thumbImage} loading="lazy" />
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Right info */}
@@ -323,163 +323,143 @@ const ProductDetails = () => {
               </span>
             </div>
 
-            {/* Clean info block (no fulfillment/shipping UI) */}
-            <div className={styles.infoBlock}>
+            <div className={styles.compactTop}>
               <div className={styles.priceRow}>
                 <div className={styles.price}>${price.toFixed(2)}</div>
               </div>
 
-              <div className={styles.paymentsRow}>
-                <span>or 4 payments of </span>
-                <b>${payments}</b>
-                <span> with </span>
-                <span className={styles.paymentsBrand}>Klarna</span>
-                <span className={styles.paymentsBrand}>Afterpay</span>
-                <span className={styles.paymentsBrand}>PayPal</span>
-              </div>
+              {/* Add to cart + favorites (kept in the first viewport) */}
+              <div className={styles.actions}>
+                <div className={styles.qtyBlock}>
+                  <div className={styles.qtyLabel}>Qty</div>
+                  <div className={styles.actionRow}>
+                    <div className={styles.ctaGroup}>
+                      <div className={styles.qtyStepper} aria-label="Quantity selector">
+                        <button
+                          type="button"
+                          className={styles.qtyBtn}
+                          aria-label="Decrease quantity"
+                          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                        >
+                          −
+                        </button>
+                        <input
+                          id="qty"
+                          type="number"
+                          min="1"
+                          value={quantity}
+                          onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)}
+                          className={styles.quantityInput}
+                          aria-label="Quantity"
+                        />
+                        <button
+                          type="button"
+                          className={styles.qtyBtn}
+                          aria-label="Increase quantity"
+                          onClick={() => setQuantity((q) => q + 1)}
+                        >
+                          +
+                        </button>
+                      </div>
 
-              <div className={styles.autoReplenishRow}>
-                Get It For <b>${autoReplenishPrice}</b> (5% Off) With Auto‑Replenish
-              </div>
+                      <button type="button" onClick={handleAddToCart} className={styles.addToCartButton}>
+                        Add to Cart
+                      </button>
+                    </div>
 
+                    <button
+                      type="button"
+                      className={`${styles.favoriteHeart} ${isFavorite ? styles.favoriteActive : ''}`}
+                      aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                      onClick={() => setIsFavorite((v) => !v)}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.heartIconSmall}>
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Variants (compact select) */}
+            {product.variants && product.variants.length > 0 && (
+              <div className={styles.variants}>
+                <label htmlFor="variant" className={styles.label}>
+                  {product.variants[0].name}:
+                </label>
+                <select
+                  id="variant"
+                  className={styles.variantSelect}
+                  value={selectedVariant ?? ''}
+                  onChange={(e) => setSelectedVariant(e.target.value)}
+                >
+                  {product.variants.map((variant) => (
+                    <option key={variant.id} value={variant.id}>
+                      {variant.value}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Key info (kept compact) */}
+            <div className={styles.infoBlock}>
               {sizeText && (
                 <div className={styles.metaRow}>
-                  <span className={styles.metaLabel}>Size:</span>
+                  <span className={styles.metaLabel}>Size</span>
                   <span className={styles.metaValue}>{sizeText}</span>
                 </div>
               )}
 
               {highlights.length > 0 && (
                 <ul className={styles.highlights}>
-                  {highlights.map((h) => (
+                  {highlights.slice(0, 3).map((h) => (
                     <li key={h}>{h}</li>
                   ))}
                 </ul>
               )}
 
-              {extras.shortDescription && (
-                <p className={styles.description}>{extras.shortDescription}</p>
-              )}
-
-              {!extras.shortDescription && product.description && (
-                <p className={styles.description}>{product.description}</p>
-              )}
+              {extras.shortDescription && <p className={styles.description}>{extras.shortDescription}</p>}
+              {!extras.shortDescription && product.description && <p className={styles.description}>{product.description}</p>}
             </div>
 
-            {/* Variants */}
-            {product.variants && product.variants.length > 0 && (
-              <div className={styles.variants}>
-                <label className={styles.label}>Select {product.variants[0].name}:</label>
-                <div className={styles.variantOptions}>
-                  {product.variants.map((variant) => (
-                    <button
-                      key={variant.id}
-                      type="button"
-                      onClick={() => setSelectedVariant(variant.id)}
-                      className={`${styles.variantBtn} ${selectedVariant === variant.id ? styles.active : ''}`}
-                    >
-                      {variant.value}
-                    </button>
-                  ))}
+            {/* Delivery/services (collapsed by default so PDP stays in-frame) */}
+            <details className={styles.fulfillmentDetails}>
+              <summary className={styles.fulfillmentSummary}>Delivery &amp; services</summary>
+              <div className={styles.fulfillmentSection} aria-label="Delivery and services">
+                <div className={styles.serviceBoxes}>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>
+                      <a className={styles.serviceLink} href="/account">
+                        Sign in
+                      </a>{' '}
+                      for <b>FREE</b> shipping
+                    </div>
+                    <div className={styles.serviceSub}>Delivery by {deliveryDateLabel} to {zipCode}</div>
+                  </div>
+                  <div className={styles.serviceBox}>
+                    <div className={styles.serviceTitle}>Auto‑Replenish</div>
+                    <div className={styles.serviceSub}>Save 5% on this item</div>
+                  </div>
                 </div>
-              </div>
-            )}
 
-            {/* Sephora-style fulfillment/service section */}
-            <div className={styles.fulfillmentSection} aria-label="Delivery and services">
-              <div className={styles.serviceBoxes}>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>
+                <div className={styles.deliveryBlock}>
+                  <div className={styles.deliveryLine}>
+                    <b>Delivery by {deliveryDateLabel}</b> to {zipCode}
+                  </div>
+                  <div className={styles.deliverySub}>
                     <a className={styles.serviceLink} href="/account">
                       Sign in
                     </a>{' '}
-                    for <b>FREE</b> shipping
+                    or create an account to enjoy <b>FREE</b> standard shipping.
                   </div>
-                  <div className={styles.serviceSub}>Delivery by {deliveryDateLabel} to {zipCode}</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Auto‑Replenish</div>
-                  <div className={styles.serviceSub}>Save 5% on this item</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Same‑Day Delivery</div>
-                  <div className={styles.serviceSub}>{zipCode}</div>
-                </div>
-                <div className={styles.serviceBox}>
-                  <div className={styles.serviceTitle}>Buy Online &amp; Pick Up</div>
-                  <div className={styles.serviceSub}>GLENDALE TOWN CENTER</div>
+                  <a className={styles.serviceLink} href="/shipping-returns">
+                    Shipping &amp; Returns
+                  </a>
                 </div>
               </div>
-
-              <div className={styles.deliveryBlock}>
-                <div className={styles.deliveryLine}>
-                  <b>Delivery by {deliveryDateLabel}</b> to {zipCode}
-                </div>
-                <div className={styles.deliverySub}>
-                  <a className={styles.serviceLink} href="/account">
-                    Sign in
-                  </a>{' '}
-                  or create an account to enjoy <b>FREE</b> standard shipping.
-                </div>
-                <a className={styles.serviceLink} href="/shipping-returns">
-                  Shipping &amp; Returns
-                </a>
-              </div>
-            </div>
-
-            {/* Add to cart + favorites */}
-            <div className={styles.actions}>
-              <div className={styles.qtyBlock}>
-                <div className={styles.qtyLabel}>Qty</div>
-                <div className={styles.actionRow}>
-                  {/* Sephora-style CTA group: qty control + pill button (hot pink) */}
-                  <div className={styles.ctaGroup}>
-                    <div className={styles.qtyStepper} aria-label="Quantity selector">
-                      <button
-                        type="button"
-                        className={styles.qtyBtn}
-                        aria-label="Decrease quantity"
-                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      >
-                        −
-                      </button>
-                      <input
-                        id="qty"
-                        type="number"
-                        min="1"
-                        value={quantity}
-                        onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)}
-                        className={styles.quantityInput}
-                        aria-label="Quantity"
-                      />
-                      <button
-                        type="button"
-                        className={styles.qtyBtn}
-                        aria-label="Increase quantity"
-                        onClick={() => setQuantity((q) => q + 1)}
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <button type="button" onClick={handleAddToCart} className={styles.addToCartButton}>
-                      Add to Cart
-                    </button>
-                  </div>
-
-                  <button
-                    type="button"
-                    className={`${styles.favoriteHeart} ${isFavorite ? styles.favoriteActive : ''}`}
-                    aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                    onClick={() => setIsFavorite((v) => !v)}
-                  >
-                    <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.heartIconSmall}>
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+            </details>
           </section>
         </div>
 

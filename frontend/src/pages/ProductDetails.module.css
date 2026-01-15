@@ -1,11 +1,11 @@
 .details {
   min-height: 100vh;
-  padding: 2.5rem 0 4rem;
+  padding: 1.25rem 0 2.5rem;
   background: #fff;
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -15,8 +15,8 @@
   align-items: center;
   gap: 0.5rem;
   color: #111;
-  font-size: 0.9rem;
-  margin: 0 0 1.25rem;
+  font-size: 12px;
+  margin: 0 0 0.75rem;
 }
 
 .breadcrumbLink {
@@ -39,26 +39,17 @@
 
 .layout {
   display: grid;
-  /* Desktop PDP layout sizing (Sephora/Kylie-style proportions) */
-  grid-template-columns: 80px minmax(0, 480px) minmax(0, 600px);
-  gap: 2rem;
+  /* Compact PDP: square image tucked top-left */
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 16px;
   align-items: start;
 }
 
-/* Left thumbnails */
-.thumbs {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  position: sticky;
-  top: 140px;
-}
-
 .thumbButton {
-  width: 64px;
-  height: 64px;
-  border-radius: 999px;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   background: #fff;
   padding: 0;
   overflow: hidden;
@@ -85,29 +76,37 @@
   align-items: center;
   justify-content: center;
   background: #f5f5f5;
-  border-radius: 12px;
+  border-radius: 10px;
   color: #666;
 }
 
-/* Center main image */
-.imageStage {
+/* Media column */
+.media {
   width: 100%;
-  max-width: 480px;
-  justify-self: center;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
 }
 
 .mainImageFrame {
   position: relative;
-  width: 100%;
+  width: 280px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .mainImage {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
   background: #fff;
   display: block;
@@ -117,13 +116,13 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   border: 1px solid rgba(0, 0, 0, 0.12);
   background: rgba(255, 255, 255, 0.85);
   color: #000;
-  font-size: 26px;
+  font-size: 18px;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -132,19 +131,25 @@
 }
 
 .arrowLeft {
-  left: 10px;
+  left: 6px;
 }
 
 .arrowRight {
-  right: 10px;
+  right: 6px;
+}
+
+.thumbsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* Right info */
 .info {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-width: 600px;
+  gap: 8px;
+  max-width: 100%;
   min-width: 0;
   text-align: left;
 }
@@ -152,7 +157,7 @@
 .brand {
   font-family: var(--aurapop-font);
   font-style: var(--aurapop-font-style);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 800;
   color: #000;
   margin: 0;
@@ -162,21 +167,21 @@
 .title {
   font-family: var(--aurapop-font);
   font-style: var(--aurapop-font-style);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #000;
   line-height: 1.4;
-  margin: 0 0 12px;
+  margin: 0;
   overflow-wrap: anywhere;
 }
 
 .topRatingRow {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding-bottom: 0.25rem;
+  gap: 6px;
+  padding-bottom: 0;
   flex-wrap: wrap;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.4;
 }
 
@@ -203,24 +208,32 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-size: 12px;
 }
 
 .favHeart {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.infoBlock {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 24px;
+.compactTop {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  max-width: 600px;
+  gap: 8px;
+  padding: 6px 0 2px;
+}
+
+.infoBlock {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;
   text-align: left;
 }
 
@@ -234,35 +247,9 @@
 .price {
   font-family: var(--aurapop-font);
   font-style: var(--aurapop-font-style);
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 800;
   color: #000;
-}
-
-.paymentsRow {
-  color: #000;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  overflow-wrap: anywhere;
-}
-
-.paymentsBrand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.1rem 0.35rem;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  border-radius: 999px;
-  font-size: 0.85rem;
-}
-
-.autoReplenishRow {
-  color: #000;
-  font-size: 14px;
-  overflow-wrap: anywhere;
 }
 
 .metaRow {
@@ -274,26 +261,33 @@
 
 .metaLabel {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
 }
 
 .metaValue {
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: 12px;
 }
 
 .description {
   color: #111;
   line-height: 1.7;
-  font-size: 14px;
+  font-size: 12px;
   margin: 0;
   overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .stars {
   display: inline-flex;
-  gap: 4px;
-  font-size: 16px;
+  gap: 2px;
+  font-size: 12px;
   line-height: 1;
 }
 
@@ -306,7 +300,7 @@
 }
 
 .reviewCount {
-  font-size: 14px;
+  font-size: 12px;
   color: #000;
 }
 
@@ -314,6 +308,7 @@
   margin: 0;
   padding-left: 1.2rem;
   color: #000;
+  font-size: 12px;
 }
 
 .highlights li {
@@ -322,40 +317,30 @@
 
 .variants {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .label {
   font-weight: 600;
   color: #000;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
 }
 
-.variantOptions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.variantBtn {
-  padding: 10px 14px;
+.variantSelect {
+  height: 32px;
+  padding: 0 10px;
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.18);
-  border-radius: 10px;
+  border-radius: 8px;
   color: #000;
   font-weight: 500;
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.variantBtn:hover {
-  border-color: rgba(0, 0, 0, 0.6);
-}
-
-.variantBtn.active {
-  background: #000;
-  color: #fff;
-  border-color: #000;
+  font-size: 12px;
 }
 
 /* Sephora-style fulfillment section */
@@ -366,22 +351,50 @@
   gap: 0.9rem;
 }
 
+.fulfillmentDetails {
+  margin-top: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.fulfillmentSummary {
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.fulfillmentSummary::-webkit-details-marker {
+  display: none;
+}
+
+.fulfillmentSummary::after {
+  content: '▾';
+  float: right;
+  opacity: 0.7;
+}
+
+.fulfillmentDetails[open] .fulfillmentSummary::after {
+  content: '▴';
+}
+
 .serviceBoxes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: 1fr;
+  gap: 8px;
 }
 
 .serviceBox {
   border: 1px solid rgba(0, 0, 0, 0.16);
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 10px;
   background: #fff;
-  min-height: 72px;
+  min-height: 0;
 }
 
 .serviceTitle {
-  font-size: 14px;
+  font-size: 12px;
   color: #000;
   font-weight: 600;
   line-height: 1.2;
@@ -391,7 +404,7 @@
 
 .serviceSub {
   margin-top: 0.35rem;
-  font-size: 14px;
+  font-size: 12px;
   color: #111;
   opacity: 0.9;
   overflow-wrap: anywhere;
@@ -405,20 +418,20 @@
 
 .deliveryBlock {
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 8px;
   background: #f7f7f7;
-  padding: 12px;
+  padding: 10px;
 }
 
 .deliveryLine {
-  font-size: 14px;
+  font-size: 12px;
   color: #000;
   margin-bottom: 0.25rem;
   overflow-wrap: anywhere;
 }
 
 .deliverySub {
-  font-size: 14px;
+  font-size: 12px;
   color: #000;
   margin-bottom: 0.25rem;
   overflow-wrap: anywhere;
@@ -428,7 +441,7 @@
 .actions {
   display: flex;
   align-items: flex-end;
-  gap: 1rem;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -441,18 +454,22 @@
 .qtyLabel {
   font-weight: 600;
   color: #000;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
 }
 
 .actionRow {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
 }
 
 .ctaGroup {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -463,17 +480,17 @@
   border: 1px solid rgba(0, 0, 0, 0.18);
   border-radius: 999px;
   overflow: hidden;
-  height: 48px;
+  height: 36px;
   background: #fff;
 }
 
 .qtyBtn {
-  width: 40px;
-  height: 48px;
+  width: 30px;
+  height: 36px;
   border: none;
   background: transparent;
   color: #000;
-  font-size: 20px;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -484,10 +501,10 @@
 .quantityInput {
   padding: 0;
   border: none;
-  width: 56px;
+  width: 44px;
   text-align: center;
-  font-size: 1rem;
-  height: 48px;
+  font-size: 12px;
+  height: 36px;
   outline: none;
   -moz-appearance: textfield;
 }
@@ -500,8 +517,8 @@
 
 /* Sephora-style pill button (hot pink) */
 .addToCartButton {
-  height: 48px;
-  padding: 0 20px;
+  height: 36px;
+  padding: 0 12px;
   border-radius: 999px;
   border: none;
   background: #ff2da1;
@@ -509,8 +526,8 @@
   font-weight: 800;
   letter-spacing: 0.02em;
   cursor: pointer;
-  min-width: 200px;
-  font-size: 14px;
+  min-width: 140px;
+  font-size: 12px;
   white-space: nowrap;
 }
 
@@ -519,8 +536,8 @@
 }
 
 .favoriteHeart {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   border: 1px solid rgba(0, 0, 0, 0.16);
   background: #fff;
@@ -531,8 +548,8 @@
 }
 
 .heartIconSmall {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   fill: transparent;
   stroke: #000;
   stroke-width: 1.5px;
@@ -622,22 +639,20 @@
 
   .layout {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 12px;
   }
 
-  .thumbs {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
+  .media {
+    max-width: 100%;
   }
 
   .thumbButton {
-    width: 56px;
-    height: 56px;
+    width: 34px;
+    height: 34px;
   }
 
   .mainImageFrame {
-    min-height: 0;
+    width: 100%;
   }
 
   .actionRow {
@@ -645,11 +660,7 @@
   }
 
   .addToCartButton {
-    min-width: 200px;
-  }
-
-  .serviceBoxes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
   }
 
   .sectionPanel {
@@ -665,23 +676,9 @@
   }
 }
 
-@media (max-width: 1200px) {
-  .layout {
-    grid-template-columns: 72px minmax(0, 480px) minmax(0, 600px);
-    gap: 1.5rem;
-  }
-}
-
 @media (max-width: 1024px) {
-  /* Collapse earlier (tablet/small laptop) so nothing overflows */
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .thumbs {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
+  .container {
+    padding: 0 1.5rem;
   }
 }
 
@@ -691,15 +688,15 @@
   }
 
   .title {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .price {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .infoBlock {
-    padding: 16px;
+    padding: 10px 12px;
   }
 
   .actionRow {
