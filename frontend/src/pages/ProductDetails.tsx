@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
@@ -72,12 +72,14 @@ const ProductDetails = () => {
   const images = (product.images || []).filter((x): x is string => typeof x === 'string' && x.length > 0);
   const activeImage = images[activeImageIndex] || images[0] || null;
 
-  const sizeText = useMemo(() => {
+  // IMPORTANT: Do not use hooks (useMemo) down here; this component has early returns above.
+  // Compute size text safely without hooks to avoid React hook-order crashes in production.
+  const sizeText = (() => {
     const v = product.variants?.find((vv) => vv.id === selectedVariant);
     if (!v) return null;
     const isSize = v.name?.toLowerCase() === 'size';
     return isSize ? v.value : null;
-  }, [product.variants, selectedVariant]);
+  })();
 
   const extras = product as unknown as {
     rating?: number;
