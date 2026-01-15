@@ -514,9 +514,9 @@
 }
 
 .aurapopTitle {
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
-  font-style: italic;
-  text-transform: uppercase;
+  font-family: var(--aurapop-font);
+  font-style: var(--aurapop-font-style);
+  text-transform: none; /* keep Title Case */
   letter-spacing: -0.02em;
 }
 
@@ -525,11 +525,47 @@
   padding: 1rem 0;
 }
 
-.relatedGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3.25rem 2.25rem;
-  font-style: italic;
+.sectionPanel {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+  padding: 1.25rem 1.25rem 1.35rem;
+  background: #fff;
+  margin-bottom: 1.25rem;
+}
+
+.panelHeaderRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.panelSubtitle {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Horizontal row layout to reduce vertical scroll */
+.cardsRow {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
+}
+
+.cardsRow > * {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+}
+
+.cardsRowCompact > * {
+  flex-basis: 240px;
+}
+
+.cardsRowWide > * {
+  flex-basis: 320px;
 }
 
 .error {
@@ -572,8 +608,15 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .relatedGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.75rem 1rem;
+  .sectionPanel {
+    padding: 1rem;
+  }
+
+  .cardsRow {
+    gap: 1rem;
+  }
+
+  .cardsRow > * {
+    flex-basis: 250px;
   }
 }

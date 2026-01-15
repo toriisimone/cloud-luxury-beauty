@@ -483,48 +483,59 @@ const ProductDetails = () => {
         {/* You Might Also Like */}
         <section className={styles.relatedSection} aria-label="Product recommendations">
           {featuredProducts.length > 0 && (
-            <>
-              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Featured Products')}</div>
-              <div className={styles.relatedGrid}>
+            <div className={styles.sectionPanel}>
+              <div className={styles.panelHeaderRow}>
+                <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Featured Products')}</div>
+                <div className={styles.panelSubtitle}>Sponsored</div>
+              </div>
+              <div className={`${styles.cardsRow} ${styles.cardsRowWide}`}>
                 {featuredProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
-            </>
+            </div>
           )}
 
           {useItWithProducts.length > 0 && (
-            <>
-              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Use It With')}</div>
-              <div className={styles.relatedGrid}>
+            <div className={styles.sectionPanel}>
+              <div className={styles.panelHeaderRow}>
+                <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Use It With')}</div>
+              </div>
+              <div className={`${styles.cardsRow} ${styles.cardsRowCompact}`}>
                 {useItWithProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
-            </>
+            </div>
           )}
 
           {similarProducts.length > 0 && (
-            <>
-              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Similar Products')}</div>
-              <div className={styles.relatedGrid}>
+            <div className={styles.sectionPanel}>
+              <div className={styles.panelHeaderRow}>
+                <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Similar Products')}</div>
+              </div>
+              <div className={styles.cardsRow}>
                 {similarProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
-            </>
-          )}
-
-          <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('You May Also Like')}</div>
-          {relatedLoading ? (
-            <div className={styles.relatedLoading}>Loading...</div>
-          ) : (
-            <div className={styles.relatedGrid}>
-              {(youMayAlsoLikeProducts.length > 0 ? youMayAlsoLikeProducts : relatedProducts).map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
             </div>
           )}
+
+          <div className={styles.sectionPanel}>
+            <div className={styles.panelHeaderRow}>
+              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('You May Also Like')}</div>
+            </div>
+            {relatedLoading ? (
+              <div className={styles.relatedLoading}>Loading...</div>
+            ) : (
+              <div className={styles.cardsRow}>
+                {(youMayAlsoLikeProducts.length > 0 ? youMayAlsoLikeProducts : relatedProducts).map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            )}
+          </div>
         </section>
       </div>
     </div>

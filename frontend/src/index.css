@@ -29,6 +29,10 @@
   --font-size-lg: 1.1rem;
   --font-size-xl: 1.25rem;
   --font-size-xxl: 2rem;
+
+  /* AURAPOP brand typography (match logo family/style) */
+  --aurapop-font: 'Helvetica Neue', 'Arial', sans-serif;
+  --aurapop-font-style: italic;
   
   /* Cloud gradients */
   --cloud-gradient: radial-gradient(circle 800px at 20% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 70%),

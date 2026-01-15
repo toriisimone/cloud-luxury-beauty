@@ -128,6 +128,8 @@
 
 /* Brand (bold) */
 .brand {
+  font-family: var(--aurapop-font);
+  font-style: var(--aurapop-font-style);
   font-size: 0.92rem;
   font-weight: 700;
   margin: 0;
@@ -137,6 +139,8 @@
 
 /* Product title */
 .name {
+  font-family: var(--aurapop-font);
+  font-style: var(--aurapop-font-style);
   font-size: 1rem;
   font-weight: 400;
   margin: 0;
@@ -190,6 +194,8 @@
 }
 
 .price {
+  font-family: var(--aurapop-font);
+  font-style: var(--aurapop-font-style);
   font-size: 1.1rem;
   font-weight: 700;
   color: #000;
