@@ -1,6 +1,9 @@
-import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Product } from '../types/global';
+import { useCart } from '../hooks/useCart';
+import { useAuth } from '../hooks/useAuth';
+import { useWishlist } from '../hooks/useWishlist';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
@@ -8,7 +11,11 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
+  const { addItem } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const isFavorite = isInWishlist(product.id);
 
   // Consistent demo rating per product (until you wire real review data)
   const { rating, reviewCount } = useMemo(() => {
@@ -45,18 +52,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
             type="button"
             className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteActive : ''}`}
             aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
               e.stopPropagation();
-              setIsFavorite((v) => !v);
+              if (!isAuthenticated) {
+                navigate('/account');
+                return;
+              }
+              await toggleWishlist(product.id);
             }}
           >
             <svg
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              fill={isFavorite ? '#000' : 'none'}
-              stroke="#000"
+              fill={isFavorite ? 'currentColor' : 'none'}
+              stroke="currentColor"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -99,6 +110,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
           
           <div className={styles.priceContainer}>
             <span className={styles.price}>${product.price.toFixed(2)}</span>
+          </div>
+
+          <div className={styles.cardActions}>
+            <button
+              type="button"
+              className={styles.addToCart}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addItem(product, undefined, 1);
+              }}
+              aria-label={`Add ${product.name} to cart`}
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
       </Link>

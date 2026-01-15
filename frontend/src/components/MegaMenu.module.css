@@ -13,23 +13,22 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   pointer-events: none;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
 }
 
 .megaMenu.open {
   height: auto;
-  max-height: none;
-  min-height: 600px;
+  max-height: min(560px, calc(100vh - 110px));
   opacity: 1;
   pointer-events: auto;
-  overflow: visible;
+  overflow: auto;
 }
 
 .megaMenuWrapper {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   /* Add top padding so the first row of tiles doesn't touch the header edge */
-  padding: 24px 40px 32px;
+  padding: 16px 20px 18px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -37,7 +36,7 @@
 .megaMenuGrid {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  gap: 40px;
+  gap: 20px;
   overflow: visible;
   width: 100%;
   box-sizing: border-box;
@@ -74,11 +73,11 @@
 }
 
 .megaMenuShopAllLink {
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-family: var(--aurapop-font);
   font-size: 0.75rem;
-  font-weight: 500;
-  font-style: italic;
-  color: #000000;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--aurapop-pink);
   text-decoration: none;
   text-transform: capitalize;
   letter-spacing: 0.3px;
@@ -92,14 +91,13 @@
 .megaMenuImageMenuBlocks {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1.5rem;
+  gap: 14px;
   max-width: 100%;
   margin: 0;
   justify-items: center;
   align-items: start;
   width: 100%;
   height: auto;
-  min-height: 300px;
   padding: 0;
   box-sizing: border-box;
 }
@@ -152,11 +150,11 @@
 .imageMenuBlockTitle {
   font-size: 0.7rem;
   font-weight: 700;
-  font-style: italic;
-  color: #000000;
+  font-style: normal;
+  color: var(--aurapop-pink);
   margin: 0;
   text-transform: capitalize;
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-family: var(--aurapop-font);
   line-height: 1.2;
   max-width: 100%;
   word-wrap: break-word;
@@ -181,13 +179,13 @@
 
 .imageMenuBlockMenuItemLink {
   font-size: 0.65rem;
-  color: #000000;
+  color: var(--aurapop-pink);
   text-decoration: none;
   transition: opacity 0.2s ease;
   text-transform: capitalize;
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--aurapop-font);
+  font-style: normal;
+  font-weight: 700;
   line-height: 1.5;
   display: block;
   max-width: 100%;
@@ -262,7 +260,7 @@
 }
 
 .bannerBlockTitle span {
-  color: #B3848F;
+  color: var(--aurapop-pink);
 }
 
 /* Mobile Styles */

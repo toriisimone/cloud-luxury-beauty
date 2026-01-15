@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { Product } from '../types/global';
 import * as productsApi from '../api/productsApi';
+import ProductCard from './ProductCard';
 import styles from './ProductCarousel.module.css';
 
 const ProductCarousel = () => {
@@ -95,23 +95,6 @@ const ProductCarousel = () => {
     }
   };
 
-  // Generate random rating for demo
-  const getRating = (productId: string) => {
-    // Consistent rating per product
-    const seed = productId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const rating = 4.0 + (seed % 10) / 10;
-    return rating.toFixed(1);
-  };
-
-  const getReviewCount = (productId: string) => {
-    const seed = productId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const count = 50 + (seed % 500);
-    if (count >= 1000) {
-      return `${(count / 1000).toFixed(1)}K`;
-    }
-    return count.toString();
-  };
-
   const showSkeleton = loading || products.length === 0;
   const skeletonItems = Array.from({ length: 10 }, (_, i) => i);
 
@@ -129,121 +112,19 @@ const ProductCarousel = () => {
           {showSkeleton
             ? skeletonItems.map((i) => (
                 <li key={`skeleton-${i}`} className={styles.productItem}>
-                  <div className={styles.productLink} aria-hidden="true">
-                    <div className={styles.productImageContainer}>
-                      <div className={styles.productImageWrapper}>
-                        <div className={styles.productPlaceholder}>
-                          {error ? 'Products unavailable' : 'Loading...'}
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.productInfo}>
-                      <div className={styles.productBrandName}>
-                        <span className={styles.productBrand}> </span>
-                        <span className={styles.productName}> </span>
-                      </div>
-                      <b className={styles.productPrice}>
-                        <span> </span>
-                      </b>
-                      <div className={styles.productRating}>
-                        <span className={styles.starRating} aria-hidden="true">
-                          <span className={styles.starContainer}>
-                            {Array.from({ length: 5 }, (_, j) => (
-                              <span key={j} className={styles.starEmpty}>★</span>
-            ))}
-                          </span>
-                        </span>
-                      </div>
-          </div>
-        </div>
+                  <div className={styles.skeletonCard} aria-hidden="true">
+                    <div className={styles.skeletonImage}>{error ? 'Products unavailable' : 'Loading...'}</div>
+                    <div className={styles.skeletonLine} />
+                    <div className={styles.skeletonLine} />
+                    <div className={styles.skeletonLineShort} />
+                  </div>
                 </li>
               ))
-            : products.map((product) => {
-                const rating = getRating(product.id);
-                const reviewCount = getReviewCount(product.id);
-                const ratingPercent = (parseFloat(rating) / 5) * 100;
-                const seed = product.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                const isNew = product.featured || seed % 2 === 0;
-
-              return (
-                  <li key={product.id} className={styles.productItem}>
-                    <Link
-                      to={`/products/${product.id}`}
-                      className={styles.productLink}
-                      aria-label={`${product.name}`}
-                    >
-                      <div className={styles.productImageContainer}>
-                        <div className={styles.productImageWrapper}>
-                          {product.images && product.images.length > 0 ? (
-                            <picture className={styles.productPicture}>
-                              <source 
-                                media="(min-width: 768px)" 
-                                srcSet={`${product.images[0]} 1x, ${product.images[0]} 2x`}
-                              />
-                              <img 
-                                src={product.images[0]} 
-                                srcSet={`${product.images[0]} 1x, ${product.images[0]} 2x`}
-                                loading="lazy" 
-                                alt={product.name}
-                        className={styles.productImage}
-                        onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.style.display = 'none';
-                                }}
-                              />
-                            </picture>
-                          ) : (
-                            <div className={styles.productPlaceholder}>No Image</div>
-                          )}
-                        </div>
-                    </div>
-                    
-                    <div className={styles.productInfo}>
-                        <div className={styles.productBrandName}>
-                          <span className={styles.productBrand}>
-                            {product.category?.name || 'AURAPOP'}
-                          </span>
-                          <span className={styles.productName}>
-                            {product.name}
-                          </span>
-                          </div>
-                        <b className={styles.productPrice}>
-                          <span>${product.price.toFixed(2)}</span>
-                        </b>
-                        <div className={styles.productRating}>
-                          <span 
-                            className={styles.starRating}
-                            aria-label={`${rating} stars`}
-                          >
-                            <span className={styles.starContainer}>
-                              {Array.from({ length: 5 }, (_, i) => (
-                                <span key={i} className={styles.starEmpty}>★</span>
-                        ))}
-                            </span>
-                            <span 
-                              className={styles.starRatingFill}
-                              style={{ width: `${ratingPercent}%` }}
-                            >
-                              {Array.from({ length: 5 }, (_, i) => (
-                                <span key={i} className={styles.starFilled}>★</span>
-                        ))}
-                            </span>
-                          </span>
-                          <span className={styles.reviewCount} aria-label={`${reviewCount} reviews`}>
-                            {reviewCount}
-                      </span>
-                        </div>
-                    </div>
-                    
-                      {isNew && (
-                        <div className={styles.productBadge}>
-                          <span className={styles.newBadge}>New</span>
-                    </div>
-                      )}
-                  </Link>
-                  </li>
-                );
-              })}
+            : products.map((product) => (
+                <li key={product.id} className={styles.productItem}>
+                  <ProductCard product={product} />
+                </li>
+              ))}
           
           {/* Hidden spacer for smooth scrolling */}
           <li aria-hidden="true" className={styles.spacerRight}></li>

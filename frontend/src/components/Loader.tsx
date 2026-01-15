@@ -3,8 +3,11 @@ import styles from './Loader.module.css';
 const Loader = () => {
   return (
     <div className={styles.loader}>
-      <div className={styles.spinner}></div>
-      <p>Loading...</p>
+      <div className={styles.diamond} aria-hidden="true" />
+      <div className={styles.logo} aria-label="AURAPOP">
+        AURAPOP
+      </div>
+      <div className={styles.sub}>Please wait…</div>
     </div>
   );
 };

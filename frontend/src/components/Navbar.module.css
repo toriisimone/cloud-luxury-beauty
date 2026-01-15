@@ -92,6 +92,11 @@
   -moz-appearance: none;
 }
 
+.countryPickerSelect option {
+  color: #000;
+  background: #fff;
+}
+
 /* Logo - Centered in Top Banner */
 .siteHeaderLogo {
   position: absolute;
@@ -202,11 +207,12 @@
 }
 
 .linkAnchor {
-  color: #ffffff;
-  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  /* Dropdown/nav text: brand font, non-italic, hot pink */
+  color: var(--aurapop-pink);
+  font-family: var(--aurapop-font);
   font-size: 0.7rem;
-  font-weight: 400;
-  font-style: italic;
+  font-weight: 700;
+  font-style: normal;
   text-decoration: none;
   text-transform: capitalize;
   letter-spacing: 0.5px;
