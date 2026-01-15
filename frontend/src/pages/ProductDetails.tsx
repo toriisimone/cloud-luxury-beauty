@@ -316,7 +316,10 @@ const ProductDetails = () => {
               </button>
               <span className={styles.dotSep}>|</span>
               <span className={styles.favCount} aria-label={`${favoritesCount} favorites`}>
-                ♥ {favoritesCount}
+                <span className={styles.favHeart} aria-hidden="true">
+                  ♥
+                </span>
+                <span>{favoritesCount}</span>
               </span>
             </div>
 
