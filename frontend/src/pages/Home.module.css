@@ -14,12 +14,12 @@
 
 /* Hero Banner Section - Full width and height */
 .heroSection {
-  position: absolute;
-  top: 0;
-  left: 0;
+  /* In normal document flow so sections below naturally sit under the banner */
+  position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 100vh;
+  height: 80vh;
+  min-height: 560px;
+  max-height: 860px;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -39,7 +39,7 @@
   height: 100% !important; /* Fill hero section completely */
   min-height: 100% !important;
   background-size: cover !important; /* Fill the entire area - wide image */
-  background-position: center 40% !important; /* Position to show face, shirt, and hands/object */
+  background-position: center top !important; /* show the top edge of the banner */
   background-repeat: no-repeat !important;
   background-color: #fafafa; /* Subtle background color */
   display: flex;
@@ -326,6 +326,13 @@
     inset 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
+/* CTA text formatting (single button uses both classes) */
+:global(.hero__content__desktop_button),
+:global(.hero__content__mobile_button) {
+  text-transform: none; /* keep Title Case from JSX */
+  letter-spacing: 0.08em; /* add spacing between letters */
+}
+
 :global(.hero__content__desktop_button):hover,
 :global(.action--primary):hover {
   background: rgba(255, 255, 255, 0.1);
@@ -573,7 +580,7 @@
 
 @media (max-width: 768px) {
   .home {
-    padding: 0 !important; /* No padding - hero is absolute */
+    padding: 0 !important;
   }
   
   .heroSection {
@@ -645,7 +652,7 @@
 
 @media (max-width: 480px) {
   .home {
-    padding: 0 !important; /* No padding - hero is absolute */
+    padding: 0 !important;
   }
   
   .heroSection {

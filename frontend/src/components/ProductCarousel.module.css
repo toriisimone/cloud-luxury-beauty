@@ -4,7 +4,7 @@
   padding: 2rem 0;
   background: #ffffff;
   position: relative;
-  margin-top: 100vh; /* Push below hero banner */
+  margin-top: 0;
   z-index: 1;
 }
 

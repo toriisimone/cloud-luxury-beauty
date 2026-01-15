@@ -51,7 +51,16 @@ body {
   font-size: var(--font-size-sm); /* Smaller base font size for Glossier style */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-top: 0; /* Removed - homepage hero starts at top */
+  /* Header is fixed (two rows). This keeps all pages (incl. homepage banner)
+     starting just under the header, instead of being hidden behind it. */
+  padding-top: 110px;
+}
+
+@media (max-width: 768px) {
+  body {
+    /* On mobile we hide the 2nd header row, so the header height is ~60px */
+    padding-top: 60px;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {

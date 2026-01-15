@@ -92,23 +92,13 @@ const Home = () => {
               </p>
             </div>
             
-            {/* Desktop Button */}
+            {/* Single CTA Button (works for both desktop + mobile via shared classes) */}
             <div className="hero__buttons hero_button">
-              <button 
-                data-placement="button 1" 
-                className="hero__content__desktop_button action action--primary"
+              <button
+                data-placement="button 1"
+                className="hero__content__desktop_button hero__content__mobile_button action action--primary"
               >
-                subscribeforNEW
-              </button>
-            </div>
-            
-            {/* Mobile Button */}
-            <div className="hero__buttons hero_button">
-              <button 
-                data-placement="button 1" 
-                className="hero__content__mobile_button action action--primary"
-              >
-                subscribeforNEW
+                Subscribe For New
               </button>
             </div>
           </div>

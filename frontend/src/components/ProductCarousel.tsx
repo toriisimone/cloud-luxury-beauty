@@ -7,23 +7,54 @@ import styles from './ProductCarousel.module.css';
 const ProductCarousel = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLUListElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        // Fetch products from all categories, limit to 10
-        const response = await productsApi.getProducts({
-          page: 1,
-          limit: 10
-        });
-        setProducts(response.products);
+        setError(null);
+        // Fetch from OUR backend DB by core categories (no external API).
+        // These map to: GET /api/products?category=skincare|makeup|hair|fragrance|body
+        const categories = ['skincare', 'makeup', 'hair', 'fragrance', 'body'] as const;
+
+        const responses = await Promise.all(
+          categories.map((c) =>
+            productsApi.getProducts({
+              category: c,
+              page: 1,
+              limit: 12,
+            })
+          )
+        );
+
+        // Interleave results so we "pick and choose" from all category pages.
+        const buckets = responses.map((r) => r.products);
+        const interleaved: Product[] = [];
+        let idx = 0;
+        while (interleaved.length < 10) {
+          let added = false;
+          for (const bucket of buckets) {
+            if (bucket[idx]) {
+              interleaved.push(bucket[idx]);
+              added = true;
+              if (interleaved.length >= 10) break;
+            }
+          }
+          if (!added) break; // no more products anywhere
+          idx++;
+        }
+
+        // Deduplicate by id in case the backend returns overlaps
+        const unique = Array.from(new Map(interleaved.map((p) => [p.id, p])).values());
+        setProducts(unique);
       } catch (error) {
         console.error('Failed to fetch products for carousel:', error);
         setProducts([]);
+        setError('Failed to load products');
       } finally {
         setLoading(false);
       }
@@ -81,13 +112,8 @@ const ProductCarousel = () => {
     return count.toString();
   };
 
-  if (loading) {
-    return null;
-  }
-
-  if (products.length === 0) {
-    return null;
-  }
+  const showSkeleton = loading || products.length === 0;
+  const skeletonItems = Array.from({ length: 10 }, (_, i) => i);
 
   return (
     <section className={styles.productCarouselSection}>
@@ -95,101 +121,136 @@ const ProductCarousel = () => {
         <ul 
           ref={scrollContainerRef}
           className={styles.productList}
+          aria-busy={loading ? 'true' : 'false'}
         >
           {/* Hidden spacer for smooth scrolling */}
           <li aria-hidden="true" className={styles.spacerLeft}></li>
           
-          {products.map((product) => {
-            const rating = getRating(product.id);
-            const reviewCount = getReviewCount(product.id);
-            const ratingPercent = (parseFloat(rating) / 5) * 100;
-            const isNew = product.featured || Math.random() > 0.6;
+          {showSkeleton
+            ? skeletonItems.map((i) => (
+                <li key={`skeleton-${i}`} className={styles.productItem}>
+                  <div className={styles.productLink} aria-hidden="true">
+                    <div className={styles.productImageContainer}>
+                      <div className={styles.productImageWrapper}>
+                        <div className={styles.productPlaceholder}>
+                          {error ? 'Products unavailable' : 'Loading...'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.productInfo}>
+                      <div className={styles.productBrandName}>
+                        <span className={styles.productBrand}> </span>
+                        <span className={styles.productName}> </span>
+                      </div>
+                      <b className={styles.productPrice}>
+                        <span> </span>
+                      </b>
+                      <div className={styles.productRating}>
+                        <span className={styles.starRating} aria-hidden="true">
+                          <span className={styles.starContainer}>
+                            {Array.from({ length: 5 }, (_, j) => (
+                              <span key={j} className={styles.starEmpty}>★</span>
+                            ))}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))
+            : products.map((product) => {
+                const rating = getRating(product.id);
+                const reviewCount = getReviewCount(product.id);
+                const ratingPercent = (parseFloat(rating) / 5) * 100;
+                const seed = product.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                const isNew = product.featured || seed % 2 === 0;
 
-            return (
-              <li key={product.id} className={styles.productItem}>
-                <Link
-                  to={`/products/${product.id}`}
-                  className={styles.productLink}
-                  aria-label={`${product.name}`}
-                >
-                  <div className={styles.productImageContainer}>
-                    <div className={styles.productImageWrapper}>
-                      {product.images && product.images.length > 0 ? (
-                        <picture className={styles.productPicture}>
-                          <source 
-                            media="(min-width: 768px)" 
-                            srcSet={`${product.images[0]} 1x, ${product.images[0]} 2x`}
-                          />
-                          <img 
-                            src={product.images[0]} 
-                            srcSet={`${product.images[0]} 1x, ${product.images[0]} 2x`}
-                            loading="lazy" 
-                            alt={product.name}
-                            className={styles.productImage}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                            }}
-                          />
-                        </picture>
-                      ) : (
-                        <div className={styles.productPlaceholder}>No Image</div>
+                return (
+                  <li key={product.id} className={styles.productItem}>
+                    <Link
+                      to={`/products/${product.id}`}
+                      className={styles.productLink}
+                      aria-label={`${product.name}`}
+                    >
+                      <div className={styles.productImageContainer}>
+                        <div className={styles.productImageWrapper}>
+                          {product.images && product.images.length > 0 ? (
+                            <picture className={styles.productPicture}>
+                              <source 
+                                media="(min-width: 768px)" 
+                                srcSet={`${product.images[0]} 1x, ${product.images[0]} 2x`}
+                              />
+                              <img 
+                                src={product.images[0]} 
+                                srcSet={`${product.images[0]} 1x, ${product.images[0]} 2x`}
+                                loading="lazy" 
+                                alt={product.name}
+                                className={styles.productImage}
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = 'none';
+                                }}
+                              />
+                            </picture>
+                          ) : (
+                            <div className={styles.productPlaceholder}>No Image</div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className={styles.productInfo}>
+                        <div className={styles.productBrandName}>
+                          <span className={styles.productBrand}>
+                            {product.category?.name || 'AURAPOP'}
+                          </span>
+                          <span className={styles.productName}>
+                            {product.name}
+                          </span>
+                        </div>
+                        <b className={styles.productPrice}>
+                          <span>${product.price.toFixed(2)}</span>
+                        </b>
+                        <div className={styles.productRating}>
+                          <span 
+                            className={styles.starRating}
+                            aria-label={`${rating} stars`}
+                          >
+                            <span className={styles.starContainer}>
+                              {Array.from({ length: 5 }, (_, i) => (
+                                <span key={i} className={styles.starEmpty}>★</span>
+                              ))}
+                            </span>
+                            <span 
+                              className={styles.starRatingFill}
+                              style={{ width: `${ratingPercent}%` }}
+                            >
+                              {Array.from({ length: 5 }, (_, i) => (
+                                <span key={i} className={styles.starFilled}>★</span>
+                              ))}
+                            </span>
+                          </span>
+                          <span className={styles.reviewCount} aria-label={`${reviewCount} reviews`}>
+                            {reviewCount}
+                          </span>
+                        </div>
+                      </div>
+
+                      {isNew && (
+                        <div className={styles.productBadge}>
+                          <span className={styles.newBadge}>New</span>
+                        </div>
                       )}
-                    </div>
-                  </div>
-
-                  <div className={styles.productInfo}>
-                    <div className={styles.productBrandName}>
-                      <span className={styles.productBrand}>
-                        {product.category?.name || 'AURAPOP'}
-                      </span>
-                      <span className={styles.productName}>
-                        {product.name}
-                      </span>
-                    </div>
-                    <b className={styles.productPrice}>
-                      <span>${product.price.toFixed(2)}</span>
-                    </b>
-                    <div className={styles.productRating}>
-                      <span 
-                        className={styles.starRating}
-                        aria-label={`${rating} stars`}
-                      >
-                        <span className={styles.starContainer}>
-                          {Array.from({ length: 5 }, (_, i) => (
-                            <span key={i} className={styles.starEmpty}>★</span>
-                          ))}
-                        </span>
-                        <span 
-                          className={styles.starRatingFill}
-                          style={{ width: `${ratingPercent}%` }}
-                        >
-                          {Array.from({ length: 5 }, (_, i) => (
-                            <span key={i} className={styles.starFilled}>★</span>
-                          ))}
-                        </span>
-                      </span>
-                      <span className={styles.reviewCount} aria-label={`${reviewCount} reviews`}>
-                        {reviewCount}
-                      </span>
-                    </div>
-                  </div>
-
-                  {isNew && (
-                    <div className={styles.productBadge}>
-                      <span className={styles.newBadge}>New</span>
-                    </div>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
+                    </Link>
+                  </li>
+                );
+              })}
           
           {/* Hidden spacer for smooth scrolling */}
           <li aria-hidden="true" className={styles.spacerRight}></li>
         </ul>
 
         {/* Navigation Buttons */}
+        {!showSkeleton && (
         <button
           className={`${styles.carouselButton} ${styles.carouselButtonPrev} ${!canScrollLeft ? styles.carouselButtonDisabled : ''}`}
           aria-label="Previous slide"
@@ -206,7 +267,9 @@ const ProductCarousel = () => {
             </g>
           </svg>
         </button>
+        )}
 
+        {!showSkeleton && (
         <button
           className={`${styles.carouselButton} ${styles.carouselButtonNext} ${!canScrollRight ? styles.carouselButtonDisabled : ''}`}
           aria-label="Next slide"
@@ -223,6 +286,7 @@ const ProductCarousel = () => {
             </g>
           </svg>
         </button>
+        )}
       </div>
     </section>
   );

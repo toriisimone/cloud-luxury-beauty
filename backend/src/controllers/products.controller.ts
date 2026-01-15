@@ -3,6 +3,7 @@ import * as productsService from '../services/products.service';
 import { logger } from '../config/logger';
 // AMAZON API DISABLED: Always use database products
 // import * as amazonService from '../services/amazonApi.service';
+import { autoSeedIfEmpty } from '../utils/autoSeed';
 
 // Startup log to confirm controller is loaded
 logger.info('[PRODUCTS CONTROLLER] ✅ Product controller module loaded and ready');
@@ -66,37 +67,11 @@ export const getProducts = async (req: Request, res: Response) => {
         });
       }
       
-      // If Skincare category doesn't exist, create it and seed products FIRST
-      if (!categoryObj && (category as string).toLowerCase() === 'skincare') {
-        logger.warn(`[PRODUCTS CONTROLLER] ========== SKINCARE CATEGORY MISSING ==========`);
-        logger.warn(`[PRODUCTS CONTROLLER] Skincare category not found in database!`);
-        logger.warn(`[PRODUCTS CONTROLLER] Creating Skincare category and seeding 20 products...`);
-        
-        const { autoSeedSkincareIfEmpty } = await import('../utils/autoSeedSkincare');
-        logger.info(`[PRODUCTS CONTROLLER] Calling autoSeedSkincareIfEmpty()...`);
-        
-        const seeded = await autoSeedSkincareIfEmpty();
-        
-        if (seeded) {
-          logger.info('[PRODUCTS CONTROLLER] ✅✅✅ SKINCARE CATEGORY CREATED AND PRODUCTS SEEDED ✅✅✅');
-          logger.info('[PRODUCTS CONTROLLER] 20 skincare products have been added to the database');
-          
-          // Look up the category again after creation
-          logger.info(`[PRODUCTS CONTROLLER] Looking up newly created Skincare category...`);
-          categoryObj = await getCategoryByName('Skincare');
-          
-          if (categoryObj) {
-            logger.info(`[PRODUCTS CONTROLLER] ✅ Found newly created category:`, {
-              id: categoryObj.id,
-              name: categoryObj.name,
-            });
-          } else {
-            logger.error(`[PRODUCTS CONTROLLER] ❌ ERROR: Category was created but cannot be found!`);
-          }
-        } else {
-          logger.error(`[PRODUCTS CONTROLLER] ❌ ERROR: autoSeedSkincareIfEmpty returned false - seeding failed!`);
-        }
-        logger.info(`[PRODUCTS CONTROLLER] ==========================================`);
+      // If the requested category doesn't exist yet, attempt CSV-based seed and re-lookup.
+      if (!categoryObj) {
+        logger.warn(`[PRODUCTS CONTROLLER] Category "${category}" not found. Attempting CSV-based seed...`);
+        await autoSeedIfEmpty();
+        categoryObj = await getCategoryByName(category as string);
       }
       
       if (categoryObj) {
@@ -123,90 +98,25 @@ export const getProducts = async (req: Request, res: Response) => {
     logger.info(`[PRODUCTS CONTROLLER] Total: ${result.total}`);
     logger.info(`[PRODUCTS CONTROLLER] Page: ${result.page}/${result.totalPages}`);
     
-    // If Skincare category and no products OR fewer than 82 products, seed all 82 products
-    if (category && (category as string).toLowerCase() === 'skincare') {
-      logger.info(`[PRODUCTS CONTROLLER] ========== SKINCARE CATEGORY CHECK ==========`);
-      logger.info(`[PRODUCTS CONTROLLER] Products found: ${result.products.length}`);
-      logger.info(`[PRODUCTS CONTROLLER] Total in category: ${result.total}`);
-      
-      // Verify category exists and get final ID
-      if (!finalCategoryId) {
-        const { getCategoryByName } = await import('../services/categories.service');
-        const categoryObj = await getCategoryByName('Skincare');
-        if (categoryObj) {
-          finalCategoryId = categoryObj.id;
-          logger.info(`[PRODUCTS CONTROLLER] ✅ Found Skincare category ID: ${finalCategoryId}`);
-        }
-      }
-      
-      // CRITICAL: Always return products if they exist, even if fewer than 82
-      // Do NOT block the response if we have products
-      if (result.total === 0) {
-        // If zero products, try to seed
-        logger.warn(`[PRODUCTS CONTROLLER] ⚠️ ZERO skincare products found! Attempting to seed...`);
-        
-        // Seed all 82 products
-        const { seedAll82SkincareProducts } = await import('../utils/seedSkincare82Products');
-        logger.info(`[PRODUCTS CONTROLLER] Calling seedAll82SkincareProducts()...`);
-        const seeded = await seedAll82SkincareProducts();
-        
-        if (seeded) {
-          logger.info('[PRODUCTS CONTROLLER] ✅ Products seeded successfully!');
-          logger.info('[PRODUCTS CONTROLLER] Fetching products again...');
-          
-          // Fetch again after seeding with higher limit to get all products
-          const newResult = await productsService.getProducts({
-            categoryId: finalCategoryId,
-            search: search as string,
-            minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
-            maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
-            featured: featured === 'true' ? true : featured === 'false' ? false : undefined,
-            page: parseInt(page as string, 10),
-            limit: 100, // Get all products
-          });
-          
-          logger.info(`[PRODUCTS CONTROLLER] ========== AFTER SEEDING ==========`);
-          logger.info(`[PRODUCTS CONTROLLER] Products returned: ${newResult.products.length}`);
-          logger.info(`[PRODUCTS CONTROLLER] Total in category: ${newResult.total}`);
-          logger.info(`[PRODUCTS CONTROLLER] ✅ Returning ${newResult.products.length} skincare products`);
-          logger.info(`[PRODUCTS CONTROLLER] ===========================================`);
-          
-          return res.json(newResult);
-        } else {
-          logger.error('[PRODUCTS CONTROLLER] ❌ Failed to seed skincare products');
-          // Still return empty result if seeding failed
-        }
-      } else {
-        // We have products - return them immediately (don't wait for seeding)
-        logger.info(`[PRODUCTS CONTROLLER] ✅ Found ${result.total} skincare products - returning them`);
-        logger.info(`[PRODUCTS CONTROLLER] Returning ${result.products.length} products (page ${result.page})`);
-      }
-    }
+    // If a category was requested but returned 0, attempt a CSV seed and retry once.
+    if (category && result.total === 0) {
+      logger.warn(`[PRODUCTS CONTROLLER] Category "${category}" returned 0 products. Attempting CSV-based seed + retry...`);
+      await autoSeedIfEmpty();
 
-    // If Skincare category, log explicit product count
-    if (category && (category as string).toLowerCase() === 'skincare') {
-      logger.info(`[PRODUCTS CONTROLLER] ========== SKINCARE CATEGORY RESPONSE ==========`);
-      logger.info(`[PRODUCTS CONTROLLER] Skincare products found: ${result.products.length}`);
-      logger.info(`[PRODUCTS CONTROLLER] Total Skincare products in database: ${result.total}`);
-      logger.info(`[PRODUCTS CONTROLLER] Returning ${result.products.length} Skincare products`);
-      logger.info(`[PRODUCTS CONTROLLER] Page: ${result.page}/${result.totalPages}`);
-      console.log(`[PRODUCTS CONTROLLER] ✅✅✅ SKINCARE PRODUCTS: ${result.products.length} found, returning ${result.products.length} products ✅✅✅`);
-      
-      // Log first few products to verify structure
-      if (result.products.length > 0) {
-        logger.info(`[PRODUCTS CONTROLLER] First product sample:`, {
-          id: result.products[0].id,
-          name: result.products[0].name,
-          price: result.products[0].price,
-          categoryId: result.products[0].categoryId,
+      const { getCategoryByName } = await import('../services/categories.service');
+      const categoryObj = await getCategoryByName(category as string);
+      if (categoryObj) {
+        const retry = await productsService.getProducts({
+          categoryId: categoryObj.id,
+          search: search as string,
+          minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
+          maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
+          featured: featured === 'true' ? true : featured === 'false' ? false : undefined,
+          page: parseInt(page as string, 10),
+          limit: parseInt(limit as string, 10),
         });
-        console.log(`[PRODUCTS CONTROLLER] First product:`, {
-          id: result.products[0].id,
-          name: result.products[0].name,
-          price: result.products[0].price,
-        });
+        return res.json(retry);
       }
-      logger.info(`[PRODUCTS CONTROLLER] ===========================================`);
     }
 
     logger.info('[PRODUCTS CONTROLLER] ========== SENDING RESPONSE TO CLIENT ==========');
