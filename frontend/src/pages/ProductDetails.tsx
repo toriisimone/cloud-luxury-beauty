@@ -21,6 +21,10 @@ const ProductDetails = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [relatedLoading, setRelatedLoading] = useState(false);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [useItWithProducts, setUseItWithProducts] = useState<Product[]>([]);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+  const [youMayAlsoLikeProducts, setYouMayAlsoLikeProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -54,16 +58,66 @@ const ProductDetails = () => {
       if (!product?.category?.slug) return;
       setRelatedLoading(true);
       try {
-        const res = await productsApi.getProducts({
+        // 1) Featured Products (site-wide)
+        const featuredRes = await productsApi.getProducts({
+          featured: true,
+          page: 1,
+          limit: 16,
+        });
+        setFeaturedProducts((featuredRes.products || []).slice(0, 12));
+
+        // 2) Category pool
+        const catRes = await productsApi.getProducts({
           category: product.category.slug,
           page: 1,
-          limit: 24,
+          limit: 60,
         });
-        const others = (res.products || []).filter((p) => p.id !== product.id).slice(0, 12);
-        setRelatedProducts(others);
+        const pool = (catRes.products || []).filter((p) => p.id !== product.id);
+
+        // Use It With (small)
+        setUseItWithProducts(pool.slice(0, 6));
+
+        // Similar Products (bigger)
+        setSimilarProducts(pool.slice(0, 12));
+
+        // You May Also Like (grid) — same as earlier relatedProducts behavior
+        setRelatedProducts(pool.slice(0, 12));
+
+        // Optional: cross-category picks for variety
+        const allCore = ['skincare', 'makeup', 'hair', 'fragrance', 'body'] as const;
+        const otherCats = allCore.filter((c) => c !== product.category?.slug);
+        const otherRes = await Promise.all(
+          otherCats.map((c) =>
+            productsApi.getProducts({
+              category: c,
+              page: 1,
+              limit: 6,
+            })
+          )
+        );
+        const buckets = otherRes.map((r) => r.products || []);
+        const interleaved: Product[] = [];
+        let idx = 0;
+        while (interleaved.length < 12) {
+          let added = false;
+          for (const b of buckets) {
+            if (b[idx]) {
+              interleaved.push(b[idx]);
+              added = true;
+              if (interleaved.length >= 12) break;
+            }
+          }
+          if (!added) break;
+          idx++;
+        }
+        setYouMayAlsoLikeProducts(interleaved.filter((p) => p.id !== product.id).slice(0, 12));
       } catch (e) {
         console.error('[ProductDetails] Failed to load related products:', e);
         setRelatedProducts([]);
+        setFeaturedProducts([]);
+        setUseItWithProducts([]);
+        setSimilarProducts([]);
+        setYouMayAlsoLikeProducts([]);
       } finally {
         setRelatedLoading(false);
       }
@@ -289,22 +343,40 @@ const ProductDetails = () => {
               <div className={styles.qtyBlock}>
                 <div className={styles.qtyLabel}>Qty</div>
                 <div className={styles.actionRow}>
-                  <input
-                    id="qty"
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)}
-                    className={styles.quantityInput}
-                    aria-label="Quantity"
-                  />
+                  {/* Sephora-style CTA group: qty control + pill button (hot pink) */}
+                  <div className={styles.ctaGroup}>
+                    <div className={styles.qtyStepper} aria-label="Quantity selector">
+                      <button
+                        type="button"
+                        className={styles.qtyBtn}
+                        aria-label="Decrease quantity"
+                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      >
+                        −
+                      </button>
+                      <input
+                        id="qty"
+                        type="number"
+                        min="1"
+                        value={quantity}
+                        onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)}
+                        className={styles.quantityInput}
+                        aria-label="Quantity"
+                      />
+                      <button
+                        type="button"
+                        className={styles.qtyBtn}
+                        aria-label="Increase quantity"
+                        onClick={() => setQuantity((q) => q + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
 
-                  <button type="button" onClick={handleAddToCart} className={styles.addToCartHeart} aria-label="Add to Cart">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.heartIcon}>
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                    <span className={styles.addToCartLabel}>Add to Cart</span>
-                  </button>
+                    <button type="button" onClick={handleAddToCart} className={styles.addToCartButton}>
+                      Add to Cart
+                    </button>
+                  </div>
 
                   <button
                     type="button"
@@ -323,17 +395,50 @@ const ProductDetails = () => {
         </div>
 
         {/* You Might Also Like */}
-        <section className={styles.relatedSection} aria-label="You Might Also Like">
-          <div className={styles.relatedHeader}>{toTitleCase('You Might Also Like')}</div>
+        <section className={styles.relatedSection} aria-label="Product recommendations">
+          {featuredProducts.length > 0 && (
+            <>
+              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Featured Products')}</div>
+              <div className={styles.relatedGrid}>
+                {featuredProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            </>
+          )}
+
+          {useItWithProducts.length > 0 && (
+            <>
+              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Use It With')}</div>
+              <div className={styles.relatedGrid}>
+                {useItWithProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            </>
+          )}
+
+          {similarProducts.length > 0 && (
+            <>
+              <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Similar Products')}</div>
+              <div className={styles.relatedGrid}>
+                {similarProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('You May Also Like')}</div>
           {relatedLoading ? (
             <div className={styles.relatedLoading}>Loading...</div>
-          ) : relatedProducts.length > 0 ? (
+          ) : (
             <div className={styles.relatedGrid}>
-              {relatedProducts.map((p) => (
+              {(youMayAlsoLikeProducts.length > 0 ? youMayAlsoLikeProducts : relatedProducts).map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
             </div>
-          ) : null}
+          )}
         </section>
       </div>
     </div>
