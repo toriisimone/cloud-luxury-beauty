@@ -1,205 +1,108 @@
-/* Product Carousel Section - Kylie Cosmetics Style */
-.carouselSection {
-  padding: 4rem 0;
-  background: #F5E6E8; /* Exact pink from promotional banner - matches top banner */
+/* Product Carousel Section */
+.productCarouselSection {
+  width: 100%;
+  padding: 2rem 0;
+  background: #ffffff;
   position: relative;
-  margin-top: 0; /* No spacing above - directly after hero banner */
-  border-top: none; /* Remove any top border/line */
+  margin-top: 100vh; /* Push below hero banner */
+  z-index: 1;
 }
 
-.container {
-  max-width: 1400px;
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 2rem;
-  position: relative;
 }
 
-.header {
+/* Product List - Horizontal Scrollable */
+.productList {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  font-style: italic;
-  color: #000;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.pagination {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: transparent;
-  border: 1px solid #000;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.dot.active {
-  background: #000;
-  border-color: #000;
-}
-
-.carouselWrapper {
-  position: relative;
-  display: flex;
-  align-items: flex-start !important; /* Start alignment to prevent clipping */
-  gap: 1rem;
-  padding-right: 0 !important; /* Remove padding, handled by carousel */
-  overflow: visible !important; /* Ensure nothing is clipped */
-}
-
-.navButton {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  z-index: 2;
-  color: #000;
-}
-
-.navButton:hover:not(:disabled) {
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
-}
-
-.navButton:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.carousel {
-  display: flex;
-  gap: 1rem; /* Consistent gap between cards */
+  gap: 1.5rem;
   overflow-x: auto;
-  overflow-y: visible !important; /* Allow content to be fully visible */
-  scroll-behavior: smooth !important; /* Smooth scrolling */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  flex: 1;
-  padding: 1rem 1rem !important; /* Extra padding to ensure last item and button are fully visible */
-  align-items: flex-start !important; /* Start alignment to prevent clipping */
-  scroll-padding-right: 2rem !important; /* Extra padding on right for last item */
-  scroll-padding-left: 1rem !important; /* Extra padding on left */
-  flex-wrap: nowrap !important; /* Prevent wrapping - Kylie style */
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
-.carousel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+.productList::-webkit-scrollbar {
+  height: 8px;
 }
 
-.productCard {
-  /* Desktop: 4 cards per row - calc((100% - 3 gaps) / 4) */
-  min-width: calc((100% - 3rem) / 4) !important;
-  max-width: calc((100% - 3rem) / 4) !important;
-  width: calc((100% - 3rem) / 4) !important;
-  min-height: 580px !important; /* Fixed minimum height to ensure buttons are visible */
-  height: auto !important; /* Allow content to expand if needed */
-  background: #fff !important; /* Clean white background */
-  border-radius: 0; /* Kylie style - sharp edges */
-  overflow: visible !important; /* Ensure nothing is cut off */
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-shadow: none; /* Kylie style - no shadow */
-  border: 1px solid rgba(0, 0, 0, 0.05); /* Subtle border */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex-shrink: 0 !important; /* Prevent cards from shrinking - critical for alignment */
-  flex-grow: 0 !important; /* Prevent cards from growing */
+.productList::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* "View Now" overlay button - appears on hover, pink background */
-/* Product Link - makes image and info clickable */
+.productList::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.productList::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Spacers for smooth scrolling */
+.spacerLeft,
+.spacerRight {
+  flex: 0 0 1rem;
+  min-width: 1rem;
+  pointer-events: none;
+}
+
+/* Product Item */
+.productItem {
+  flex: 0 0 auto;
+  width: 200px;
+  min-width: 200px;
+  scroll-snap-align: start;
+}
+
+/* Product Link */
 .productLink {
+  display: block;
   text-decoration: none;
   color: inherit;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.productCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Subtle shadow on hover */
-}
-
-/* Badges Container - Kylie style (multiple badges support) */
-.badgesContainer {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  z-index: 2;
-  align-items: flex-start;
-}
-
-.badge {
-  background: #fff;
-  color: #000;
-  padding: 0.35rem 0.7rem;
-  font-size: 0.65rem;
-  font-weight: 500;
-  text-transform: lowercase;
-  letter-spacing: 0.3px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-  white-space: nowrap;
-  line-height: 1.2;
-}
-
-.imageContainer {
-  width: 100%;
-  height: 320px !important; /* Fixed height for all product images */
-  aspect-ratio: 1;
-  background: #ffffff !important; /* White background for all images */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
   position: relative;
-  flex-shrink: 0 !important; /* Prevent image container from shrinking */
-  flex-grow: 0 !important; /* Prevent image container from growing */
-  border: none !important; /* No border */
-  padding: 1rem !important; /* Padding to prevent images from touching edges */
+  width: 100%;
+}
+
+/* Product Image Container */
+.productImageContainer {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.productImageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.productPicture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .productImage {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain !important; /* Show full product without cropping */
-  object-position: center;
-  padding: 0 !important; /* No padding on image itself */
-  border: none !important; /* No border */
-  background: transparent !important; /* Transparent image background, container has white */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.placeholder {
+.productPlaceholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -207,227 +110,210 @@
   justify-content: center;
   background: #f5f5f5;
   color: #999;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
 }
 
+/* Product Info */
 .productInfo {
-  padding: 1.25rem 1.5rem 1.5rem !important;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  flex: 1;
-  min-height: 220px !important; /* Minimum height to ensure button space */
-  justify-content: space-between; /* Distribute content evenly */
-  overflow: visible !important; /* Ensure button is never cut off */
 }
 
-/* Shade Selection - Kylie style */
-.shadeSelection {
+.productBrandName {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-
-.shadeText {
-  font-size: 0.75rem;
-  color: #000;
-  font-weight: 400;
-  text-transform: lowercase;
-  letter-spacing: 0.2px;
-}
-
-.shadeSwatches {
-  display: flex;
+  flex-direction: column;
   gap: 0.25rem;
-  align-items: center;
 }
 
-.shadeSwatch {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.shadeSwatch:hover {
-  transform: scale(1.15);
+.productBrand {
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
 .productName {
-  font-size: 0.9rem;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 0.75rem;
   font-weight: 400;
   color: #000;
-  margin: 0.25rem 0 0;
-  line-height: 1.4;
-  text-transform: lowercase;
-  letter-spacing: 0.2px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.rating {
+.productPrice {
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+/* Product Rating */
+.productRating {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  order: -1; /* Rating appears before product name - Kylie style */
-  margin-bottom: 0.25rem;
 }
 
-.stars {
-  display: flex;
-  gap: 2px;
-}
-
-.star {
-  color: #000;
-  font-size: 0.85rem;
+.starRating {
+  position: relative;
+  display: inline-block;
+  font-size: 0.75rem;
   line-height: 1;
 }
 
-.starHalf {
-  color: #000;
-  font-size: 0.85rem;
-  opacity: 0.5;
-  line-height: 1;
+.starContainer {
+  display: inline-block;
+  color: #ddd;
 }
 
 .starEmpty {
   color: #ddd;
-  font-size: 0.85rem;
-  line-height: 1;
+  display: inline-block;
 }
 
-.ratingText {
+.starRatingFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.starFilled {
+  color: #000;
+  display: inline-block;
+}
+
+.reviewCount {
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
   font-size: 0.7rem;
   color: #666;
-  font-weight: 400;
 }
 
-/* Price Container - Kylie style (with strikethrough support) */
-.priceContainer {
+/* Product Badge */
+.productBadge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 2;
+}
+
+.newBadge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: #000;
+  color: #fff;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Carousel Navigation Buttons */
+.carouselButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+  padding: 0;
 }
 
-.originalPrice {
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: #999;
-  text-decoration: line-through;
+.carouselButton:hover:not(.carouselButtonDisabled) {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.price {
-  font-size: 1.1rem;
-  font-weight: 400;
+.carouselButton:active:not(.carouselButtonDisabled) {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carouselButtonDisabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.carouselButtonPrev {
+  left: 1rem;
+}
+
+.carouselButtonNext {
+  right: 1rem;
+}
+
+.carouselArrow {
+  width: 24px;
+  height: 40px;
   color: #000;
 }
 
-/* Add to Cart Button - "View on Amazon" with hover "Buy on Amazon" in pink - Kylie Cosmetics size */
-.addToCartButton {
-  width: 100%;
-  padding: 1.125rem 1.5rem !important; /* Larger padding - Kylie Cosmetics size */
-  background: #000 !important;
-  color: #fff !important;
-  border: none !important;
-  font-size: 0.95rem !important; /* Larger font size - Kylie Cosmetics size */
-  font-weight: 500 !important;
-  font-style: normal !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease;
-  text-transform: capitalize !important; /* First letter capitalized */
-  letter-spacing: 0.3px !important;
-  margin-top: auto;
-  position: relative;
-  z-index: 1;
-  border-radius: 0;
-  flex-shrink: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-height: 48px !important; /* Minimum height for better touch targets */
+.carouselButtonNext .carouselArrow {
+  transform: rotate(180deg);
 }
 
-.addToCartButton:hover {
-  background: #000 !important;
-  color: transparent !important; /* Hide original text on hover */
-}
-
-/* Hover text "Buy on Amazon" - pink background matching theme */
-.addToCartButton::before {
-  content: attr(data-hover-text) !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: #F5E6E8 !important; /* Pink background matching site color */
-  color: #000 !important; /* Black text for readability */
-  border: 2px solid #000 !important; /* Black border */
-  opacity: 0 !important;
-  transition: opacity 0.2s ease !important;
-  text-transform: capitalize !important; /* First letter capitalized */
-  letter-spacing: 0.3px !important;
-  border-radius: 0 !important;
-  font-style: normal !important;
-  font-weight: 500 !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
-  font-size: 0.95rem !important; /* Match button font size */
-  z-index: 2 !important;
-  pointer-events: none !important;
-}
-
-.addToCartButton:hover::before {
-  opacity: 1 !important;
-}
-
-/* Tablet: 2 cards per row */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .productCard {
-    /* Tablet: 2 cards per row - calc((100% - 1 gap) / 2) */
-    min-width: calc((100% - 1rem) / 2) !important;
-    max-width: calc((100% - 1rem) / 2) !important;
-    width: calc((100% - 1rem) / 2) !important;
-    min-height: 580px !important; /* Same minimum height */
-  }
-
-  .imageContainer {
-    height: calc((100vw - 4rem - 1rem) / 2) !important; /* Match card width for square */
-    background: #ffffff !important; /* White background */
-  }
-}
-
-/* Mobile: 1 card per row */
+/* Responsive Design */
 @media (max-width: 768px) {
-  .carouselSection {
-    padding: 2rem 0;
+  .productCarouselSection {
+    padding: 1.5rem 0;
   }
 
-  .title {
-    font-size: 1.5rem;
+  .carouselContainer {
+    padding: 0 1rem;
   }
 
-  .productCard {
-    /* Mobile: 1 card per row - full width minus padding */
-    min-width: calc(100% - 2rem) !important;
-    max-width: calc(100% - 2rem) !important;
-    width: calc(100% - 2rem) !important;
-    min-height: 550px !important; /* Slightly smaller on mobile but still ensures button visibility */
+  .productItem {
+    width: 180px;
+    min-width: 180px;
   }
 
-  .imageContainer {
-    height: calc(100vw - 4rem) !important; /* Match card width for square on mobile */
-    background: #ffffff !important; /* White background */
+  .carouselButton {
+    width: 36px;
+    height: 36px;
   }
 
-  .navButton {
-    width: 40px;
-    height: 40px;
+  .carouselButtonPrev {
+    left: 0.5rem;
+  }
+
+  .carouselButtonNext {
+    right: 0.5rem;
+  }
+
+  .carouselArrow {
+    width: 20px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productItem {
+    width: 160px;
+    min-width: 160px;
+  }
+
+  .productList {
+    gap: 1rem;
   }
 }

@@ -109,7 +109,7 @@ const Navbar = () => {
               <div className={styles.countryPicker} tabIndex={0}>
                 <span className={styles.countryPickerCurrent}>
                   US <span className={styles.countryPickerSymbol}>$</span>
-            </span>
+                </span>
                 <select 
                   id="LocalizationForm-Select" 
                   name="country_code" 
@@ -211,7 +211,7 @@ const Navbar = () => {
                 data-cart-count={getItemCount()}
                 aria-label={`${getItemCount()} items in cart`}
               >
-                <svg width="19" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="21" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 9L4 20H20L18 9H6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 <path d="M4 9H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M6 9C6 8 6.5 7 7.5 7C8.5 7 9 8 9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>

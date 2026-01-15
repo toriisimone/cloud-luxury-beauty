@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import CategoryCard from '../components/CategoryCard';
+import ProductCarousel from '../components/ProductCarousel';
 import Loader from '../components/Loader';
 import { Category } from '../types/global';
 import * as categoriesApi from '../api/categoriesApi';
@@ -49,7 +50,7 @@ const Home = () => {
       <section className={styles.heroSection}>
         <div 
           className={styles.heroBanner}
-          style={{ backgroundImage: `url(/images/edition-banner.png)` }}
+          style={{ backgroundImage: `url(/images/three-banner.png)` }}
         >
           {/* CRT TV Overlay */}
           <div className={styles.crtOverlay}></div>
@@ -97,7 +98,7 @@ const Home = () => {
                 data-placement="button 1" 
                 className="hero__content__desktop_button action action--primary"
               >
-                join waitlist
+                subscribeforNEW
               </button>
             </div>
             
@@ -107,12 +108,15 @@ const Home = () => {
                 data-placement="button 1" 
                 className="hero__content__mobile_button action action--primary"
               >
-                join waitlist
+                subscribeforNEW
               </button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Product Carousel - Directly under hero banner */}
+      <ProductCarousel />
 
       {/* Shop by Category Section */}
       {categories.length > 0 && (

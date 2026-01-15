@@ -314,12 +314,30 @@
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
+  white-space: nowrap;
+  /* Glow effect */
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.6),
+    0 0 30px rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(255, 255, 255, 0.3),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 :global(.hero__content__desktop_button):hover,
 :global(.action--primary):hover {
-  background: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgb(255, 255, 255);
+  text-shadow: 
+    0 0 15px rgba(255, 255, 255, 1),
+    0 0 25px rgba(255, 255, 255, 0.8),
+    0 0 35px rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.7),
+    0 0 25px rgba(255, 255, 255, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 /* Mobile Button - Hidden on desktop */
@@ -333,17 +351,35 @@
   letter-spacing: 2px;
   padding: 0.875rem 2rem;
   background: transparent;
-  border: 1px solid rgb(0, 0, 0);
-  color: rgb(0, 0, 0);
+  border: 1px solid rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
+  white-space: nowrap;
+  /* Glow effect */
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.6),
+    0 0 30px rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(255, 255, 255, 0.3),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 :global(.hero__content__mobile_button):hover {
-  background: rgb(0, 0, 0);
+  background: rgba(255, 255, 255, 0.1);
   color: rgb(255, 255, 255);
+  text-shadow: 
+    0 0 15px rgba(255, 255, 255, 1),
+    0 0 25px rgba(255, 255, 255, 0.8),
+    0 0 35px rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.7),
+    0 0 25px rgba(255, 255, 255, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 .cloudOverlay::before {
