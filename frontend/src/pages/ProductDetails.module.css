@@ -166,6 +166,28 @@
   padding-bottom: 0.25rem;
 }
 
+.dotSep {
+  opacity: 0.6;
+}
+
+.askQuestionBtn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #000;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+}
+
+.askQuestionBtn:hover {
+  opacity: 0.8;
+}
+
+.favCount {
+  font-weight: 600;
+}
+
 .infoBlock {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
@@ -186,6 +208,30 @@
   font-size: 1.35rem;
   font-weight: 800;
   color: #000;
+}
+
+.paymentsRow {
+  color: #000;
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.paymentsBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.autoReplenishRow {
+  color: #000;
+  font-size: 0.98rem;
 }
 
 .metaRow {
@@ -278,6 +324,66 @@
   background: #000;
   color: #fff;
   border-color: #000;
+}
+
+/* Sephora-style fulfillment section */
+.fulfillmentSection {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.serviceBoxes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.serviceBox {
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 10px;
+  padding: 0.85rem;
+  background: #fff;
+  min-height: 86px;
+}
+
+.serviceTitle {
+  font-size: 0.95rem;
+  color: #000;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.serviceSub {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: #111;
+  opacity: 0.9;
+}
+
+.serviceLink {
+  color: #0b57d0;
+  text-decoration: underline;
+}
+
+.deliveryBlock {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: #f7f7f7;
+  padding: 0.9rem;
+}
+
+.deliveryLine {
+  font-size: 1rem;
+  color: #000;
+  margin-bottom: 0.25rem;
+}
+
+.deliverySub {
+  font-size: 0.95rem;
+  color: #000;
+  margin-bottom: 0.25rem;
 }
 
 /* Actions row */
@@ -460,6 +566,10 @@
 
   .addToCartButton {
     min-width: 210px;
+  }
+
+  .serviceBoxes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .relatedGrid {
