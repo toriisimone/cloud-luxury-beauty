@@ -32,7 +32,7 @@
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 4rem 2rem 4rem;
+  padding: 2.5rem 2rem 3rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -45,7 +45,7 @@
 
 .pageTitle {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 400;
   color: #000;
   margin: 0;
@@ -239,7 +239,7 @@
   }
 
   .container {
-    padding: 3rem 1.5rem 4rem;
+    padding: 2rem 1.5rem 3rem;
   }
 }
 
@@ -250,11 +250,11 @@
   }
 
   .container {
-    padding: 3rem 1rem 4rem;
+    padding: 2rem 1rem 3rem;
   }
 
   .pageTitle {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   .backToTop {
@@ -271,7 +271,7 @@
   }
 
   .container {
-    padding: 2rem 1rem 3rem;
+    padding: 1.5rem 1rem 2.5rem;
   }
 
   .pageTitle {

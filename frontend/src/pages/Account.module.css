@@ -10,7 +10,7 @@
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 2rem;
   color: var(--color-text);
 }
@@ -185,11 +185,26 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+
   .sections {
     grid-template-columns: 1fr;
   }
 
   .authForm {
     padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.4rem;
   }
 }

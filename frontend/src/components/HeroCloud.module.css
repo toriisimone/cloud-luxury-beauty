@@ -164,14 +164,15 @@
 }
 
 .title {
-  font-size: 4rem;
+  /* Keep hero editorial but not oversized */
+  font-size: 2.5rem;
   margin-bottom: 1rem;
   color: var(--color-text);
   text-shadow: 0 12px 30px rgba(255, 255, 255, 0.75);
 }
 
 .subtitle {
-  font-size: 1.25rem;
+  font-size: 1rem;
   margin-bottom: 2rem;
   color: var(--color-text-light);
   max-width: 600px;
@@ -183,10 +184,10 @@
   display: inline-block;
   background: var(--color-rose-gold);
   color: white;
-  padding: 1rem 2.5rem;
+  padding: 0.875rem 2rem;
   border-radius: 30px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   transition: all 0.3s;
   box-shadow: 0 4px 15px rgba(183, 110, 121, 0.3);
 }
@@ -203,10 +204,20 @@
   }
 
   .title {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .content {
+    padding: 1.5rem 1rem;
   }
 }

@@ -10,7 +10,7 @@
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 2rem;
   color: var(--color-text);
 }
@@ -44,7 +44,7 @@
 }
 
 .statValue {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--color-rose-gold);
 }
@@ -70,7 +70,26 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .statValue {
+    font-size: 1.6rem;
+  }
+
   .stats {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.4rem;
   }
 }
