@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import CategoryTileGrid from '../components/CategoryTileGrid';
 import ProductCard from '../components/ProductCard';
 import Loader from '../components/Loader';
 import { Product } from '../types/global';
@@ -40,6 +41,9 @@ const Skincare = () => {
         <div className={styles.header}>
           <h1 className={styles.pageTitle}>Skincare</h1>
         </div>
+
+        {/* Kylie-style category tile grid (above product grid) */}
+        <CategoryTileGrid baseCategorySlug="skincare" />
 
         {/* Products Grid */}
         {loading ? (

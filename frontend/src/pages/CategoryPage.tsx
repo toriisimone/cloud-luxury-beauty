@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import CategoryTileGrid from '../components/CategoryTileGrid';
 import ProductCard from '../components/ProductCard';
 import Loader from '../components/Loader';
 import { Product } from '../types/global';
@@ -104,6 +105,9 @@ const CategoryPage = () => {
             </button>
           </div>
         </div>
+
+        {/* Kylie-style category tile grid (above product grid) */}
+        <CategoryTileGrid baseCategorySlug={normalizedCategory} />
 
         {error && (
           <div className={styles.error}>
