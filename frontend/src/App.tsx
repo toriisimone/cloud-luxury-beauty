@@ -14,6 +14,7 @@ import Checkout from './pages/Checkout';
 import Account from './pages/Account';
 import AdminDashboard from './pages/AdminDashboard';
 import Coupons from './pages/Coupons';
+import ErrorBoundary from './components/ErrorBoundary';
 import styles from './App.module.css';
 
 function App() {
@@ -24,20 +25,22 @@ function App() {
           <div className={styles.app}>
             <Navbar />
             <main className={styles.main}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/skincare" element={<Skincare />} />
-                <Route path="/products/:id" element={<ProductDetails />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/category/:topCategory" element={<CategoryPage />} />
-                <Route path="/category/:topCategory/:subCategory" element={<CategoryPage />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/account" element={<Account />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/coupons" element={<Coupons />} />
-              </Routes>
+              <ErrorBoundary>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/skincare" element={<Skincare />} />
+                  <Route path="/products/:id" element={<ProductDetails />} />
+                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/category/:topCategory" element={<CategoryPage />} />
+                  <Route path="/category/:topCategory/:subCategory" element={<CategoryPage />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/account" element={<Account />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/coupons" element={<Coupons />} />
+                </Routes>
+              </ErrorBoundary>
             </main>
             <Footer />
           </div>

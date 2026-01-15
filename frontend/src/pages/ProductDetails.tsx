@@ -13,6 +13,7 @@ const ProductDetails = () => {
   const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -20,8 +21,13 @@ const ProductDetails = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!id) return;
+      if (!id) {
+        setLoadError('Missing product id in URL.');
+        setLoading(false);
+        return;
+      }
       try {
+        setLoadError(null);
         const data = await productsApi.getProductById(id);
         setProduct(data);
         if (data.variants && data.variants.length > 0) {
@@ -30,6 +36,8 @@ const ProductDetails = () => {
         setActiveImageIndex(0);
       } catch (error) {
         console.error('Failed to fetch product:', error);
+        setProduct(null);
+        setLoadError('Failed to load product');
       } finally {
         setLoading(false);
       }
@@ -49,6 +57,10 @@ const ProductDetails = () => {
     return <Loader />;
   }
 
+  if (loadError) {
+    return <div className={styles.error}>{loadError}</div>;
+  }
+
   if (!product) {
     return <div className={styles.error}>Product not found</div>;
   }
@@ -57,7 +69,7 @@ const ProductDetails = () => {
     ? product.variants?.find((v) => v.id === selectedVariant)?.price || product.price
     : product.price;
 
-  const images = product.images || [];
+  const images = (product.images || []).filter((x): x is string => typeof x === 'string' && x.length > 0);
   const activeImage = images[activeImageIndex] || images[0] || null;
 
   const sizeText = useMemo(() => {
