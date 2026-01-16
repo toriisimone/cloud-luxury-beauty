@@ -34,46 +34,40 @@ const tiles: Tile[] = [
 const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productCount, baseCategorySlug }: Props) => {
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [useVideoBanner, setUseVideoBanner] = useState(true);
-  const [videoReady, setVideoReady] = useState(false);
 
   const hrefFor = useMemo(() => {
     return (tileSlug: string) => `/category/${baseCategorySlug}/${tileSlug}`;
   }, [baseCategorySlug]);
 
+  const assetMenuBannerBase = useMemo(() => {
+    // Your updated banner routes (notably: skincare uses "skin-banner.png")
+    if (bannerKey === 'skincare') return 'skin-banner';
+    return `${bannerKey}-banner`;
+  }, [bannerKey]);
+
   const bannerSources = useMemo(
     () => [
+      // Prefer your uploaded menu banner files first
+      `/assets/images/menu/${bannerKey}/${assetMenuBannerBase}.png`,
+      `/assets/images/menu/${bannerKey}/${assetMenuBannerBase}.jpg`,
+      `/assets/images/menu/${bannerKey}/${assetMenuBannerBase}.jpeg`,
+
       // Source of truth: /images/category-banners/
       `/images/category-banners/${bannerKey}-banner.jpg`,
       `/images/category-banners/${bannerKey}-banner.png`,
+      `/images/category-banners/${bannerKey}-banner.jpeg`,
       // Also support /assets/images/menu/<category>/ (matches your current upload location)
       `/assets/images/menu/${bannerKey}/${bannerKey}-banner.jpg`,
       `/assets/images/menu/${bannerKey}/${bannerKey}-banner.png`,
+      `/assets/images/menu/${bannerKey}/${bannerKey}-banner.jpeg`,
     ],
-    [bannerKey]
+    [assetMenuBannerBase, bannerKey]
   );
-
-  // Video banner support (MP4) for main categories; safe fallback to image.
-  const shouldTryVideoBanner = ['skincare', 'makeup', 'hair', 'fragrance', 'body'].includes(bannerKey);
-  const bannerVideoSources = useMemo(
-    () => [
-      `/images/category-banners/${bannerKey}-banner.mp4`,
-      `/assets/images/menu/${bannerKey}/${bannerKey}-banner.mp4`,
-    ],
-    [bannerKey]
-  );
-
-  // Reset readiness when category changes.
-  useEffect(() => {
-    setVideoReady(false);
-    setUseVideoBanner(true);
-  }, [bannerKey]);
 
   // Preload banner + tiles so the page feels instant.
   useEffect(() => {
     const urls = [
-      // For video categories, don't warm image banners/posters (prevents "image first" flash).
-      ...(shouldTryVideoBanner ? [] : bannerSources),
+      ...bannerSources,
       `/images/categories/new-category.jpg`,
       `/images/categories/new-category.png`,
       `/images/categories/best-sellers-category.jpg`,
@@ -99,80 +93,43 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
 
     // Hint preload for banner (highest priority)
     const links: HTMLLinkElement[] = [];
-    // For video categories, skip preloading banner images; for image categories, preload normally.
-    if (!shouldTryVideoBanner) {
-      bannerSources.forEach((href, i) => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.href = href;
-        link.fetchPriority = i === 0 ? 'high' : 'low';
-        document.head.appendChild(link);
-        links.push(link);
-      });
-    }
-
-    // Hint preload for video banner (if enabled)
-    if (shouldTryVideoBanner && bannerVideoSources[0]) {
+    bannerSources.forEach((href, i) => {
       const link = document.createElement('link');
       link.rel = 'preload';
-      link.as = 'video';
-      link.href = bannerVideoSources[0];
-      link.type = 'video/mp4';
+      link.as = 'image';
+      link.href = href;
+      link.fetchPriority = i === 0 ? 'high' : 'low';
       document.head.appendChild(link);
       links.push(link);
-    }
+    });
 
     return () => {
       links.forEach((l) => l.parentNode?.removeChild(l));
     };
-  }, [bannerSources, bannerVideoSources, shouldTryVideoBanner]);
+  }, [bannerSources]);
 
   return (
     <section className={styles.stack} aria-label="Category header">
       {/* Banner */}
       <div className={styles.banner} data-banner-key={bannerKey}>
         <div className={styles.bannerMediaWrap}>
-          {shouldTryVideoBanner && useVideoBanner ? (
-            <video
-              className={styles.bannerMedia}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              onCanPlay={() => setVideoReady(true)}
-              onPlaying={() => setVideoReady(true)}
-              onError={() => {
-                // For video categories, never flash an image fallback.
-                // If video fails, keep the branded background visible.
-                setUseVideoBanner(false);
-              }}
-              style={{ opacity: videoReady ? 1 : 0 }}
-            >
-              {bannerVideoSources.map((src) => (
-                <source key={src} src={src} type="video/mp4" />
-              ))}
-            </video>
-          ) : !shouldTryVideoBanner ? (
-            <img
-              className={styles.bannerMedia}
-              src={bannerSources[0]}
-              alt={bannerTitle}
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              onError={(e) => {
-                const img = e.currentTarget;
-                const idx = Number(img.dataset.srcIndex || '0');
-                const nextIdx = idx + 1;
-                if (nextIdx < bannerSources.length) {
-                  img.dataset.srcIndex = String(nextIdx);
-                  img.src = bannerSources[nextIdx];
-                }
-              }}
-            />
-          ) : null}
+          <img
+            className={styles.bannerMedia}
+            src={bannerSources[0]}
+            alt={bannerTitle}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            onError={(e) => {
+              const img = e.currentTarget;
+              const idx = Number(img.dataset.srcIndex || '0');
+              const nextIdx = idx + 1;
+              if (nextIdx < bannerSources.length) {
+                img.dataset.srcIndex = String(nextIdx);
+                img.src = bannerSources[nextIdx];
+              }
+            }}
+          />
         </div>
         <div className={styles.bannerOverlay}>
           <div className={styles.bannerTitle}>{bannerTitle}</div>

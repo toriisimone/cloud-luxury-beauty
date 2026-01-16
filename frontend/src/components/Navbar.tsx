@@ -25,20 +25,24 @@ const Navbar = () => {
     if (preloadedCategoryBannersRef.current.has(slug)) return;
     preloadedCategoryBannersRef.current.add(slug);
 
-    const shouldTryVideoBanner = ['skincare', 'makeup', 'hair', 'fragrance', 'body'].includes(slug);
-    const urls = shouldTryVideoBanner
-      ? [`/images/category-banners/${slug}-banner.mp4`]
-      : [
-          `/images/category-banners/${slug}-banner.jpg`,
-          `/images/category-banners/${slug}-banner.png`,
-        ];
+    const assetMenuBase = slug === 'skincare' ? 'skin-banner' : `${slug}-banner`;
+    const urls = [
+      // Prefer your current upload routes
+      `/assets/images/menu/${slug}/${assetMenuBase}.png`,
+      `/assets/images/menu/${slug}/${assetMenuBase}.jpg`,
+      `/assets/images/menu/${slug}/${assetMenuBase}.jpeg`,
+
+      // Keep /images/category-banners/ as fallback
+      `/images/category-banners/${slug}-banner.jpg`,
+      `/images/category-banners/${slug}-banner.png`,
+      `/images/category-banners/${slug}-banner.jpeg`,
+    ];
 
     urls.forEach((href) => {
       const link = document.createElement('link');
       link.rel = 'preload';
-      link.as = href.endsWith('.mp4') ? 'video' : 'image';
+      link.as = 'image';
       link.href = href;
-      if (href.endsWith('.mp4')) link.type = 'video/mp4';
       document.head.appendChild(link);
     });
   };
