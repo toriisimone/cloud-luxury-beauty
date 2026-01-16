@@ -39,17 +39,33 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
     return (tileSlug: string) => `/category/${baseCategorySlug}/${tileSlug}`;
   }, [baseCategorySlug]);
 
+  const bannerSources = useMemo(
+    () => [
+      `/images/category-banners/${bannerKey}-banner.jpg`,
+      `/images/category-banners/${bannerKey}-banner.png`,
+      // Fallback for legacy uploads directly under /images/
+      `/images/${bannerKey}-banner.jpg`,
+      `/images/${bannerKey}-banner.png`,
+    ],
+    [bannerKey]
+  );
+
   return (
     <section className={styles.stack} aria-label="Category header">
       {/* Banner */}
       <div className={styles.banner}>
         <img
           className={styles.bannerImage}
-          src={`/images/category-banners/${bannerKey}-banner.jpg`}
+          src={bannerSources[0]}
           alt={bannerTitle}
           onError={(e) => {
             const img = e.currentTarget;
-            if (img.src.endsWith('.jpg')) img.src = `/images/category-banners/${bannerKey}-banner.png`;
+            const idx = Number(img.dataset.srcIndex || '0');
+            const nextIdx = idx + 1;
+            if (nextIdx < bannerSources.length) {
+              img.dataset.srcIndex = String(nextIdx);
+              img.src = bannerSources[nextIdx];
+            }
           }}
         />
         <div className={styles.bannerOverlay}>
