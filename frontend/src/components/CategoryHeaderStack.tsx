@@ -52,8 +52,8 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
     [bannerKey]
   );
 
-  // Video banner support (MP4). Currently used for Makeup; safe fallback to image.
-  const shouldTryVideoBanner = bannerKey === 'makeup';
+  // Video banner support (MP4) for main categories; safe fallback to image.
+  const shouldTryVideoBanner = ['skincare', 'makeup', 'hair', 'fragrance', 'body'].includes(bannerKey);
   const bannerVideoSources = useMemo(
     () => [
       `/images/category-banners/${bannerKey}-banner.mp4`,
