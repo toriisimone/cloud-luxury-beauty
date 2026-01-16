@@ -34,6 +34,7 @@ const tiles: Tile[] = [
 const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productCount, baseCategorySlug }: Props) => {
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [useVideoBanner, setUseVideoBanner] = useState(true);
 
   const hrefFor = useMemo(() => {
     return (tileSlug: string) => `/category/${baseCategorySlug}/${tileSlug}`;
@@ -47,6 +48,16 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
       // Also support /assets/images/menu/<category>/ (matches your current upload location)
       `/assets/images/menu/${bannerKey}/${bannerKey}-banner.jpg`,
       `/assets/images/menu/${bannerKey}/${bannerKey}-banner.png`,
+    ],
+    [bannerKey]
+  );
+
+  // Video banner support (MP4). Currently used for Makeup; safe fallback to image.
+  const shouldTryVideoBanner = bannerKey === 'makeup';
+  const bannerVideoSources = useMemo(
+    () => [
+      `/images/category-banners/${bannerKey}-banner.mp4`,
+      `/assets/images/menu/${bannerKey}/${bannerKey}-banner.mp4`,
     ],
     [bannerKey]
   );
@@ -90,32 +101,60 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
       links.push(link);
     });
 
+    // Hint preload for video banner (if enabled)
+    if (shouldTryVideoBanner && bannerVideoSources[0]) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'video';
+      link.href = bannerVideoSources[0];
+      link.type = 'video/mp4';
+      document.head.appendChild(link);
+      links.push(link);
+    }
+
     return () => {
       links.forEach((l) => l.parentNode?.removeChild(l));
     };
-  }, [bannerSources]);
+  }, [bannerSources, bannerVideoSources, shouldTryVideoBanner]);
 
   return (
     <section className={styles.stack} aria-label="Category header">
       {/* Banner */}
       <div className={styles.banner}>
-        <img
-          className={styles.bannerImage}
-          src={bannerSources[0]}
-          alt={bannerTitle}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-          onError={(e) => {
-            const img = e.currentTarget;
-            const idx = Number(img.dataset.srcIndex || '0');
-            const nextIdx = idx + 1;
-            if (nextIdx < bannerSources.length) {
-              img.dataset.srcIndex = String(nextIdx);
-              img.src = bannerSources[nextIdx];
-            }
-          }}
-        />
+        {shouldTryVideoBanner && useVideoBanner ? (
+          <video
+            className={styles.bannerVideo}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={bannerSources[1] || bannerSources[0]}
+            onError={() => setUseVideoBanner(false)}
+          >
+            {bannerVideoSources.map((src) => (
+              <source key={src} src={src} type="video/mp4" />
+            ))}
+          </video>
+        ) : (
+          <img
+            className={styles.bannerImage}
+            src={bannerSources[0]}
+            alt={bannerTitle}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            onError={(e) => {
+              const img = e.currentTarget;
+              const idx = Number(img.dataset.srcIndex || '0');
+              const nextIdx = idx + 1;
+              if (nextIdx < bannerSources.length) {
+                img.dataset.srcIndex = String(nextIdx);
+                img.src = bannerSources[nextIdx];
+              }
+            }}
+          />
+        )}
         <div className={styles.bannerOverlay}>
           <div className={styles.bannerTitle}>{bannerTitle}</div>
         </div>

@@ -19,6 +19,14 @@
   display: block;
 }
 
+.bannerVideo {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
 .bannerOverlay {
   position: absolute;
   inset: 0;
@@ -212,6 +220,9 @@
   .bannerImage {
     height: 240px;
   }
+  .bannerVideo {
+    height: 240px;
+  }
 
   .bannerTitle {
     font-size: 38px;
@@ -231,6 +242,9 @@
   }
 
   .bannerImage {
+    height: 210px;
+  }
+  .bannerVideo {
     height: 210px;
   }
 
