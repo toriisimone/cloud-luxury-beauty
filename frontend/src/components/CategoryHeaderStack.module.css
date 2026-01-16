@@ -26,16 +26,11 @@
   height: 100%;
   /* Make it feel like a real banner video (no letterboxing). */
   object-fit: cover;
-  object-position: top center;
+  object-position: center;
   display: block;
   background: #fff;
 }
 
-/* Hair + Makeup: center framing (top was cutting too much) */
-.banner[data-banner-key='hair'] .bannerMedia,
-.banner[data-banner-key='makeup'] .bannerMedia {
-  object-position: center 35%;
-}
 
 .bannerOverlay {
   position: absolute;
