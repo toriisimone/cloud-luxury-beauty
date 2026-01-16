@@ -44,6 +44,9 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
       // Source of truth: /images/category-banners/
       `/images/category-banners/${bannerKey}-banner.jpg`,
       `/images/category-banners/${bannerKey}-banner.png`,
+      // Also support /assets/images/menu/<category>/ (matches your current upload location)
+      `/assets/images/menu/${bannerKey}/${bannerKey}-banner.jpg`,
+      `/assets/images/menu/${bannerKey}/${bannerKey}-banner.png`,
     ],
     [bannerKey]
   );
