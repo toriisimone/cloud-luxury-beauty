@@ -250,17 +250,18 @@
   left: 1.5rem;
   right: 1.5rem;
   font-size: 1.25rem;
-  font-weight: 600;
-  color: #fff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  font-weight: 400;
+  color: #000;
+  text-shadow: none;
   text-transform: lowercase;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: var(--aurapop-font);
+  font-style: italic;
   letter-spacing: 0.5px;
   line-height: 1.4;
 }
 
 .bannerBlockTitle span {
-  color: var(--aurapop-pink);
+  color: #000;
 }
 
 /* Mobile Styles */
