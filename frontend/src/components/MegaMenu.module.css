@@ -75,9 +75,9 @@
 .megaMenuShopAllLink {
   font-family: var(--aurapop-font);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 400;
   font-style: italic;
-  color: var(--aurapop-pink);
+  color: #000;
   text-decoration: none;
   text-transform: capitalize;
   letter-spacing: 0.3px;
@@ -149,9 +149,9 @@
 
 .imageMenuBlockTitle {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 400;
   font-style: italic;
-  color: var(--aurapop-pink);
+  color: #000;
   margin: 0;
   text-transform: capitalize;
   font-family: var(--aurapop-font);
@@ -179,13 +179,13 @@
 
 .imageMenuBlockMenuItemLink {
   font-size: 0.65rem;
-  color: var(--aurapop-pink);
+  color: #000;
   text-decoration: none;
   transition: opacity 0.2s ease;
   text-transform: capitalize;
   font-family: var(--aurapop-font);
   font-style: italic;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.5;
   display: block;
   max-width: 100%;
