@@ -25,11 +25,13 @@ const Navbar = () => {
     if (preloadedCategoryBannersRef.current.has(slug)) return;
     preloadedCategoryBannersRef.current.add(slug);
 
-    const urls = [
-      `/images/category-banners/${slug}-banner.mp4`,
-      `/images/category-banners/${slug}-banner.png`,
-      `/images/category-banners/${slug}-banner.jpg`,
-    ];
+    const shouldTryVideoBanner = ['skincare', 'makeup', 'hair', 'fragrance', 'body'].includes(slug);
+    const urls = shouldTryVideoBanner
+      ? [`/images/category-banners/${slug}-banner.mp4`]
+      : [
+          `/images/category-banners/${slug}-banner.jpg`,
+          `/images/category-banners/${slug}-banner.png`,
+        ];
 
     urls.forEach((href) => {
       const link = document.createElement('link');

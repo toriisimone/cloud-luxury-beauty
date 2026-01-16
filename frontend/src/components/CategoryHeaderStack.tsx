@@ -35,6 +35,7 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [useVideoBanner, setUseVideoBanner] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
 
   const hrefFor = useMemo(() => {
     return (tileSlug: string) => `/category/${baseCategorySlug}/${tileSlug}`;
@@ -62,10 +63,17 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
     [bannerKey]
   );
 
+  // Reset readiness when category changes.
+  useEffect(() => {
+    setVideoReady(false);
+    setUseVideoBanner(true);
+  }, [bannerKey]);
+
   // Preload banner + tiles so the page feels instant.
   useEffect(() => {
     const urls = [
-      ...bannerSources,
+      // For video categories, don't warm image banners/posters (prevents "image first" flash).
+      ...(shouldTryVideoBanner ? [] : bannerSources),
       `/images/categories/new-category.jpg`,
       `/images/categories/new-category.png`,
       `/images/categories/best-sellers-category.jpg`,
@@ -91,15 +99,18 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
 
     // Hint preload for banner (highest priority)
     const links: HTMLLinkElement[] = [];
-    bannerSources.forEach((href, i) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = href;
-      link.fetchPriority = i === 0 ? 'high' : 'low';
-      document.head.appendChild(link);
-      links.push(link);
-    });
+    // For video categories, skip preloading banner images; for image categories, preload normally.
+    if (!shouldTryVideoBanner) {
+      bannerSources.forEach((href, i) => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = href;
+        link.fetchPriority = i === 0 ? 'high' : 'low';
+        document.head.appendChild(link);
+        links.push(link);
+      });
+    }
 
     // Hint preload for video banner (if enabled)
     if (shouldTryVideoBanner && bannerVideoSources[0]) {
@@ -130,14 +141,20 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
               loop
               playsInline
               preload="auto"
-              poster={bannerSources[1] || bannerSources[0]}
-              onError={() => setUseVideoBanner(false)}
+              onCanPlay={() => setVideoReady(true)}
+              onPlaying={() => setVideoReady(true)}
+              onError={() => {
+                // For video categories, never flash an image fallback.
+                // If video fails, keep the branded background visible.
+                setUseVideoBanner(false);
+              }}
+              style={{ opacity: videoReady ? 1 : 0 }}
             >
               {bannerVideoSources.map((src) => (
                 <source key={src} src={src} type="video/mp4" />
               ))}
             </video>
-          ) : (
+          ) : !shouldTryVideoBanner ? (
             <img
               className={styles.bannerMedia}
               src={bannerSources[0]}
@@ -155,7 +172,7 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
                 }
               }}
             />
-          )}
+          ) : null}
         </div>
         <div className={styles.bannerOverlay}>
           <div className={styles.bannerTitle}>{bannerTitle}</div>

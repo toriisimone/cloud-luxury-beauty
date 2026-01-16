@@ -38,6 +38,27 @@ function App() {
     };
   }, [showSplash]);
 
+  // Warm category banner videos early so they're already there on click.
+  useEffect(() => {
+    const categories = ['skincare', 'makeup', 'hair', 'fragrance', 'body'];
+    const links: HTMLLinkElement[] = [];
+
+    categories.forEach((key) => {
+      const href = `/images/category-banners/${key}-banner.mp4`;
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'video';
+      link.href = href;
+      link.type = 'video/mp4';
+      document.head.appendChild(link);
+      links.push(link);
+    });
+
+    return () => {
+      links.forEach((l) => l.parentNode?.removeChild(l));
+    };
+  }, []);
+
   return (
     <AuthProvider>
       <CartProvider>
