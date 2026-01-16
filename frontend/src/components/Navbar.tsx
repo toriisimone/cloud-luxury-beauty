@@ -82,13 +82,14 @@ const Navbar = () => {
     if (subCategory) {
       const topSlug = category.toLowerCase().replace(/\s+/g, '-');
       const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
-      return `/assets/images/menu/${topSlug}/${subSlug}.jpg`;
+      // Prefer new menu image path first
+      return `/images/menu/${topSlug}/${subSlug}.jpg`;
     }
-    return `/assets/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/tile.jpg`;
+    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/tile.jpg`;
   };
 
   const getBannerImagePath = (category: TopCategory): string => {
-    return `/assets/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/banner.jpg`;
+    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/banner.jpg`;
   };
 
   const getCategoryUrl = (category: TopCategory): string => {
@@ -353,12 +354,28 @@ const Navbar = () => {
                                       {/* Dropdown Header Image - Place your image here */}
                                       <div className={megaMenuStyles.megaMenuHeaderImageContainer}>
                                         <img 
-                                          src={`/assets/images/menu/${item.category.toLowerCase().replace(/\s+/g, '-')}/header.jpg`}
+                                          src={`/images/menu/${item.category.toLowerCase().replace(/\s+/g, '-')}/header.jpg`}
                                           alt={`${item.category} Header`}
                                           className={megaMenuStyles.megaMenuHeaderImage}
                                           onError={(e) => {
-                                            const target = e.target as HTMLImageElement;
-                                            target.style.display = 'none';
+                                            const img = e.currentTarget;
+                                            const slug = item.category.toLowerCase().replace(/\s+/g, '-');
+                                            const idx = Number(img.dataset.srcIndex || '0');
+                                            const candidates = [
+                                              `/images/menu/${slug}/header.jpg`,
+                                              `/images/menu/${slug}/header.png`,
+                                              `/images/menu/${slug}/header.jpeg`,
+                                              `/assets/images/menu/${slug}/header.jpg`,
+                                              `/assets/images/menu/${slug}/header.png`,
+                                              `/assets/images/menu/${slug}/header.jpeg`,
+                                            ];
+                                            const nextIdx = idx + 1;
+                                            if (nextIdx < candidates.length) {
+                                              img.dataset.srcIndex = String(nextIdx);
+                                              img.src = candidates[nextIdx];
+                                            } else {
+                                              img.style.display = 'none';
+                                            }
                                           }}
                                         />
                                       </div>
@@ -439,8 +456,26 @@ const Navbar = () => {
                                                     style={{ width: '100%', height: '100%' }}
                                                     sizes="104px"
                                                     onError={(e) => {
-                                                      const target = e.target as HTMLImageElement;
-                                                      target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect width="200" height="200" fill="%23f5f5f5"/%3E%3C/svg%3E';
+                                                      const img = e.currentTarget;
+                                                      const topSlug = (item.category as TopCategory).toLowerCase().replace(/\s+/g, '-');
+                                                      const subSlug = imageMenuBlock.toLowerCase().replace(/\s+/g, '-');
+                                                      const idx = Number(img.dataset.srcIndex || '0');
+                                                      const candidates = [
+                                                        `/images/menu/${topSlug}/${subSlug}.jpg`,
+                                                        `/images/menu/${topSlug}/${subSlug}.png`,
+                                                        `/images/menu/${topSlug}/${subSlug}.jpeg`,
+                                                        `/assets/images/menu/${topSlug}/${subSlug}.jpg`,
+                                                        `/assets/images/menu/${topSlug}/${subSlug}.png`,
+                                                        `/assets/images/menu/${topSlug}/${subSlug}.jpeg`,
+                                                      ];
+                                                      const nextIdx = idx + 1;
+                                                      if (nextIdx < candidates.length) {
+                                                        img.dataset.srcIndex = String(nextIdx);
+                                                        img.src = candidates[nextIdx];
+                                                      } else {
+                                                        img.src =
+                                                          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect width="200" height="200" fill="%23f5f5f5"/%3E%3C/svg%3E';
+                                                      }
                                                     }}
                                                   />
                                                 </div>
@@ -486,8 +521,25 @@ const Navbar = () => {
                                               tabIndex={-1}
                                               style={{ width: '100%', height: '100%' }}
                                               onError={(e) => {
-                                                const target = e.target as HTMLImageElement;
-                                                target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="610" height="660"%3E%3Crect width="610" height="660" fill="%23f5f5f5"/%3E%3C/svg%3E';
+                                                const img = e.currentTarget;
+                                                const slug = (item.category as TopCategory).toLowerCase().replace(/\s+/g, '-');
+                                                const idx = Number(img.dataset.srcIndex || '0');
+                                                const candidates = [
+                                                  `/images/menu/${slug}/banner.jpg`,
+                                                  `/images/menu/${slug}/banner.png`,
+                                                  `/images/menu/${slug}/banner.jpeg`,
+                                                  `/assets/images/menu/${slug}/banner.jpg`,
+                                                  `/assets/images/menu/${slug}/banner.png`,
+                                                  `/assets/images/menu/${slug}/banner.jpeg`,
+                                                ];
+                                                const nextIdx = idx + 1;
+                                                if (nextIdx < candidates.length) {
+                                                  img.dataset.srcIndex = String(nextIdx);
+                                                  img.src = candidates[nextIdx];
+                                                } else {
+                                                  img.src =
+                                                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="610" height="660"%3E%3Crect width="610" height="660" fill="%23f5f5f5"/%3E%3C/svg%3E';
+                                                }
                                               }}
                                             />
                                           </div>

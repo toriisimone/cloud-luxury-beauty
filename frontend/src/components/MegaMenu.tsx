@@ -35,16 +35,16 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     if (subCategory) {
       const topSlug = category.toLowerCase().replace(/\s+/g, '-');
       const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
-      const path = `/assets/images/menu/${topSlug}/${subSlug}.jpg`;
+      const path = `/images/menu/${topSlug}/${subSlug}.jpg`;
       // Return path - if image doesn't exist, browser will show broken image, we'll handle with CSS
       return path;
     }
-    return `/assets/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/tile.jpg`;
+    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/tile.jpg`;
   };
 
   // Get image path for banner with fallback
   const getBannerImagePath = (category: TopCategory): string => {
-    return `/assets/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/banner.jpg`;
+    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/banner.jpg`;
   };
 
   const getCategoryUrl = (category: TopCategory): string => {
@@ -127,9 +127,26 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                           height="200"
                           tabIndex={-1}
                           onError={(e) => {
-                            // Fallback to placeholder if image fails to load
-                            const target = e.target as HTMLImageElement;
-                            target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect width="200" height="200" fill="%23f5f5f5"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="14"%3EImage%3C/text%3E%3C/svg%3E';
+                            const img = e.currentTarget;
+                            const topSlug = currentCategory.toLowerCase().replace(/\s+/g, '-');
+                            const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
+                            const idx = Number(img.dataset.srcIndex || '0');
+                            const candidates = [
+                              `/images/menu/${topSlug}/${subSlug}.jpg`,
+                              `/images/menu/${topSlug}/${subSlug}.png`,
+                              `/images/menu/${topSlug}/${subSlug}.jpeg`,
+                              `/assets/images/menu/${topSlug}/${subSlug}.jpg`,
+                              `/assets/images/menu/${topSlug}/${subSlug}.png`,
+                              `/assets/images/menu/${topSlug}/${subSlug}.jpeg`,
+                            ];
+                            const nextIdx = idx + 1;
+                            if (nextIdx < candidates.length) {
+                              img.dataset.srcIndex = String(nextIdx);
+                              img.src = candidates[nextIdx];
+                            } else {
+                              img.src =
+                                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect width="200" height="200" fill="%23f5f5f5"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="14"%3EImage%3C/text%3E%3C/svg%3E';
+                            }
                           }}
                         />
                       </div>
@@ -173,9 +190,25 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                     height="660"
                     tabIndex={-1}
                     onError={(e) => {
-                      // Fallback to placeholder if image fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="610" height="660"%3E%3Crect width="610" height="660" fill="%23f5f5f5"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="18"%3EBanner Image%3C/text%3E%3C/svg%3E';
+                      const img = e.currentTarget;
+                      const slug = currentCategory.toLowerCase().replace(/\s+/g, '-');
+                      const idx = Number(img.dataset.srcIndex || '0');
+                      const candidates = [
+                        `/images/menu/${slug}/banner.jpg`,
+                        `/images/menu/${slug}/banner.png`,
+                        `/images/menu/${slug}/banner.jpeg`,
+                        `/assets/images/menu/${slug}/banner.jpg`,
+                        `/assets/images/menu/${slug}/banner.png`,
+                        `/assets/images/menu/${slug}/banner.jpeg`,
+                      ];
+                      const nextIdx = idx + 1;
+                      if (nextIdx < candidates.length) {
+                        img.dataset.srcIndex = String(nextIdx);
+                        img.src = candidates[nextIdx];
+                      } else {
+                        img.src =
+                          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="610" height="660"%3E%3Crect width="610" height="660" fill="%23f5f5f5"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-family="sans-serif" font-size="18"%3EBanner Image%3C/text%3E%3C/svg%3E';
+                      }
                     }}
                   />
                 </div>
