@@ -27,6 +27,12 @@
   display: block;
 }
 
+/* Makeup video needs more top content visible (makeup + tattoo) */
+.banner[data-banner-key='makeup'] .bannerVideo {
+  transform: translateY(26px) scale(1.04);
+  transform-origin: top center;
+}
+
 .bannerOverlay {
   position: absolute;
   inset: 0;
@@ -224,6 +230,10 @@
     height: 240px;
   }
 
+  .banner[data-banner-key='makeup'] .bannerVideo {
+    transform: translateY(22px) scale(1.04);
+  }
+
   .bannerTitle {
     font-size: 38px;
   }
@@ -246,6 +256,10 @@
   }
   .bannerVideo {
     height: 210px;
+  }
+
+  .banner[data-banner-key='makeup'] .bannerVideo {
+    transform: translateY(18px) scale(1.04);
   }
 
   .bannerTitle {
