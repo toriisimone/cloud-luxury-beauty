@@ -41,12 +41,9 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
 
   const bannerSources = useMemo(
     () => [
-      // Preferred: keep all category banners in /images/
-      `/images/${bannerKey}-banner.jpg`,
-      `/images/${bannerKey}-banner.png`,
-      // Optional alternate: /images/<category>/<category>-banner.(png|jpg)
-      `/images/${bannerKey}/${bannerKey}-banner.jpg`,
-      `/images/${bannerKey}/${bannerKey}-banner.png`,
+      // Source of truth: /images/category-banners/
+      `/images/category-banners/${bannerKey}-banner.jpg`,
+      `/images/category-banners/${bannerKey}-banner.png`,
     ],
     [bannerKey]
   );
