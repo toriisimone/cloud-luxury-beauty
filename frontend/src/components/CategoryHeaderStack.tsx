@@ -41,9 +41,6 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
 
   const bannerSources = useMemo(
     () => [
-      `/images/category-banners/${bannerKey}-banner.jpg`,
-      `/images/category-banners/${bannerKey}-banner.png`,
-      // Fallback for legacy uploads directly under /images/
       `/images/${bannerKey}-banner.jpg`,
       `/images/${bannerKey}-banner.png`,
     ],

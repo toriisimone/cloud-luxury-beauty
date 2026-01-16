@@ -463,7 +463,6 @@ const Navbar = () => {
                                             />
                                           </div>
                                           <div className={megaMenuStyles.bannerBlockTitle}>
-                                            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                                             {(() => {
                                               const bannerTitles: Record<TopCategory, string> = {
                                                 'Skincare': categoryNames['Skincare'].toLowerCase(),
@@ -477,14 +476,10 @@ const Navbar = () => {
                                               
                                               if (isFragrance || bannerTitle.includes('<br>')) {
                                                 return (
-                                                  <span style={{ color: '#B3848F' }} dangerouslySetInnerHTML={{ __html: bannerTitle }} />
+                                                  <span dangerouslySetInnerHTML={{ __html: bannerTitle }} />
                                                 );
                                               } else {
-                                                return (
-                                                  <span style={{ color: '#B3848F' }}>
-                                                    {bannerTitle}
-                                                  </span>
-                                                );
+                                                return bannerTitle;
                                               }
                                             })()}
                                           </div>
