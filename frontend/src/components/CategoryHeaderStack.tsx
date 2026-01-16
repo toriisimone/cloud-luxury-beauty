@@ -120,41 +120,43 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
   return (
     <section className={styles.stack} aria-label="Category header">
       {/* Banner */}
-      <div className={styles.banner} data-banner-key={bannerKey}>
-        {shouldTryVideoBanner && useVideoBanner ? (
-          <video
-            className={styles.bannerVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster={bannerSources[1] || bannerSources[0]}
-            onError={() => setUseVideoBanner(false)}
-          >
-            {bannerVideoSources.map((src) => (
-              <source key={src} src={src} type="video/mp4" />
-            ))}
-          </video>
-        ) : (
-          <img
-            className={styles.bannerImage}
-            src={bannerSources[0]}
-            alt={bannerTitle}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            onError={(e) => {
-              const img = e.currentTarget;
-              const idx = Number(img.dataset.srcIndex || '0');
-              const nextIdx = idx + 1;
-              if (nextIdx < bannerSources.length) {
-                img.dataset.srcIndex = String(nextIdx);
-                img.src = bannerSources[nextIdx];
-              }
-            }}
-          />
-        )}
+      <div className={styles.banner}>
+        <div className={styles.bannerMediaWrap}>
+          {shouldTryVideoBanner && useVideoBanner ? (
+            <video
+              className={styles.bannerMedia}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={bannerSources[1] || bannerSources[0]}
+              onError={() => setUseVideoBanner(false)}
+            >
+              {bannerVideoSources.map((src) => (
+                <source key={src} src={src} type="video/mp4" />
+              ))}
+            </video>
+          ) : (
+            <img
+              className={styles.bannerMedia}
+              src={bannerSources[0]}
+              alt={bannerTitle}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              onError={(e) => {
+                const img = e.currentTarget;
+                const idx = Number(img.dataset.srcIndex || '0');
+                const nextIdx = idx + 1;
+                if (nextIdx < bannerSources.length) {
+                  img.dataset.srcIndex = String(nextIdx);
+                  img.src = bannerSources[nextIdx];
+                }
+              }}
+            />
+          )}
+        </div>
         <div className={styles.bannerOverlay}>
           <div className={styles.bannerTitle}>{bannerTitle}</div>
         </div>

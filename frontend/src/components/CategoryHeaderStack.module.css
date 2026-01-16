@@ -7,30 +7,27 @@
   width: 100%;
   border-radius: 0;
   overflow: hidden;
-  background: #f6d2da;
+  background: #fff;
   position: relative;
 }
 
-.bannerImage {
+.bannerMediaWrap {
   width: 100%;
-  height: 280px;
-  object-fit: cover; /* supports 1440×808 without distortion (cropping only) */
-  object-position: top center; /* show top of photo first (makeup banner fix) */
-  display: block;
+  aspect-ratio: 1440 / 808;
+  max-height: 560px; /* bigger so full video frame feels showcased */
+  position: relative;
+  background: #fff;
 }
 
-.bannerVideo {
+.bannerMedia {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 280px;
-  object-fit: cover;
-  object-position: top center;
+  height: 100%;
+  object-fit: contain; /* show entire frame (no cropping) */
+  object-position: center;
   display: block;
-}
-
-/* Makeup video needs more top content visible (makeup + tattoo) */
-.banner[data-banner-key='makeup'] .bannerVideo {
-  transform: translateY(26px) scale(1.04);
-  transform-origin: top center;
+  background: #fff;
 }
 
 .bannerOverlay {
@@ -223,15 +220,8 @@
 }
 
 @media (max-width: 1024px) {
-  .bannerImage {
-    height: 240px;
-  }
-  .bannerVideo {
-    height: 240px;
-  }
-
-  .banner[data-banner-key='makeup'] .bannerVideo {
-    transform: translateY(22px) scale(1.04);
+  .bannerMediaWrap {
+    max-height: 480px;
   }
 
   .bannerTitle {
@@ -251,15 +241,8 @@
     padding: 0 1rem;
   }
 
-  .bannerImage {
-    height: 210px;
-  }
-  .bannerVideo {
-    height: 210px;
-  }
-
-  .banner[data-banner-key='makeup'] .bannerVideo {
-    transform: translateY(18px) scale(1.04);
+  .bannerMediaWrap {
+    max-height: 380px;
   }
 
   .bannerTitle {
