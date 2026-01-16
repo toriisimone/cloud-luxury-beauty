@@ -35,16 +35,16 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
     if (subCategory) {
       const topSlug = category.toLowerCase().replace(/\s+/g, '-');
       const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
-      const path = `/images/menu/${topSlug}/${subSlug}.jpg`;
+      const path = `/mega-images/${topSlug}/${subSlug}.png`;
       // Return path - if image doesn't exist, browser will show broken image, we'll handle with CSS
       return path;
     }
-    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/tile.jpg`;
+    return `/mega-images/${category.toLowerCase().replace(/\s+/g, '-')}/tile.png`;
   };
 
   // Get image path for banner with fallback
   const getBannerImagePath = (category: TopCategory): string => {
-    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/banner.jpg`;
+    return `/mega-images/${category.toLowerCase().replace(/\s+/g, '-')}/banner.png`;
   };
 
   const getCategoryUrl = (category: TopCategory): string => {
@@ -132,6 +132,9 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                             const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
                             const idx = Number(img.dataset.srcIndex || '0');
                             const candidates = [
+                              `/mega-images/${topSlug}/${subSlug}.png`,
+                              `/mega-images/${topSlug}/${subSlug}.jpg`,
+                              `/mega-images/${topSlug}/${subSlug}.jpeg`,
                               `/images/menu/${topSlug}/${subSlug}.jpg`,
                               `/images/menu/${topSlug}/${subSlug}.png`,
                               `/images/menu/${topSlug}/${subSlug}.jpeg`,
@@ -194,6 +197,9 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                       const slug = currentCategory.toLowerCase().replace(/\s+/g, '-');
                       const idx = Number(img.dataset.srcIndex || '0');
                       const candidates = [
+                        `/mega-images/${slug}/banner.png`,
+                        `/mega-images/${slug}/banner.jpg`,
+                        `/mega-images/${slug}/banner.jpeg`,
                         `/images/menu/${slug}/banner.jpg`,
                         `/images/menu/${slug}/banner.png`,
                         `/images/menu/${slug}/banner.jpeg`,

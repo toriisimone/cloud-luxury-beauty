@@ -28,6 +28,15 @@ const Navbar = () => {
     const assetMenuBase = slug === 'skincare' ? 'skin-banner' : `${slug}-banner`;
     const urls = [
       // Prefer your current upload routes
+      `/mega-images/${slug}/header.png`,
+      `/mega-images/${slug}/header.jpg`,
+      `/mega-images/${slug}/header.jpeg`,
+      `/mega-images/${slug}/banner.png`,
+      `/mega-images/${slug}/banner.jpg`,
+      `/mega-images/${slug}/banner.jpeg`,
+      `/mega-images/${slug}/tile.png`,
+      `/mega-images/${slug}/tile.jpg`,
+      `/mega-images/${slug}/tile.jpeg`,
       `/assets/images/menu/${slug}/${assetMenuBase}.png`,
       `/assets/images/menu/${slug}/${assetMenuBase}.jpg`,
       `/assets/images/menu/${slug}/${assetMenuBase}.jpeg`,
@@ -82,14 +91,14 @@ const Navbar = () => {
     if (subCategory) {
       const topSlug = category.toLowerCase().replace(/\s+/g, '-');
       const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
-      // Prefer new menu image path first
-      return `/images/menu/${topSlug}/${subSlug}.jpg`;
+      // Prefer mega menu upload path first
+      return `/mega-images/${topSlug}/${subSlug}.png`;
     }
-    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/tile.jpg`;
+    return `/mega-images/${category.toLowerCase().replace(/\s+/g, '-')}/tile.png`;
   };
 
   const getBannerImagePath = (category: TopCategory): string => {
-    return `/images/menu/${category.toLowerCase().replace(/\s+/g, '-')}/banner.jpg`;
+    return `/mega-images/${category.toLowerCase().replace(/\s+/g, '-')}/banner.png`;
   };
 
   const getCategoryUrl = (category: TopCategory): string => {
@@ -354,7 +363,7 @@ const Navbar = () => {
                                       {/* Dropdown Header Image - Place your image here */}
                                       <div className={megaMenuStyles.megaMenuHeaderImageContainer}>
                                         <img 
-                                          src={`/images/menu/${item.category.toLowerCase().replace(/\s+/g, '-')}/header.jpg`}
+                                          src={`/mega-images/${item.category.toLowerCase().replace(/\s+/g, '-')}/header.png`}
                                           alt={`${item.category} Header`}
                                           className={megaMenuStyles.megaMenuHeaderImage}
                                           onError={(e) => {
@@ -362,6 +371,9 @@ const Navbar = () => {
                                             const slug = item.category.toLowerCase().replace(/\s+/g, '-');
                                             const idx = Number(img.dataset.srcIndex || '0');
                                             const candidates = [
+                                              `/mega-images/${slug}/header.png`,
+                                              `/mega-images/${slug}/header.jpg`,
+                                              `/mega-images/${slug}/header.jpeg`,
                                               `/images/menu/${slug}/header.jpg`,
                                               `/images/menu/${slug}/header.png`,
                                               `/images/menu/${slug}/header.jpeg`,
@@ -461,6 +473,9 @@ const Navbar = () => {
                                                       const subSlug = imageMenuBlock.toLowerCase().replace(/\s+/g, '-');
                                                       const idx = Number(img.dataset.srcIndex || '0');
                                                       const candidates = [
+                                                        `/mega-images/${topSlug}/${subSlug}.png`,
+                                                        `/mega-images/${topSlug}/${subSlug}.jpg`,
+                                                        `/mega-images/${topSlug}/${subSlug}.jpeg`,
                                                         `/images/menu/${topSlug}/${subSlug}.jpg`,
                                                         `/images/menu/${topSlug}/${subSlug}.png`,
                                                         `/images/menu/${topSlug}/${subSlug}.jpeg`,
@@ -525,6 +540,9 @@ const Navbar = () => {
                                                 const slug = (item.category as TopCategory).toLowerCase().replace(/\s+/g, '-');
                                                 const idx = Number(img.dataset.srcIndex || '0');
                                                 const candidates = [
+                                                  `/mega-images/${slug}/banner.png`,
+                                                  `/mega-images/${slug}/banner.jpg`,
+                                                  `/mega-images/${slug}/banner.jpeg`,
                                                   `/images/menu/${slug}/banner.jpg`,
                                                   `/images/menu/${slug}/banner.png`,
                                                   `/images/menu/${slug}/banner.jpeg`,

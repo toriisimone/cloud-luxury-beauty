@@ -22,20 +22,20 @@ export const getProductImagePath = (
 
 /**
  * Get category menu tile image path
- * Format: /images/menu/{topCategory}/tile.jpg
+ * Format: /mega-images/{topCategory}/tile.jpg
  */
 export const getMenuTileImagePath = (topCategory: string): string => {
   const topSlug = topCategory.toLowerCase().replace(/\s+/g, '-');
-  return `/images/menu/${topSlug}/tile.jpg`;
+  return `/mega-images/${topSlug}/tile.png`;
 };
 
 /**
  * Get category menu banner image path
- * Format: /images/menu/{topCategory}/banner.jpg
+ * Format: /mega-images/{topCategory}/banner.jpg
  */
 export const getMenuBannerImagePath = (topCategory: string): string => {
   const topSlug = topCategory.toLowerCase().replace(/\s+/g, '-');
-  return `/images/menu/${topSlug}/banner.jpg`;
+  return `/mega-images/${topSlug}/banner.png`;
 };
 
 /**
