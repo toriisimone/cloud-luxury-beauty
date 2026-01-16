@@ -16,7 +16,8 @@
   /* Kylie-style: big banner, but not so tall that tiles/controls are pushed below fold */
   height: clamp(220px, 26vw, 360px);
   position: relative;
-  background: #fff;
+  /* Ensure banner never "disappears" while MP4 loads (some categories have no poster image) */
+  background: linear-gradient(135deg, rgba(255, 45, 161, 0.12), rgba(255, 255, 255, 0.92));
 }
 
 .bannerMedia {
