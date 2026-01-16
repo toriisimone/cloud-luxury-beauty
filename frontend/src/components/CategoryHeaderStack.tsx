@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './CategoryHeaderStack.module.css';
 
@@ -51,6 +51,50 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
     [bannerKey]
   );
 
+  // Preload banner + tiles so the page feels instant.
+  useEffect(() => {
+    const urls = [
+      ...bannerSources,
+      `/images/categories/new-category.jpg`,
+      `/images/categories/new-category.png`,
+      `/images/categories/best-sellers-category.jpg`,
+      `/images/categories/best-sellers-category.png`,
+      `/images/categories/lips-category.jpg`,
+      `/images/categories/lips-category.png`,
+      `/images/categories/face-category.jpg`,
+      `/images/categories/face-category.png`,
+      `/images/categories/eyes-brows-category.jpg`,
+      `/images/categories/eyes-brows-category.png`,
+      `/images/categories/featured-category.jpg`,
+      `/images/categories/featured-category.png`,
+    ];
+
+    // Warm cache with Image objects
+    const imgs: HTMLImageElement[] = [];
+    urls.forEach((href) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = href;
+      imgs.push(img);
+    });
+
+    // Hint preload for banner (highest priority)
+    const links: HTMLLinkElement[] = [];
+    bannerSources.forEach((href, i) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = href;
+      link.fetchPriority = i === 0 ? 'high' : 'low';
+      document.head.appendChild(link);
+      links.push(link);
+    });
+
+    return () => {
+      links.forEach((l) => l.parentNode?.removeChild(l));
+    };
+  }, [bannerSources]);
+
   return (
     <section className={styles.stack} aria-label="Category header">
       {/* Banner */}
@@ -59,6 +103,9 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
           className={styles.bannerImage}
           src={bannerSources[0]}
           alt={bannerTitle}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           onError={(e) => {
             const img = e.currentTarget;
             const idx = Number(img.dataset.srcIndex || '0');
@@ -90,7 +137,8 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
                 className={styles.tileImage}
                 src={`/images/categories/${t.imageBaseName}.jpg`}
                 alt={t.label}
-                loading="lazy"
+                loading="eager"
+                decoding="async"
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.endsWith('.jpg')) img.src = `/images/categories/${t.imageBaseName}.png`;
