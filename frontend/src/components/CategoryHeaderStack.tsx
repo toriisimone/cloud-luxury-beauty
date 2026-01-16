@@ -120,7 +120,7 @@ const CategoryHeaderStack = ({ bannerKey, bannerTitle, breadcrumbLabel, productC
   return (
     <section className={styles.stack} aria-label="Category header">
       {/* Banner */}
-      <div className={styles.banner}>
+      <div className={styles.banner} data-banner-key={bannerKey}>
         <div className={styles.bannerMediaWrap}>
           {shouldTryVideoBanner && useVideoBanner ? (
             <video
