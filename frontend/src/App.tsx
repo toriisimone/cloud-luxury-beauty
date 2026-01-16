@@ -25,7 +25,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 import styles from './App.module.css';
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return sessionStorage.getItem('aurapop:splashSeen') !== 'true';
+  });
 
   useEffect(() => {
     if (!showSplash) return;
@@ -42,7 +45,19 @@ function App() {
           <CartDrawerProvider>
             <Router>
               <div className={styles.app}>
-                {showSplash && <InitialLoadingScreen onDone={() => setShowSplash(false)} />}
+                {showSplash && (
+                  <InitialLoadingScreen
+                    minDurationMs={250}
+                    onDone={() => {
+                      try {
+                        sessionStorage.setItem('aurapop:splashSeen', 'true');
+                      } catch {
+                        // ignore
+                      }
+                      setShowSplash(false);
+                    }}
+                  />
+                )}
                 <Navbar />
                 <CartDrawer />
                 <main className={styles.main}>

@@ -18,6 +18,28 @@ const Navbar = () => {
   const [hoveredCategory, setHoveredCategory] = useState<TopCategory | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const preloadedCategoryBannersRef = useRef<Set<string>>(new Set());
+
+  const preloadCategoryBanner = (category: TopCategory) => {
+    const slug = category.toLowerCase();
+    if (preloadedCategoryBannersRef.current.has(slug)) return;
+    preloadedCategoryBannersRef.current.add(slug);
+
+    const urls = [
+      `/images/category-banners/${slug}-banner.mp4`,
+      `/images/category-banners/${slug}-banner.png`,
+      `/images/category-banners/${slug}-banner.jpg`,
+    ];
+
+    urls.forEach((href) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = href.endsWith('.mp4') ? 'video' : 'image';
+      link.href = href;
+      if (href.endsWith('.mp4')) link.type = 'video/mp4';
+      document.head.appendChild(link);
+    });
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -273,6 +295,7 @@ const Navbar = () => {
                                 clearTimeout(closeTimeoutRef.current);
                                 closeTimeoutRef.current = null;
                               }
+                              preloadCategoryBanner(item.category as TopCategory);
                               setHoveredCategory(item.category);
                               setMegaMenuOpen(true);
                             }}

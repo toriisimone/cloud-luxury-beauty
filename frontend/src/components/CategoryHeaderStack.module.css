@@ -4,7 +4,12 @@
 }
 
 .banner {
-  width: 100%;
+  /* Full-bleed banner like Kylie (edge-to-edge) */
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   border-radius: 0;
   overflow: hidden;
   background: #fff;
