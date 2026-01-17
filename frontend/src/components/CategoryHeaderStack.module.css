@@ -22,7 +22,7 @@
   height: clamp(220px, 26vw, 360px);
   position: relative;
   /* Ensure banner never "disappears" while MP4 loads (some categories have no poster image) */
-  background: linear-gradient(135deg, rgba(255, 45, 161, 0.12), rgba(255, 255, 255, 0.92));
+  background: linear-gradient(135deg, rgba(200, 75, 112, 0.12), rgba(255, 255, 255, 0.92));
 }
 
 .bannerMedia {
@@ -129,8 +129,8 @@
 }
 
 .tile:hover .tileImageWrap {
-  box-shadow: 0 0 0 3px rgba(255, 45, 161, 0.14), 0 10px 24px rgba(255, 45, 161, 0.12);
-  border-color: rgba(255, 45, 161, 0.22);
+  box-shadow: 0 0 0 3px rgba(200, 75, 112, 0.14), 0 10px 24px rgba(200, 75, 112, 0.12);
+  border-color: rgba(200, 75, 112, 0.22);
 }
 
 .controlsRow {
@@ -216,7 +216,7 @@
 }
 
 .dropdownItem:hover {
-  background: rgba(255, 45, 161, 0.08);
+  background: rgba(200, 75, 112, 0.08);
 }
 
 .dropdownHint {

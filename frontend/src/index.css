@@ -35,7 +35,7 @@
   --aurapop-font-style: italic;
 
   /* AURAPOP brand accent */
-  --aurapop-pink: #ff2da1;
+  --aurapop-pink: #c84b70;
   
   /* Cloud gradients */
   --cloud-gradient: radial-gradient(circle 800px at 20% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 70%),

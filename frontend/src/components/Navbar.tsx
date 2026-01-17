@@ -407,102 +407,129 @@ const Navbar = () => {
                                         </div>
                                       )}
                                       <div className={megaMenuStyles.megaMenuImageMenuBlocks}>
-                                        {(categoryData.imageMenuBlocks || []).map((imageMenuBlock: string) => {
+                                        {(() => {
+                                          const blocks = categoryData.imageMenuBlocks || [];
+                                          let bestSellersSeen = 0;
+
                                           const formatTitle = (title: string): string => {
                                             if (item.category === 'Makeup') {
-                                              if (title === 'Complexion/Face') {
-                                                return 'Face';
-                                              }
-                                              if (title === 'Eyes & Brows') {
-                                                return 'Eyes & Brows';
-                                              }
-                                              if (title === 'Best Sellers') {
-                                                return 'Best Sellers ';
-                                              }
+                                              if (title === 'Complexion/Face') return 'Face';
+                                              if (title === 'Eyes & Brows') return 'Eyes & Brows';
+                                              if (title === 'Best Sellers') return 'Best Sellers';
                                             }
                                             if (isFragrance && title.includes(' ')) {
                                               const parts = title.split(' ');
-                                              if (parts.length > 1) {
-                                                return `${parts[0]} <br>${parts.slice(1).join(' ')}`;
-                                              }
+                                              if (parts.length > 1) return `${parts[0]} <br>${parts.slice(1).join(' ')}`;
                                             }
                                             return title;
                                           };
-                                          
-                                          const formattedTitle = formatTitle(imageMenuBlock);
-                                          
-                                          return (
-                                            <div key={imageMenuBlock} className={megaMenuStyles.imageMenuBlock}>
-                                              <Link
-                                                to={getSubCategoryUrl(item.category as TopCategory, imageMenuBlock)}
-                                                className={megaMenuStyles.imageMenuBlockTitleLink}
-                                                onClick={() => setMegaMenuOpen(false)}
-                                                rel="follow"
-                                                data-level="2"
-                                                data-track-title={formattedTitle.replace(/<br>/g, ' ')}
-                                                data-parent-title={imageMenuBlock}
-                                                data-grand-title={item.category}
-                                              >
-                                                <div 
-                                                  className={megaMenuStyles.responsiveImage}
-                                                  style={{
-                                                    '--aspect-ratio': '100.0%',
-                                                    '--max-height': '200px',
-                                                    '--max-width': '200px',
-                                                    '--object-fit': 'cover',
-                                                    '--object-position': 'center'
-                                                  } as React.CSSProperties}
-                                                  tabIndex={0}
+
+                                          return blocks.map((imageMenuBlock: string, blockIdx: number) => {
+                                            const imageKey = (() => {
+                                              // Explicit overrides to match your uploaded mega-images filenames
+                                              if (item.category === 'Makeup' && imageMenuBlock === 'Best Sellers') {
+                                                const which = bestSellersSeen;
+                                                bestSellersSeen += 1;
+                                                return which === 0 ? 'bestseller' : 'bestsellers';
+                                              }
+                                              if (item.category === 'Makeup' && imageMenuBlock === 'Complexion/Face') return 'face';
+                                              if (item.category === 'Makeup' && imageMenuBlock === 'Featured') return 'featured';
+                                              if (item.category === 'Skincare' && imageMenuBlock === 'Skincare') return 'skincare';
+                                              if (item.category === 'Hair' && imageMenuBlock === 'Hair') return 'hair';
+                                              if (item.category === 'Body' && imageMenuBlock === 'Body') return 'body';
+                                              if (item.category === 'Fragrance' && imageMenuBlock === 'New Hair and Body Mists')
+                                                return 'new-hair-body-mists';
+                                              if (item.category === 'Fragrance' && imageMenuBlock === 'Mists') return 'mists';
+                                              return imageMenuBlock;
+                                            })();
+
+                                            const formattedTitle = formatTitle(imageMenuBlock);
+
+                                            const toHref = (() => {
+                                              const top = item.category as TopCategory;
+                                              if (imageMenuBlock.toLowerCase() === item.category.toLowerCase()) return getCategoryUrl(top);
+                                              if (item.category === 'Fragrance' && imageMenuBlock === 'New Hair and Body Mists') {
+                                                return getSubCategoryUrl(top, 'Mists');
+                                              }
+                                              if (item.category === 'Body' && imageMenuBlock === 'Body') return getCategoryUrl(top);
+                                              if (item.category === 'Hair' && imageMenuBlock === 'Hair') return getCategoryUrl(top);
+                                              if (item.category === 'Skincare' && imageMenuBlock === 'Skincare') return getCategoryUrl(top);
+                                              return getSubCategoryUrl(top, imageMenuBlock);
+                                            })();
+
+                                            return (
+                                              <div key={`${imageMenuBlock}-${blockIdx}`} className={megaMenuStyles.imageMenuBlock}>
+                                                <Link
+                                                  to={toHref}
+                                                  className={megaMenuStyles.imageMenuBlockTitleLink}
+                                                  onClick={() => setMegaMenuOpen(false)}
+                                                  rel="follow"
+                                                  data-level="2"
+                                                  data-track-title={formattedTitle.replace(/<br>/g, ' ')}
+                                                  data-parent-title={imageMenuBlock}
+                                                  data-grand-title={item.category}
                                                 >
-                                                  <img
-                                                    src={getCategoryImagePath(item.category as TopCategory, imageMenuBlock)}
-                                                    alt={imageMenuBlock}
-                                                    className={`${megaMenuStyles.responsiveImageImage} ${megaMenuStyles.imageMenuBlockImage} lazyautosizes lazyloaded`}
-                                                    loading="lazy"
-                                                    data-src={getCategoryImagePath(item.category as TopCategory, imageMenuBlock)}
-                                                    data-widths="[200,200]"
-                                                    data-aspectratio="1.0"
-                                                    data-sizes="auto"
-                                                    width="200"
-                                                    height="200"
-                                                    tabIndex={-1}
-                                                    style={{ width: '100%', height: '100%' }}
-                                                    sizes="104px"
-                                                    onError={(e) => {
-                                                      const img = e.currentTarget;
-                                                      const topSlug = (item.category as TopCategory).toLowerCase().replace(/\s+/g, '-');
-                                                      const idx = Number(img.dataset.srcIndex || '0');
-                                                      const slugs = menuImageSlugVariants(imageMenuBlock);
-                                                      const candidates = slugs.flatMap((s) => [
-                                                        `/mega-images/${topSlug}/${s}.png`,
-                                                        `/mega-images/${topSlug}/${s}.jpg`,
-                                                        `/mega-images/${topSlug}/${s}.jpeg`,
-                                                        `/images/menu/${topSlug}/${s}.jpg`,
-                                                        `/images/menu/${topSlug}/${s}.png`,
-                                                        `/images/menu/${topSlug}/${s}.jpeg`,
-                                                        `/assets/images/menu/${topSlug}/${s}.jpg`,
-                                                        `/assets/images/menu/${topSlug}/${s}.png`,
-                                                        `/assets/images/menu/${topSlug}/${s}.jpeg`,
-                                                      ]);
-                                                      const nextIdx = idx + 1;
-                                                      if (nextIdx < candidates.length) {
-                                                        img.dataset.srcIndex = String(nextIdx);
-                                                        img.src = candidates[nextIdx];
-                                                      } else {
-                                                        img.src =
-                                                          'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect width="200" height="200" fill="%23f5f5f5"/%3E%3C/svg%3E';
-                                                      }
-                                                    }}
+                                                  <div
+                                                    className={megaMenuStyles.responsiveImage}
+                                                    style={{
+                                                      '--aspect-ratio': '100.0%',
+                                                      '--max-height': '200px',
+                                                      '--max-width': '200px',
+                                                      '--object-fit': 'cover',
+                                                      '--object-position': 'center',
+                                                    } as React.CSSProperties}
+                                                    tabIndex={0}
+                                                  >
+                                                    <img
+                                                      src={getCategoryImagePath(item.category as TopCategory, imageKey)}
+                                                      alt={imageMenuBlock}
+                                                      className={`${megaMenuStyles.responsiveImageImage} ${megaMenuStyles.imageMenuBlockImage} lazyautosizes lazyloaded`}
+                                                      loading="lazy"
+                                                      data-src={getCategoryImagePath(item.category as TopCategory, imageKey)}
+                                                      data-widths="[200,200]"
+                                                      data-aspectratio="1.0"
+                                                      data-sizes="auto"
+                                                      width="200"
+                                                      height="200"
+                                                      tabIndex={-1}
+                                                      style={{ width: '100%', height: '100%' }}
+                                                      sizes="104px"
+                                                      onError={(e) => {
+                                                        const img = e.currentTarget;
+                                                        const topSlug = (item.category as TopCategory).toLowerCase().replace(/\s+/g, '-');
+                                                        const idx = Number(img.dataset.srcIndex || '0');
+                                                        const slugs = menuImageSlugVariants(imageKey);
+                                                        const candidates = slugs.flatMap((s) => [
+                                                          `/mega-images/${topSlug}/${s}.png`,
+                                                          `/mega-images/${topSlug}/${s}.jpg`,
+                                                          `/mega-images/${topSlug}/${s}.jpeg`,
+                                                          `/images/menu/${topSlug}/${s}.jpg`,
+                                                          `/images/menu/${topSlug}/${s}.png`,
+                                                          `/images/menu/${topSlug}/${s}.jpeg`,
+                                                          `/assets/images/menu/${topSlug}/${s}.jpg`,
+                                                          `/assets/images/menu/${topSlug}/${s}.png`,
+                                                          `/assets/images/menu/${topSlug}/${s}.jpeg`,
+                                                        ]);
+                                                        const nextIdx = idx + 1;
+                                                        if (nextIdx < candidates.length) {
+                                                          img.dataset.srcIndex = String(nextIdx);
+                                                          img.src = candidates[nextIdx];
+                                                        } else {
+                                                          img.src =
+                                                            'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect width="200" height="200" fill="%23f5f5f5"/%3E%3C/svg%3E';
+                                                        }
+                                                      }}
+                                                    />
+                                                  </div>
+                                                  <h2
+                                                    className={megaMenuStyles.imageMenuBlockTitle}
+                                                    dangerouslySetInnerHTML={{ __html: formattedTitle }}
                                                   />
-                                                </div>
-                                                <h2 
-                                                  className={megaMenuStyles.imageMenuBlockTitle}
-                                                  dangerouslySetInnerHTML={{ __html: formattedTitle }}
-                                                />
-                                              </Link>
-                                            </div>
-                                          );
-                                        })}
+                                                </Link>
+                                              </div>
+                                            );
+                                          });
+                                        })()}
                                       </div>
                                       <div className={megaMenuStyles.megaMenuButtons}></div>
                                       <div className={megaMenuStyles.megaMenuSecondaryLinksBlocks}></div>

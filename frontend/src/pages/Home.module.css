@@ -126,9 +126,9 @@
   opacity: 0.18;
   mix-blend-mode: soft-light;
   background:
-    radial-gradient(300px 140px at 20% 30%, rgba(255, 45, 161, 0.18), rgba(255, 45, 161, 0) 60%),
+    radial-gradient(300px 140px at 20% 30%, rgba(200, 75, 112, 0.18), rgba(200, 75, 112, 0) 60%),
     radial-gradient(260px 120px at 70% 45%, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 65%),
-    radial-gradient(320px 160px at 50% 75%, rgba(255, 45, 161, 0.12), rgba(255, 45, 161, 0) 60%),
+    radial-gradient(320px 160px at 50% 75%, rgba(200, 75, 112, 0.12), rgba(200, 75, 112, 0) 60%),
     repeating-linear-gradient(
       90deg,
       rgba(255, 255, 255, 0.06) 0px,

@@ -43,6 +43,7 @@ const CATEGORY_MAPPINGS: Record<TopCategory, { subCategories: string[]; imageMen
       'Sensitive Skin', 'Tools'
     ],
     imageMenuBlocks: [
+      'Skincare',
       'Cleansers',
       'Serums & Treatments',
       'Moisturizers',
@@ -57,6 +58,7 @@ const CATEGORY_MAPPINGS: Record<TopCategory, { subCategories: string[]; imageMen
     imageMenuBlocks: [
       'New',
       'Best Sellers',
+      'Best Sellers',
       'Lips',
       'Complexion/Face',
       'Eyes & Brows',
@@ -68,6 +70,7 @@ const CATEGORY_MAPPINGS: Record<TopCategory, { subCategories: string[]; imageMen
       'Shampoo', 'Conditioner', 'Treatments', 'Styling', 'Tools'
     ],
     imageMenuBlocks: [
+      'Hair',
       'Shampoo',
       'Conditioner',
       'Treatments',
@@ -84,6 +87,7 @@ const CATEGORY_MAPPINGS: Record<TopCategory, { subCategories: string[]; imageMen
       'Men',
       'Unisex',
       'Mists',
+      'New Hair and Body Mists',
       'Sets'
     ]
   },
@@ -92,6 +96,7 @@ const CATEGORY_MAPPINGS: Record<TopCategory, { subCategories: string[]; imageMen
       'Lotions', 'Creams', 'Oils', 'Scrubs', 'Deodorant', 'Mists'
     ],
     imageMenuBlocks: [
+      'Body',
       'Lotions',
       'Creams',
       'Scrubs',

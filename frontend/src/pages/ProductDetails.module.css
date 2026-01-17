@@ -5,9 +5,10 @@
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 clamp(16px, 3vw, 56px);
 }
 
 .breadcrumbs {
@@ -45,7 +46,7 @@
 .layout {
   display: grid;
   /* Compact PDP: image top-left, info to the right */
-  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
   grid-template-areas:
     "image info"
     "thumbs info";
@@ -106,14 +107,14 @@
 .imageStage {
   width: 100%;
   grid-area: image;
-  max-width: 280px;
-  justify-self: start;
+  max-width: 520px;
+  justify-self: stretch;
   align-self: start;
 }
 
 .mainImageFrame {
   position: relative;
-  width: min(280px, 100%);
+  width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
   display: flex;
@@ -167,7 +168,7 @@
   flex-direction: column;
   grid-area: info;
   gap: 10px;
-  max-width: 640px;
+  max-width: none;
   min-width: 0;
   text-align: left;
 }
@@ -566,7 +567,7 @@
   padding: 0 14px;
   border-radius: 999px;
   border: none;
-  background: #ff2da1;
+  background: var(--aurapop-pink);
   color: #fff;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -679,7 +680,7 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 1rem;
+    padding: 0 16px;
   }
 
   .layout {
@@ -698,7 +699,7 @@
   }
 
   .mainImageFrame {
-    width: min(320px, 100%);
+    width: min(420px, 100%);
   }
 
   .actionRow {
@@ -733,19 +734,19 @@
 
 @media (max-width: 1200px) {
   .container {
-    padding: 0 1.5rem;
+    padding: 0 clamp(16px, 3vw, 40px);
   }
 }
 
 @media (max-width: 1024px) {
   .container {
-    padding: 0 1.25rem;
+    padding: 0 20px;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    padding: 0 16px;
+    padding: 0 14px;
   }
 
   .title {

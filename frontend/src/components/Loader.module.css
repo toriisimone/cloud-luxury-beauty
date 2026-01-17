@@ -13,13 +13,13 @@
   height: 44px;
   transform: rotate(45deg);
   border-radius: 8px;
-  border: 2px solid rgba(255, 45, 161, 0.55);
+  border: 2px solid rgba(200, 75, 112, 0.55);
   background:
-    linear-gradient(135deg, rgba(255, 45, 161, 0.18), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(135deg, rgba(200, 75, 112, 0.18), rgba(255, 255, 255, 0) 60%),
     radial-gradient(20px 20px at 30% 30%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 70%);
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.08),
-    inset 0 0 12px rgba(255, 45, 161, 0.18);
+    inset 0 0 12px rgba(200, 75, 112, 0.18);
   animation: diamondFloat 1.2s ease-in-out infinite, diamondShimmer 1.6s linear infinite;
 }
 

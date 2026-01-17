@@ -52,8 +52,8 @@
 }
 
 .tile:hover .imageWrap {
-  box-shadow: 0 0 0 3px rgba(255, 45, 161, 0.18), 0 10px 24px rgba(255, 45, 161, 0.12);
-  border-color: rgba(255, 45, 161, 0.25);
+  box-shadow: 0 0 0 3px rgba(200, 75, 112, 0.18), 0 10px 24px rgba(200, 75, 112, 0.12);
+  border-color: rgba(200, 75, 112, 0.25);
 }
 
 .tile:hover .label {

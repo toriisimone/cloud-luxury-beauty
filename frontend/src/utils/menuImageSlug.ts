@@ -32,7 +32,34 @@ export function menuImageSlugVariants(input: string): string[] {
     .trim()
     .replace(/\s+/g, '-');
 
-  // Unique, stable order
-  return Array.from(new Set([base, andVersion, basic].filter(Boolean)));
+  const seedList = [base, andVersion, basic].filter(Boolean);
+  const out: string[] = [];
+  const seen = new Set<string>();
+
+  const add = (v: string) => {
+    const vv = v.trim();
+    if (!vv) return;
+    if (seen.has(vv)) return;
+    seen.add(vv);
+    out.push(vv);
+  };
+
+  seedList.forEach((s) => {
+    add(s);
+    // Support filenames without hyphens: "best-sellers" -> "bestsellers"
+    add(s.replace(/-/g, ''));
+
+    // Support singular/plural mismatch: "mists" <-> "mist"
+    if (s.endsWith('s')) {
+      const singular = s.slice(0, -1);
+      add(singular);
+      add(singular.replace(/-/g, ''));
+    } else {
+      add(`${s}s`);
+      add(`${s}s`.replace(/-/g, ''));
+    }
+  });
+
+  return out;
 }
 

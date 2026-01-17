@@ -1,7 +1,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: #fff;
+  background: #000;
   z-index: 5000;
   display: grid;
   place-items: center;
@@ -20,13 +20,13 @@
   height: 54px;
   transform: rotate(45deg);
   border-radius: 10px;
-  border: 2px solid rgba(255, 45, 161, 0.6);
+  border: 2px solid rgba(200, 75, 112, 0.7);
   background:
-    linear-gradient(135deg, rgba(255, 45, 161, 0.22), rgba(255, 255, 255, 0) 60%),
-    radial-gradient(20px 20px at 30% 30%, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0) 70%);
+    linear-gradient(135deg, rgba(200, 75, 112, 0.28), rgba(0, 0, 0, 0) 60%),
+    radial-gradient(20px 20px at 30% 30%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 70%);
   box-shadow:
     0 12px 34px rgba(0, 0, 0, 0.08),
-    inset 0 0 14px rgba(255, 45, 161, 0.2);
+    inset 0 0 14px rgba(200, 75, 112, 0.24);
   animation: diamondFloat 1.15s ease-in-out infinite, diamondShimmer 1.55s linear infinite;
 }
 
@@ -46,17 +46,56 @@
   font-style: italic;
   font-weight: 900;
   letter-spacing: 0.06em;
-  color: #000;
+  color: var(--aurapop-pink);
   text-transform: uppercase;
   opacity: 0;
   animation: logoIn 520ms ease 120ms forwards;
+  text-shadow:
+    0 0 10px rgba(200, 75, 112, 0.85),
+    0 0 26px rgba(200, 75, 112, 0.55),
+    0 0 48px rgba(200, 75, 112, 0.35);
+}
+
+.logoWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+}
+
+.sparkleTop,
+.sparkleBottom {
+  color: var(--aurapop-pink);
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(200, 75, 112, 0.65));
+  animation: sparklePop 900ms ease 180ms forwards, sparkleTwinkle 1.25s ease-in-out infinite;
+}
+
+.sparkleTop {
+  transform: translateY(2px);
+}
+
+.sparkleBottom {
+  transform: translateY(-2px) rotate(180deg);
+}
+
+@keyframes sparklePop {
+  from { opacity: 0; transform: translateY(6px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { opacity: 0.55; transform: translateY(0) scale(1); }
+  45% { opacity: 1; transform: translateY(-1px) scale(1.06); }
+  70% { opacity: 0.65; transform: translateY(0) scale(1); }
 }
 
 .sub {
   font-family: var(--aurapop-font);
   font-style: italic;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.72);
   opacity: 0;
   animation: subIn 520ms ease 220ms forwards;
 }
