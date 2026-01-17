@@ -5,6 +5,7 @@ import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartDrawerProvider } from './context/CartDrawerContext';
 import InitialLoadingScreen from './components/InitialLoadingScreen';
+import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
@@ -76,10 +77,11 @@ function App() {
         <WishlistProvider>
           <CartDrawerProvider>
             <Router>
+              <ScrollToTop />
               <div className={styles.app}>
                 {showSplash && (
                   <InitialLoadingScreen
-                    minDurationMs={250}
+                    minDurationMs={120}
                     onDone={() => {
                       try {
                         sessionStorage.setItem('aurapop:splashSeen', 'true');

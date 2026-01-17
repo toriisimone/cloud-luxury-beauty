@@ -29,7 +29,6 @@ const InitialLoadingScreen = ({ onDone, minDurationMs = 950 }: Props) => {
   return (
     <div className={styles.backdrop} role="status" aria-live="polite" aria-label="Loading">
       <div className={styles.inner}>
-        <div className={styles.diamond} aria-hidden="true" />
         <div className={styles.logoWrap} aria-label="AURAPOP">
           <div className={styles.sparkleTop} aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 13 13">

@@ -99,7 +99,26 @@ const Navbar = () => {
   };
 
   const getBannerImagePath = (category: TopCategory): string => {
-    return `/mega-images/${category.toLowerCase().replace(/\s+/g, '-')}/banner.png`;
+    const slug = category.toLowerCase().replace(/\s+/g, '-');
+    // The "raised" right-side mega menu banner uses a category-matched PNG (not banner.png).
+    // This matches your uploads like skincare/skincare.png, hair/hair.png, etc.
+    const key = (() => {
+      switch (category) {
+        case 'Skincare':
+          return 'skincare';
+        case 'Makeup':
+          return 'bestseller';
+        case 'Hair':
+          return 'hair';
+        case 'Fragrance':
+          return 'new-hair-body-mists';
+        case 'Body':
+          return 'body';
+        default:
+          return 'banner';
+      }
+    })();
+    return `/mega-images/${slug}/${key}.png`;
   };
 
   const getCategoryUrl = (category: TopCategory): string => {
@@ -567,7 +586,26 @@ const Navbar = () => {
                                                 const img = e.currentTarget;
                                                 const slug = (item.category as TopCategory).toLowerCase().replace(/\s+/g, '-');
                                                 const idx = Number(img.dataset.srcIndex || '0');
+                                                const bannerKey = (() => {
+                                                  switch (item.category as TopCategory) {
+                                                    case 'Skincare':
+                                                      return 'skincare';
+                                                    case 'Makeup':
+                                                      return 'bestseller';
+                                                    case 'Hair':
+                                                      return 'hair';
+                                                    case 'Fragrance':
+                                                      return 'new-hair-body-mists';
+                                                    case 'Body':
+                                                      return 'body';
+                                                    default:
+                                                      return 'banner';
+                                                  }
+                                                })();
                                                 const candidates = [
+                                                  `/mega-images/${slug}/${bannerKey}.png`,
+                                                  `/mega-images/${slug}/${bannerKey}.jpg`,
+                                                  `/mega-images/${slug}/${bannerKey}.jpeg`,
                                                   `/mega-images/${slug}/banner.png`,
                                                   `/mega-images/${slug}/banner.jpg`,
                                                   `/mega-images/${slug}/banner.jpeg`,
