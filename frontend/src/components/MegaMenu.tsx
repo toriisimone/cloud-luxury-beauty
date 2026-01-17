@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { TopCategory, getCategoryStructure } from '../data/productData';
+import { menuImageSlugVariants } from '../utils/menuImageSlug';
 import styles from './MegaMenu.module.css';
 
 interface MegaMenuProps {
@@ -34,8 +35,8 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
   const getCategoryImagePath = (category: TopCategory, subCategory?: string): string => {
     if (subCategory) {
       const topSlug = category.toLowerCase().replace(/\s+/g, '-');
-      const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
-      const path = `/mega-images/${topSlug}/${subSlug}.png`;
+      const slug = menuImageSlugVariants(subCategory)[0];
+      const path = `/mega-images/${topSlug}/${slug}.png`;
       // Return path - if image doesn't exist, browser will show broken image, we'll handle with CSS
       return path;
     }
@@ -129,19 +130,19 @@ const MegaMenu = ({ isOpen, onClose, activeCategory, onMouseEnter, onMouseLeave 
                           onError={(e) => {
                             const img = e.currentTarget;
                             const topSlug = currentCategory.toLowerCase().replace(/\s+/g, '-');
-                            const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
                             const idx = Number(img.dataset.srcIndex || '0');
-                            const candidates = [
-                              `/mega-images/${topSlug}/${subSlug}.png`,
-                              `/mega-images/${topSlug}/${subSlug}.jpg`,
-                              `/mega-images/${topSlug}/${subSlug}.jpeg`,
-                              `/images/menu/${topSlug}/${subSlug}.jpg`,
-                              `/images/menu/${topSlug}/${subSlug}.png`,
-                              `/images/menu/${topSlug}/${subSlug}.jpeg`,
-                              `/assets/images/menu/${topSlug}/${subSlug}.jpg`,
-                              `/assets/images/menu/${topSlug}/${subSlug}.png`,
-                              `/assets/images/menu/${topSlug}/${subSlug}.jpeg`,
-                            ];
+                            const slugs = menuImageSlugVariants(subCategory);
+                            const candidates = slugs.flatMap((s) => [
+                              `/mega-images/${topSlug}/${s}.png`,
+                              `/mega-images/${topSlug}/${s}.jpg`,
+                              `/mega-images/${topSlug}/${s}.jpeg`,
+                              `/images/menu/${topSlug}/${s}.jpg`,
+                              `/images/menu/${topSlug}/${s}.png`,
+                              `/images/menu/${topSlug}/${s}.jpeg`,
+                              `/assets/images/menu/${topSlug}/${s}.jpg`,
+                              `/assets/images/menu/${topSlug}/${s}.png`,
+                              `/assets/images/menu/${topSlug}/${s}.jpeg`,
+                            ]);
                             const nextIdx = idx + 1;
                             if (nextIdx < candidates.length) {
                               img.dataset.srcIndex = String(nextIdx);

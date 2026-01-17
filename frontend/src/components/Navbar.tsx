@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import { getCategoryStructure, TopCategory } from '../data/productData';
 import { useCartDrawer } from '../context/CartDrawerContext';
+import { menuImageSlugVariants } from '../utils/menuImageSlug';
 import SearchOverlay from './SearchOverlay';
 import styles from './Navbar.module.css';
 import megaMenuStyles from './MegaMenu.module.css';
@@ -90,9 +91,9 @@ const Navbar = () => {
   const getCategoryImagePath = (category: TopCategory, subCategory?: string): string => {
     if (subCategory) {
       const topSlug = category.toLowerCase().replace(/\s+/g, '-');
-      const subSlug = subCategory.toLowerCase().replace(/\s+/g, '-');
       // Prefer mega menu upload path first
-      return `/mega-images/${topSlug}/${subSlug}.png`;
+      const slug = menuImageSlugVariants(subCategory)[0];
+      return `/mega-images/${topSlug}/${slug}.png`;
     }
     return `/mega-images/${category.toLowerCase().replace(/\s+/g, '-')}/tile.png`;
   };
@@ -470,19 +471,19 @@ const Navbar = () => {
                                                     onError={(e) => {
                                                       const img = e.currentTarget;
                                                       const topSlug = (item.category as TopCategory).toLowerCase().replace(/\s+/g, '-');
-                                                      const subSlug = imageMenuBlock.toLowerCase().replace(/\s+/g, '-');
                                                       const idx = Number(img.dataset.srcIndex || '0');
-                                                      const candidates = [
-                                                        `/mega-images/${topSlug}/${subSlug}.png`,
-                                                        `/mega-images/${topSlug}/${subSlug}.jpg`,
-                                                        `/mega-images/${topSlug}/${subSlug}.jpeg`,
-                                                        `/images/menu/${topSlug}/${subSlug}.jpg`,
-                                                        `/images/menu/${topSlug}/${subSlug}.png`,
-                                                        `/images/menu/${topSlug}/${subSlug}.jpeg`,
-                                                        `/assets/images/menu/${topSlug}/${subSlug}.jpg`,
-                                                        `/assets/images/menu/${topSlug}/${subSlug}.png`,
-                                                        `/assets/images/menu/${topSlug}/${subSlug}.jpeg`,
-                                                      ];
+                                                      const slugs = menuImageSlugVariants(imageMenuBlock);
+                                                      const candidates = slugs.flatMap((s) => [
+                                                        `/mega-images/${topSlug}/${s}.png`,
+                                                        `/mega-images/${topSlug}/${s}.jpg`,
+                                                        `/mega-images/${topSlug}/${s}.jpeg`,
+                                                        `/images/menu/${topSlug}/${s}.jpg`,
+                                                        `/images/menu/${topSlug}/${s}.png`,
+                                                        `/images/menu/${topSlug}/${s}.jpeg`,
+                                                        `/assets/images/menu/${topSlug}/${s}.jpg`,
+                                                        `/assets/images/menu/${topSlug}/${s}.png`,
+                                                        `/assets/images/menu/${topSlug}/${s}.jpeg`,
+                                                      ]);
                                                       const nextIdx = idx + 1;
                                                       if (nextIdx < candidates.length) {
                                                         img.dataset.srcIndex = String(nextIdx);
