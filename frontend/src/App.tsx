@@ -81,7 +81,7 @@ function App() {
               <div className={styles.app}>
                 {showSplash && (
                   <InitialLoadingScreen
-                    minDurationMs={120}
+                    minDurationMs={50}
                     onDone={() => {
                       try {
                         sessionStorage.setItem('aurapop:splashSeen', 'true');

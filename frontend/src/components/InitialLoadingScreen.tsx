@@ -40,7 +40,10 @@ const InitialLoadingScreen = ({ onDone, minDurationMs = 950 }: Props) => {
               />
             </svg>
           </div>
-          <div className={styles.logo}>AURAPOP</div>
+          <div className={styles.logo}>
+            <span className={styles.logoAura}>AURA</span>
+            <span className={styles.logoPop}>POP</span>
+          </div>
           <div className={styles.sparkleBottom} aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 13 13">
               <path

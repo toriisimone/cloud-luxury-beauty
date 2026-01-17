@@ -21,15 +21,28 @@
   font-weight: 900;
   letter-spacing: 0.08em;
   font-size: clamp(48px, 7vw, 104px);
-  color: var(--aurapop-pink);
   text-transform: uppercase;
   opacity: 0;
   animation: logoIn 520ms ease 120ms forwards, neonFlicker 2.2s ease-in-out infinite;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.06em;
+}
+
+.logoAura {
+  color: var(--aurapop-pink);
   text-shadow:
     0 0 8px rgba(200, 75, 112, 0.95),
     0 0 22px rgba(200, 75, 112, 0.75),
     0 0 48px rgba(200, 75, 112, 0.55),
     0 0 86px rgba(200, 75, 112, 0.35);
+}
+
+.logoPop {
+  color: rgba(255, 255, 255, 0.98);
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.55),
+    0 0 26px rgba(255, 255, 255, 0.25);
 }
 
 .logoWrap {
@@ -60,6 +73,8 @@
 
 .sparkleBottom {
   transform: translateY(-2px) rotate(180deg);
+  color: rgba(255, 255, 255, 0.98);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.25));
 }
 
 @keyframes sparklePop {

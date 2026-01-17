@@ -107,7 +107,7 @@ const Navbar = () => {
         case 'Skincare':
           return 'skincare';
         case 'Makeup':
-          return 'bestseller';
+          return 'bestsellers';
         case 'Hair':
           return 'hair';
         case 'Fragrance':
@@ -591,7 +591,7 @@ const Navbar = () => {
                                                     case 'Skincare':
                                                       return 'skincare';
                                                     case 'Makeup':
-                                                      return 'bestseller';
+                                                      return 'bestsellers';
                                                     case 'Hair':
                                                       return 'hair';
                                                     case 'Fragrance':

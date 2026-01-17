@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
@@ -233,6 +233,49 @@ const ProductDetails = () => {
   };
 
   const { brand, title } = deriveBrandTitle(product);
+
+  const ScrollArrowsRow = ({
+    className,
+    ariaLabel,
+    children,
+  }: {
+    className?: string;
+    ariaLabel: string;
+    children: React.ReactNode;
+  }) => {
+    const rowRef = useRef<HTMLDivElement | null>(null);
+
+    const scrollByAmount = (dir: -1 | 1) => {
+      const el = rowRef.current;
+      if (!el) return;
+      const amt = Math.max(280, Math.floor(el.clientWidth * 0.85));
+      el.scrollBy({ left: dir * amt, behavior: 'smooth' });
+    };
+
+    return (
+      <div className={styles.cardsRowWrap} aria-label={ariaLabel}>
+        <button
+          type="button"
+          className={`${styles.rowArrow} ${styles.rowArrowLeft}`}
+          aria-label="Scroll left"
+          onClick={() => scrollByAmount(-1)}
+        >
+          ‹
+        </button>
+        <div ref={rowRef} className={className}>
+          {children}
+        </div>
+        <button
+          type="button"
+          className={`${styles.rowArrow} ${styles.rowArrowRight}`}
+          aria-label="Scroll right"
+          onClick={() => scrollByAmount(1)}
+        >
+          ›
+        </button>
+      </div>
+    );
+  };
 
   return (
     <div className={styles.details}>
@@ -503,11 +546,14 @@ const ProductDetails = () => {
                 <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Featured Products')}</div>
                 <div className={styles.panelSubtitle}>Sponsored</div>
               </div>
-              <div className={`${styles.cardsRow} ${styles.cardsRowWide}`}>
+              <ScrollArrowsRow
+                ariaLabel="Featured products carousel"
+                className={`${styles.cardsRow} ${styles.cardsRowWide}`}
+              >
                 {featuredProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
-              </div>
+              </ScrollArrowsRow>
             </div>
           )}
 
@@ -516,11 +562,14 @@ const ProductDetails = () => {
               <div className={styles.panelHeaderRow}>
                 <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Use It With')}</div>
               </div>
-              <div className={`${styles.cardsRow} ${styles.cardsRowCompact}`}>
+              <ScrollArrowsRow
+                ariaLabel="Use it with carousel"
+                className={`${styles.cardsRow} ${styles.cardsRowCompact}`}
+              >
                 {useItWithProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
-              </div>
+              </ScrollArrowsRow>
             </div>
           )}
 
@@ -529,11 +578,11 @@ const ProductDetails = () => {
               <div className={styles.panelHeaderRow}>
                 <div className={`${styles.sectionTitle} ${styles.aurapopTitle}`}>{toTitleCase('Similar Products')}</div>
               </div>
-              <div className={styles.cardsRow}>
+              <ScrollArrowsRow ariaLabel="Similar products carousel" className={styles.cardsRow}>
                 {similarProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
-              </div>
+              </ScrollArrowsRow>
             </div>
           )}
 
@@ -544,11 +593,11 @@ const ProductDetails = () => {
             {relatedLoading ? (
               <div className={styles.relatedLoading}>Loading...</div>
             ) : (
-              <div className={styles.cardsRow}>
+              <ScrollArrowsRow ariaLabel="You may also like carousel" className={styles.cardsRow}>
                 {(youMayAlsoLikeProducts.length > 0 ? youMayAlsoLikeProducts : relatedProducts).map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
-              </div>
+              </ScrollArrowsRow>
             )}
           </div>
         </section>
